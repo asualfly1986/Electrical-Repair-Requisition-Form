@@ -516,6 +516,7 @@ const App = {
           this.renderCategories();
           this.renderCatalog();
           this.renderCart();
+          this.renderLivePreview();
           this.showToast(`ซิงค์ข้อมูลสำเร็จ (${res.count} รายการ)`, "success");
           this.closeAllModals();
         } catch (err) {
@@ -541,6 +542,7 @@ const App = {
           this.renderCategories();
           this.renderCatalog();
           this.renderCart();
+          this.renderLivePreview();
           this.showToast(`นำเข้าสำเร็จ (${res.count} รายการ)`, "success");
           this.closeAllModals();
         } catch (err) {

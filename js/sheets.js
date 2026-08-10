@@ -37,61 +37,138 @@ const SheetsManager = {
     }
   },
 
-  // แปลง URL Google Sheets ให้อยู่ในรูป Export CSV URL
-  formatGoogleSheetCsvUrl(url) {
-    if (!url) return "";
-    let sheetId = "";
+  // แยก Sheet ID และ GID จาก URL
+  extractSheetParams(url) {
+    let sheetId = "1l_ZJpnBOQcjxIIRI9HqKlFsUJ1ddq-ZAqSeHQB7RnXE";
     let gid = "1247142924";
 
-    const idMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-    if (idMatch) {
-      sheetId = idMatch[1];
+    if (url) {
+      const idMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      if (idMatch) sheetId = idMatch[1];
+
+      const gidMatch = url.match(/[#&?]gid=([0-9]+)/);
+      if (gidMatch) gid = gidMatch[1];
     }
 
-    const gidMatch = url.match(/[#&?]gid=([0-9]+)/);
-    if (gidMatch) {
-      gid = gidMatch[1];
-    }
-
-    if (sheetId) {
-      return `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
-    }
-    return url;
+    return { sheetId, gid };
   },
 
-  // ดึงข้อมูลจาก Google Sheets
+  // แปลง URL Google Sheets ให้อยู่ในรูป Export CSV URL
+  formatGoogleSheetCsvUrl(url) {
+    const { sheetId, gid } = this.extractSheetParams(url);
+    return `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+  },
+
+  // ดึงข้อมูลจาก Google Sheets (รองรับทั้ง GViz JSON API, Direct CSV และ Fallback Proxies)
   async fetchFromGoogleSheets(url) {
     const targetUrl = url || this.DEFAULT_SHEET_URL;
-    const csvUrl = this.formatGoogleSheetCsvUrl(targetUrl);
+    const { sheetId, gid } = this.extractSheetParams(targetUrl);
 
-    // ลองดึงตรงๆ หรือผ่าน gviz
-    const fetchUrls = [
-      csvUrl,
-      csvUrl.replace('/export?format=csv&', '/gviz/tq?tqx=out:csv&'),
-      // Fallback ผ่าน CORS proxy สำหรับ Google Sheet สาธารณะ
-      `https://api.allorigins.win/raw?url=${encodeURIComponent(csvUrl)}`
+    const gvizJsonUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=${gid}`;
+    const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+    const gvizCsvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=${gid}`;
+
+    // รายการ Endpoints ที่จะทดลองเรียก
+    const fetchEndpoints = [
+      { url: gvizJsonUrl, type: "gviz" },
+      { url: csvUrl, type: "csv" },
+      { url: gvizCsvUrl, type: "csv" },
+      { url: `https://api.allorigins.win/raw?url=${encodeURIComponent(gvizJsonUrl)}`, type: "gviz" },
+      { url: `https://corsproxy.io/?${encodeURIComponent(gvizJsonUrl)}`, type: "gviz" },
+      { url: `https://api.allorigins.win/raw?url=${encodeURIComponent(csvUrl)}`, type: "csv" }
     ];
 
-    for (const u of fetchUrls) {
+    let lastError = null;
+
+    for (const ep of fetchEndpoints) {
       try {
-        const response = await fetch(u, { cache: "no-store" });
+        const response = await fetch(ep.url, { cache: "no-store" });
         if (response.ok) {
           const text = await response.text();
-          // ตรวจสอบว่าได้เป็นข้อความ CSV จริง ไม่ใช่หน้า Login ของ Google
-          if (text && !text.includes("<!DOCTYPE html") && !text.includes("accounts.google.com")) {
-            const parsedItems = this.parseCsvToMaterials(text);
-            if (parsedItems.length > 0) {
+          if (text && !text.includes("accounts.google.com") && !text.includes("<title>Sign in</title>")) {
+            let parsedItems = [];
+            if (ep.type === "gviz") {
+              parsedItems = this.parseGvizJsonToMaterials(text);
+            } else {
+              parsedItems = this.parseCsvToMaterials(text);
+            }
+
+            if (parsedItems && parsedItems.length > 0) {
               this.saveMaterials(parsedItems);
               return { success: true, count: parsedItems.length, data: parsedItems, source: "Google Sheets" };
             }
           }
         }
       } catch (err) {
-        console.warn("Fetch attempt failed:", u, err);
+        lastError = err;
+        console.warn("Fetch endpoint failed:", ep.url, err);
       }
     }
 
-    throw new Error("ไม่สามารถเชื่อมต่อ Google Sheet ได้ กรุณาตรวจสอบว่าได้ตั้งค่าสิทธิ์แชร์เป็น 'ทุกคนที่มีลิงก์มีสิทธิ์ดู' หรือนำเข้าไฟล์ Excel/CSV แทน");
+    throw new Error(
+      "ไม่สามารถเชื่อมต่อ Google Sheets ได้ กรุณาตรวจสอบว่าได้ตั้งค่าสิทธิ์ใน Google Sheets เป็น 'ทุกคนที่มีลิงก์' (มีสิทธิ์อ่าน) แล้วหรือยัง"
+    );
+  },
+
+  // แปลง GViz JSON เป็น Object Array ของพัสดุ พร้อมยอดคงเหลือ 3 แหล่ง
+  parseGvizJsonToMaterials(text) {
+    try {
+      const start = text.indexOf('{');
+      const end = text.lastIndexOf('}');
+      if (start === -1 || end === -1) return [];
+      const jsonStr = text.substring(start, end + 1);
+      const data = JSON.parse(jsonStr);
+
+      if (!data.table || !data.table.rows || data.table.rows.length === 0) return [];
+
+      const currentDefault = (typeof DEFAULT_PEA_MATERIALS !== 'undefined') ? DEFAULT_PEA_MATERIALS : [];
+      const result = [];
+
+      data.table.rows.forEach((r, idx) => {
+        if (!r.c) return;
+        const cells = r.c.map(c => (c && c.v !== null && c.v !== undefined) ? String(c.v).trim() : "");
+
+        const rawCode = cells[1] || "";
+        let formattedCode = rawCode;
+        if (/^\d{10}$/.test(rawCode)) {
+          formattedCode = `${rawCode[0]}-${rawCode.slice(1, 3)}-${rawCode.slice(3, 6)}-${rawCode.slice(6, 10)}`;
+        }
+
+        // จับคู่กับฐานข้อมูลมาตรฐานเพื่อป้องกันปัญหาภาษาไทยเพี้ยนจากไฟล์นำเข้า
+        const match = currentDefault.find(m => 
+          (m.code && (m.code === formattedCode || m.code.replace(/-/g, '') === rawCode.replace(/-/g, ''))) ||
+          (m.no && m.no === String(idx + 1))
+        );
+
+        const name = (match && match.name) ? match.name : (cells[2] || rawCode);
+        const unit = (match && match.unit) ? match.unit : (cells[3] || "ชิ้น");
+        const category = (match && match.category) ? match.category : "อุปกรณ์ระบบไฟฟ้าและบำรุงรักษา";
+
+        const standardQuota = cells[4] || (match ? match.standardQuota : "") || "";
+        const stockMB52 = cells[6] || (match ? match.stockMB52 : "0") || "0";
+        const stockWMS = cells[7] || (match ? match.stockWMS : "0") || "0";
+        const stockSloc0023 = cells[8] || (match ? match.stockSloc0023 : "0") || "0";
+
+        if (rawCode || name) {
+          result.push({
+            no: String(idx + 1),
+            code: formattedCode || rawCode || "-",
+            name: name,
+            unit: unit,
+            standardQuota: standardQuota,
+            stockMB52: stockMB52,
+            stockWMS: stockWMS,
+            stockSloc0023: stockSloc0023,
+            category: category
+          });
+        }
+      });
+
+      return result;
+    } catch (e) {
+      console.warn("GViz JSON parse failed", e);
+      return [];
+    }
   },
 
   // แปลงข้อความ CSV เป็น Object Array ของพัสดุ
@@ -99,10 +176,9 @@ const SheetsManager = {
     const lines = csvText.split(/\r?\n/).filter(line => line.trim().length > 0);
     if (lines.length === 0) return [];
 
+    const currentDefault = (typeof DEFAULT_PEA_MATERIALS !== 'undefined') ? DEFAULT_PEA_MATERIALS : [];
     const result = [];
-    let headerIndex = { no: -1, code: -1, name: -1, unit: -1, quota: -1, category: -1 };
 
-    // ฟังก์ชันแยก Column ใน CSV แบบรองรับ Quoted Text
     const parseCsvLine = (line) => {
       const row = [];
       let inQuotes = false;
@@ -127,50 +203,48 @@ const SheetsManager = {
       return row;
     };
 
-    // หา Header แถวแรกที่มีหัวคอลัมน์
     let startRow = 0;
-    for (let r = 0; r < Math.min(5, lines.length); r++) {
-      const cols = parseCsvLine(lines[r]).map(c => c.toLowerCase());
-      for (let c = 0; c < cols.length; c++) {
-        const col = cols[c];
-        if (col.includes("ลำดับ") || col.includes("no")) headerIndex.no = c;
-        if (col.includes("รหัส") || col.includes("code") || col.includes("material")) headerIndex.code = c;
-        if (col.includes("รายการ") || col.includes("ชื่อ") || col.includes("description") || col.includes("name")) headerIndex.name = c;
-        if (col.includes("หน่วย") || col.includes("unit")) headerIndex.unit = c;
-        if (col.includes("เกณฑ์") || col.includes("quota") || col.includes("มาตรฐาน")) headerIndex.quota = c;
-        if (col.includes("หมวด") || col.includes("category") || col.includes("ประเภท")) headerIndex.category = c;
-      }
-      if (headerIndex.name !== -1 || headerIndex.code !== -1) {
-        startRow = r + 1;
-        break;
-      }
-    }
-
-    // ถ้าไม่เจอ Header ให้เดาตามตำแหน่งมาตรฐาน
-    if (headerIndex.name === -1 && headerIndex.code === -1) {
-      headerIndex = { no: 0, code: 1, name: 2, unit: 3, quota: 4, category: 5 };
-      startRow = 0;
+    // ตรวจสอบว่าแถวแรกเป็น Header หรือไม่
+    const firstLine = parseCsvLine(lines[0]);
+    if (firstLine.some(c => c.includes("ลำดับ") || c.includes("รหัส") || c.includes("รายการ") || c.includes("code"))) {
+      startRow = 1;
     }
 
     for (let i = startRow; i < lines.length; i++) {
       const cols = parseCsvLine(lines[i]);
       if (cols.length < 2) continue;
 
-      const no = (headerIndex.no !== -1 && cols[headerIndex.no]) ? cols[headerIndex.no].replace(/^["']|["']$/g, '').trim() : String(i);
-      const code = (headerIndex.code !== -1 && cols[headerIndex.code]) ? cols[headerIndex.code].replace(/^["']|["']$/g, '').trim() : "";
-      const name = (headerIndex.name !== -1 && cols[headerIndex.name]) ? cols[headerIndex.name].replace(/^["']|["']$/g, '').trim() : "";
-      const unit = (headerIndex.unit !== -1 && cols[headerIndex.unit]) ? cols[headerIndex.unit].replace(/^["']|["']$/g, '').trim() : "ชิ้น";
-      const quota = (headerIndex.quota !== -1 && cols[headerIndex.quota]) ? cols[headerIndex.quota].replace(/^["']|["']$/g, '').trim() : "";
-      const category = (headerIndex.category !== -1 && cols[headerIndex.category]) ? cols[headerIndex.category].replace(/^["']|["']$/g, '').trim() : "อุปกรณ์ระบบไฟฟ้าและบำรุงรักษา";
+      const rawCode = cols[1] ? cols[1].replace(/^["']|["']$/g, '').trim() : "";
+      let formattedCode = rawCode;
+      if (/^\d{10}$/.test(rawCode)) {
+        formattedCode = `${rawCode[0]}-${rawCode.slice(1, 3)}-${rawCode.slice(3, 6)}-${rawCode.slice(6, 10)}`;
+      }
 
-      if (name || code) {
+      const match = currentDefault.find(m => 
+        (m.code && (m.code === formattedCode || m.code.replace(/-/g, '') === rawCode.replace(/-/g, ''))) ||
+        (m.no && m.no === String(i - startRow + 1))
+      );
+
+      const name = (match && match.name) ? match.name : (cols[2] ? cols[2].replace(/^["']|["']$/g, '').trim() : rawCode);
+      const unit = (match && match.unit) ? match.unit : (cols[3] ? cols[3].replace(/^["']|["']$/g, '').trim() : "ชิ้น");
+      const category = (match && match.category) ? match.category : "อุปกรณ์ระบบไฟฟ้าและบำรุงรักษา";
+
+      const standardQuota = (cols[4] ? cols[4].replace(/^["']|["']$/g, '').trim() : "") || (match ? match.standardQuota : "") || "";
+      const stockMB52 = (cols[6] ? cols[6].replace(/^["']|["']$/g, '').trim() : "") || (match ? match.stockMB52 : "0") || "0";
+      const stockWMS = (cols[7] ? cols[7].replace(/^["']|["']$/g, '').trim() : "") || (match ? match.stockWMS : "0") || "0";
+      const stockSloc0023 = (cols[8] ? cols[8].replace(/^["']|["']$/g, '').trim() : "") || (match ? match.stockSloc0023 : "0") || "0";
+
+      if (rawCode || name) {
         result.push({
-          no: no || String(result.length + 1),
-          code: code || "-",
-          name: name || code,
-          unit: unit || "ชิ้น",
-          standardQuota: quota,
-          category: category || "อุปกรณ์ระบบไฟฟ้าและบำรุงรักษา"
+          no: String(result.length + 1),
+          code: formattedCode || rawCode || "-",
+          name: name,
+          unit: unit,
+          standardQuota: standardQuota,
+          stockMB52: stockMB52,
+          stockWMS: stockWMS,
+          stockSloc0023: stockSloc0023,
+          category: category
         });
       }
     }
