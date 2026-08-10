@@ -1,0 +1,511 @@
+/**
+ * CSS สำหรับการพิมพ์เอกสารใบเบิก A4 การไฟฟ้าส่วนภูมิภาค
+ * กำหนดความหนาเส้นเท่ากัน 1px สม่ำเสมอ 100% ทำให้เส้นขอบมุมบนซ้าย-ขวา ชนจดกันสนิท ไร้รอยต่อ
+ */
+
+@page {
+  size: A4 portrait;
+  margin: 10mm 12mm 10mm 12mm;
+}
+
+@media print {
+  /* ซ่อนแถบเลื่อน (Scrollbars) ทั้งหมดในการสั่งพิมพ์ */
+  *,
+  *::before,
+  *::after {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
+  ::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  /* ซ่อนส่วนประกอบ UI เว็บทั้งหมดเวลาพิมพ์ */
+  html, body {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100% !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-family: 'Sarabun', 'TH Sarabun New', 'TH SarabunPSK', 'Cordia New', sans-serif !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    overflow: visible !important;
+    display: block !important;
+  }
+
+  .no-print,
+  .app-header,
+  .app-sidebar,
+  .sidebar,
+  .app-toast-container,
+  .action-toolbar,
+  .preview-toolbar,
+  .modal-overlay,
+  .modal-container,
+  .modal-backdrop,
+  .modal-dialog,
+  .tabs-navigation,
+  .search-section,
+  .catalog-container,
+  .btn,
+  header,
+  footer {
+    display: none !important;
+  }
+
+  .app-container,
+  .main-content,
+  .content-area,
+  .preview-wrapper,
+  .preview-panel,
+  .preview-scroll-wrapper,
+  #printDocumentArea {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+    position: static !important;
+    float: none !important;
+  }
+
+  .pea-a4-page {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    border: none !important;
+    box-shadow: none !important;
+    position: relative !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* หน้าแรกที่มีหน้าถัดไปเท่านั้นที่จะตัดขึ้นหน้าใหม่ */
+  .pea-a4-page:not(:last-child) {
+    page-break-after: always !important;
+    break-after: page !important;
+  }
+
+  /* หน้าสุดท้าย (หรือหน้าเดียว) ห้ามขึ้นหน้าใหม่เด็ดขาด เพื่อป้องกันแผ่นเปล่า */
+  .pea-a4-page:last-child {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  .pea-master-table {
+    width: 100% !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+}
+
+.page-no-indicator {
+  font-size: 9.5pt;
+  font-weight: normal;
+  color: #000000;
+}
+
+/* โครงสร้างหน้าเอกสาร A4 (บนหน้าจอ Preview และตอน Print) */
+.pea-a4-page {
+  background: #ffffff;
+  color: #000000;
+  width: 210mm;
+  min-height: 297mm;
+  padding: 10mm 12mm;
+  margin: 0 auto 20px auto;
+  box-sizing: border-box;
+  font-family: 'Sarabun', 'TH Sarabun New', 'TH SarabunPSK', 'Cordia New', sans-serif;
+  font-size: 12.5pt;
+  line-height: 1.3;
+  box-shadow: none;
+  border: none;
+  position: relative;
+}
+
+/* ตารางหลักของแบบฟอร์มเอกสารใบเบิก (Master Table) เส้นหนา 1px เท่ากันทุกจุด */
+.pea-master-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  table-layout: fixed;
+  border: 1px solid #000000;
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.pea-master-table td,
+.pea-master-table th {
+  border: 1px solid #000000;
+  box-sizing: border-box;
+  color: #000000;
+  vertical-align: middle;
+  padding: 0;
+  margin: 0;
+}
+
+/* ช่องโลโก้ กฟภ. พร้อมข้อความ การไฟฟ้าส่วนภูมิภาคสาขาเมืองขอนแก่น 2 */
+.cell-logo {
+  text-align: center;
+  vertical-align: middle !important;
+  padding: 2px 2px !important;
+  background: #ffffff;
+  border: 1px solid #000000 !important;
+}
+
+.logo-container-flex {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 1px 0;
+}
+
+.pea-logo-img {
+  width: auto;
+  max-width: 96%;
+  height: 74px; /* ขยายโลโก้ให้ใหญ่ขึ้นเด่นชัด */
+  max-height: 76px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+.logo-subtext {
+  color: #84348b !important; /* สีม่วงตามตราสัญลักษณ์ กฟภ. */
+  font-weight: 700 !important; /* ตัวหนา */
+  font-size: 7.4pt; /* ปรับขนาดให้พอดี ไม่ล้นตาราง */
+  line-height: 1.05;
+  text-align: center;
+  letter-spacing: -0.35px;
+  white-space: nowrap;
+  margin-top: 2px; /* ขยับตัวหนังสือลงมาด้านล่าง ไม่ให้โลโก้ทับ */
+  padding: 0 1px;
+}
+
+/* ช่องข้อมูลสังกัด (ตารางย่อย) */
+.cell-header-info {
+  padding: 0 !important;
+  vertical-align: top !important;
+  background: #ffffff;
+  border: 1px solid #000000 !important;
+}
+
+.nested-info-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  table-layout: fixed;
+  border: none !important;
+  margin: 0;
+  padding: 0;
+}
+
+.nested-info-table td {
+  border: none !important;
+  border-bottom: 1px solid #000000 !important;
+  padding: 2px 6px !important;
+  font-size: 11.5pt;
+  height: 25px; /* ปรับความสูงให้รับกับขนาดโลโก้ */
+}
+
+.nested-info-table tr:last-child td {
+  border-bottom: none !important;
+}
+
+.lbl-issue,
+.lbl-dept {
+  width: 95px;
+  text-align: center;
+  font-weight: bold;
+  border-right: 1px solid #000000 !important;
+  font-size: 11.5pt;
+}
+
+.val-issue {
+  font-weight: bold;
+  font-size: 11.5pt;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
+.val-issue-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.page-counter-top-right {
+  font-size: 10.5pt;
+  font-weight: bold;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.val-dept {
+  font-size: 11.5pt;
+  padding-left: 8px !important;
+}
+
+/* ช่องข้อมูลเอกสาร (เลขที่, ใบส่งของ, วันที่) */
+.cell-meta-title {
+  text-align: center;
+  padding: 4px 6px !important;
+  font-size: 12pt;
+}
+
+.title-bold {
+  font-size: 15pt;
+  font-weight: bold;
+}
+
+.doc-number-line {
+  font-size: 11.5pt;
+  margin-top: 2px;
+}
+
+.cell-meta-right-group {
+  padding: 0 !important;
+  vertical-align: middle !important;
+  border: 1px solid #000000 !important;
+}
+
+.meta-flex-container {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+  min-height: 48px;
+}
+
+.cell-meta-delivery-part {
+  flex: 1;
+  padding: 4px 10px !important;
+  font-size: 11.5pt;
+  border-right: 1px solid #000000 !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.delivery-number-line {
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.cell-meta-date-part {
+  width: 220px; /* ขยายความกว้างและขยับมาทางซ้ายอย่างเหมาะสม */
+  min-width: 200px;
+  padding: 4px 12px !important;
+  font-size: 11.5pt;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.date-text {
+  font-weight: 600;
+  font-size: 11.5pt;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+/* ช่องจุดหมายและวัตถุประสงค์ (รวมช่องสำหรับใช้งานเป็นช่องเดียว) */
+.cell-dest-warehouse {
+  padding: 4px 6px !important;
+  text-align: center;
+  font-size: 11pt;
+}
+
+.cell-dest-purpose {
+  padding: 4px 12px !important;
+  font-size: 11pt;
+  text-align: center;
+}
+
+.dest-label {
+  font-weight: bold;
+  font-size: 11pt;
+  text-align: center;
+}
+
+.dest-value {
+  margin-top: 2px;
+  text-align: center;
+  font-size: 11pt;
+}
+
+/* หัวตารางรายการพัสดุ (14 pt ตัวหนา) */
+.th-row th {
+  background-color: #ffffff;
+  font-weight: bold;
+  text-align: center;
+  height: 30px;
+  font-size: 14pt; /* ขนาด 14 pt ตัวหนา */
+  padding: 3px 4px !important;
+  border: 1px solid #000000;
+}
+
+/* สัดส่วนคอลัมน์และเนื้อหาในตารางพัสดุ (ขนาดเดิมเพื่อความพอดี) */
+.col-code {
+  text-align: center;
+  font-size: 10.5pt;
+  font-weight: normal;
+  white-space: nowrap;
+}
+
+.col-qty {
+  text-align: center;
+  font-size: 11pt;
+  font-weight: 500;
+}
+
+.col-unit {
+  text-align: center;
+  font-size: 10.5pt;
+  font-weight: normal;
+  white-space: nowrap;
+}
+
+.col-desc {
+  text-align: left;
+  padding: 2px 6px !important;
+  font-size: 14pt; /* ขนาด 14 pt ตัวปกติ ชิดซ้าย (ตัดคำขึ้นบรรทัดใหม่อัตโนมัติ) */
+  font-weight: normal;
+  line-height: 1.2;
+  white-space: normal !important;
+  word-break: break-word !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+.col-remark {
+  text-align: center;
+  font-size: 10pt;
+  font-weight: normal;
+  white-space: normal;
+  word-break: break-word;
+  padding: 2px 4px !important;
+}
+
+.item-row td {
+  height: 25px;
+  padding: 2px 4px !important;
+  border: 1px solid #000000;
+  vertical-align: middle;
+}
+
+.empty-row td {
+  height: 25px;
+  border: 1px solid #000000;
+}
+
+/* ข้อความส่งต่อหน้าถัดไป (สำหรับหน้าที่ยังไม่ใช่หน้าสุดท้าย) */
+.cell-continue-notice {
+  text-align: right;
+  padding: 10px 18px !important;
+  font-size: 11pt;
+  font-weight: bold;
+  color: #000000;
+  border-top: 1px solid #000000 !important;
+  background: #ffffff;
+}
+
+/* ส่วนลงนามท้ายใบเบิก (14 pt: ชื่อตัวปกติ / ตำแหน่งตัวหนา) */
+.cell-signatures {
+  padding: 48px 16px 16px 16px !important; /* เว้นระยะห่างจากตารางด้านบนประมาณ 2 แถว */
+  background: #ffffff;
+  border: 1px solid #000000 !important;
+}
+
+.sig-row-requester {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 48px !important; /* ระยะห่างระหว่างแถวผู้เบิกกับแถวผู้อนุมัติประมาณ 2 แถวตาราง */
+}
+
+.requester-box {
+  text-align: center;
+  min-width: 320px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sig-image-slot {
+  height: 48px;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  margin-bottom: -22px; /* ทาบลายเซ็นลงบนเส้นประอย่างสมจริง */
+  pointer-events: none;
+  z-index: 2;
+}
+
+.requester-digital-sig-img {
+  max-height: 48px;
+  max-width: 180px;
+  object-fit: contain;
+  display: block;
+}
+
+.sig-row-approvers {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  text-align: center;
+}
+
+.sig-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 14pt; /* ขนาด 14 pt */
+}
+
+.sig-line {
+  font-size: 14pt;
+  font-weight: normal; /* ตัวปกติ */
+  margin-bottom: 8px; /* เพิ่มช่องว่างสำหรับเซ็นชื่อเหนือวงเล็บ */
+  white-space: nowrap;
+}
+
+.sig-name {
+  font-size: 13.5pt;
+  font-weight: normal; /* ชื่อตัวปกติ */
+  min-height: 24px;
+  line-height: 1.2;
+}
+
+.sig-role {
+  font-weight: bold; /* ตำแหน่งตัวหนา */
+  font-size: 14pt;
+  margin-top: 4px;
+}
