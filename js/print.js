@@ -266,7 +266,7 @@ const PrintEngine = {
       .join("");
 
     return `
-      <div class="pea-a4-page pea-memo-page" style="font-family: 'TH Sarabun PSK', 'TH Sarabun New', 'Sarabun', sans-serif !important; font-size: 20pt !important; line-height: 1.0 !important; padding: 12mm 20mm 20mm 30mm !important; box-sizing: border-box; color: #000000; background: #ffffff;">
+      <div class="pea-a4-page pea-memo-page" style="font-family: 'TH Sarabun PSK', 'TH Sarabun New', 'Sarabun', sans-serif !important; font-size: 20pt !important; line-height: 1.0 !important; padding: 7mm 20mm 20mm 30mm !important; box-sizing: border-box; color: #000000; background: #ffffff;">
         <!-- ส่วนหัวจดหมายบันทึกข้อความ (ตราโลโก้อยู่บนซ้าย ด้านล่างเป็นข้อความการไฟฟ้าส่วนภูมิภาค) -->
         <div class="memo-header" style="text-align: left; margin-bottom: 8px;">
           <img src="assets/pea-logo-bw.png" style="height: 104px; object-fit: contain; margin-bottom: 8px;" alt="PEA LOGO">
@@ -275,7 +275,7 @@ const PrintEngine = {
         </div>
 
         <!-- รายละเอียดข้อความ จาก/ถึง (จัดวางหัวข้อแบบหนา ปรับหัวข้อให้เยื้องตรงแนว 2.2ซม.) -->
-        <div class="memo-meta" style="font-size: 20pt; line-height: 1.0; margin-bottom: 15px; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif;">
+        <div class="memo-meta" style="font-size: 20pt; line-height: 1.0; margin-bottom: 5px; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif;">
           <div style="display: flex; margin-bottom: 3px;">
             <div style="width: 55%; display: flex; align-items: flex-start;">
               <span style="font-weight: bold; min-width: 2.2cm; display: inline-block; flex-shrink: 0;">จาก</span>
@@ -327,7 +327,7 @@ const PrintEngine = {
         <!-- ส่วนอนุมัติผู้จัดการ ผจก. (แยกส่วนลงชื่อย้ายมาไว้ข้างใต้ชิดขวาตามทิศทางลูกศรในภาพ) -->
         <div class="memo-signatures-approver" style="font-size: 20pt; line-height: 1.0; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif; width: 100%; display: flex; flex-direction: column; color: #000000;">
           <!-- ข้อความนำส่งชิดซ้าย -->
-          <div style="font-size: 20pt; line-height: 1.0; margin-bottom: 2.0cm; width: 100%; text-align: left;">
+          <div style="font-size: 20pt; line-height: 1.0; margin-bottom: 1.3cm; width: 100%; text-align: left;">
             <strong>ที่</strong> &nbsp;${this.escapeHtml(formData.memoNo || "ฉ.1 ขก.2 (ปบ.)")}<br>
             <strong>เรียน</strong> &nbsp;ผจก.กฟจ.ขก., ผจก.กฟส.ขก.2,<br>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;หผ.ปบ.กฟส.ขก.2 , หผ.คพ.กฟจ.ขก.<br>
