@@ -311,7 +311,16 @@ const SheetsManager = {
       warehouseHeadName: "....................................",
       warehouseHeadPosition: "หัวหน้าคลังพัสดุ",
       approverName: "นายสุริยา นพคุณ",
-      approverPosition: "ผู้อนุมัติ"
+      approverPosition: "ผู้อนุมัติ",
+      // ค่าเริ่มต้น บันทึกข้อความ (Memo)
+      memoFrom: "ผปบ.กฟส.ขก.2",
+      memoTo: "กฟส.ขก.2",
+      memoNo: "ฉ.1 ขก.2(ปบ.)",
+      memoSubject: "ขออนุมัติเบิกพัสดุอุปกรณ์สำรองคลังฉุกเฉินแก้กระแสไฟฟ้าขัดข้อง",
+      memoRef: "ฉ.1กบษ.(บร) 1142/2567 ลว. 25 ก.ค. 2567",
+      memoDear: "ผจก. กฟส.ขก.2 ผ่าน รจก.(ท) กฟส.ขก.2",
+      memoProposerName: "นายมารุต พึ่งตน",
+      memoProposerPosition: "หผ.ปบ.กฟส.ขก.2"
     };
 
     try {

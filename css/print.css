@@ -509,3 +509,22 @@
   font-size: 14pt;
   margin-top: 4px;
 }
+
+/* สไตล์เฉพาะสำหรับหน้าบันทึกข้อความ (Cover Memo) */
+.pea-memo-page {
+  padding: 20mm 20mm 20mm 25mm !important; /* เว้นขอบตามระเบียบงานสารบรรณ (บน 2ซม. ซ้าย 2.5ซม. ขวา 2ซม. ล่าง 2ซม.) */
+  font-family: 'Sarabun', 'TH Sarabun New', sans-serif !important;
+  line-height: 1.6 !important;
+  color: #000000 !important;
+  box-sizing: border-box !important;
+}
+
+.pea-memo-page td {
+  border: none !important;
+  color: #000000 !important;
+}
+
+.pea-memo-page table {
+  border: none !important;
+}
+

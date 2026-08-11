@@ -10,6 +10,7 @@ const App = {
   activeCategory: "all",
   stockFilter: "all", // all, has_mb52, has_wms, has_sloc, has_any
   searchQuery: "",
+  activeDocView: "both", // both, memo, requisition
 
   // เริ่มต้นการทำงานของแอพ
   init() {
@@ -300,7 +301,7 @@ const App = {
     const container = document.getElementById("livePreviewContainer");
     if (!container) return;
 
-    const html = PrintEngine.renderRequisitionPages(this.settings, this.cart);
+    const html = PrintEngine.renderRequisitionPages(this.settings, this.cart, this.activeDocView || "both");
     container.innerHTML = html;
 
     // ผูก Event ให้กล่องผู้เบิกบนพรีวิวสามารถคลิกเพื่อเปิดหน้าต่างเซ็นชื่อได้ทันที
@@ -425,6 +426,29 @@ const App = {
         PrintEngine.printDocument();
       });
     }
+
+    // สลับหน้าเอกสารสำหรับพรีวิว/พิมพ์
+    document.querySelectorAll(".btn-doc-tab").forEach(tab => {
+      tab.addEventListener("click", (e) => {
+        // ลบคลาส active ของทุกปุ่ม
+        document.querySelectorAll(".btn-doc-tab").forEach(t => {
+          t.classList.remove("active");
+          t.style.background = "transparent";
+          t.style.color = "var(--text-dim)";
+          t.style.fontWeight = "normal";
+        });
+        
+        // เพิ่มคลาส active ให้ปุ่มที่คลิก
+        tab.classList.add("active");
+        tab.style.background = "var(--pea-gold)";
+        tab.style.color = "#000000";
+        tab.style.fontWeight = "bold";
+
+        // อัปเดต View และ Render พรีวิวใหม่
+        this.activeDocView = tab.dataset.view;
+        this.renderLivePreview();
+      });
+    });
 
     // ปุ่มเปิด Modal ต่างๆ
     const btnOpenSettings = document.getElementById("btnOpenSettings");
@@ -910,6 +934,16 @@ const App = {
     setVal("settingCheckerName", s.checkerName || "");
     setVal("settingWarehouseHeadName", s.warehouseHeadName || "");
     setVal("settingApproverName", s.approverName || "");
+
+    // ข้อมูลบันทึกข้อความ (Memo)
+    setVal("settingMemoFrom", s.memoFrom || "ผปบ.กฟส.ขก.2");
+    setVal("settingMemoTo", s.memoTo || "กฟส.ขก.2");
+    setVal("settingMemoNo", s.memoNo || "ฉ.1 ขก.2(ปบ.)");
+    setVal("settingMemoSubject", s.memoSubject || "ขออนุมัติเบิกพัสดุอุปกรณ์สำรองคลังฉุกเฉินแก้กระแสไฟฟ้าขัดข้อง");
+    setVal("settingMemoRef", s.memoRef || "ฉ.1กบษ.(บร) 1142/2567 ลว. 25 ก.ค. 2567");
+    setVal("settingMemoDear", s.memoDear || "ผจก. กฟส.ขก.2 ผ่าน รจก.(ท) กฟส.ขก.2");
+    setVal("settingMemoProposerName", s.memoProposerName || "นายมารุต พึ่งตน");
+    setVal("settingMemoProposerPosition", s.memoProposerPosition || "หผ.ปบ.กฟส.ขก.2");
   },
 
   // บันทึกการตั้งค่าจากฟอร์ม
@@ -934,7 +968,17 @@ const App = {
       requesterName: getVal("settingRequesterName"),
       checkerName: getVal("settingCheckerName"),
       warehouseHeadName: getVal("settingWarehouseHeadName"),
-      approverName: getVal("settingApproverName")
+      approverName: getVal("settingApproverName"),
+      
+      // บันทึกข้อความ (Memo)
+      memoFrom: getVal("settingMemoFrom") || "ผปบ.กฟส.ขก.2",
+      memoTo: getVal("settingMemoTo") || "กฟส.ขก.2",
+      memoNo: getVal("settingMemoNo") || "ฉ.1 ขก.2(ปบ.)",
+      memoSubject: getVal("settingMemoSubject") || "ขออนุมัติเบิกพัสดุอุปกรณ์สำรองคลังฉุกเฉินแก้กระแสไฟฟ้าขัดข้อง",
+      memoRef: getVal("settingMemoRef") || "ฉ.1กบษ.(บร) 1142/2567 ลว. 25 ก.ค. 2567",
+      memoDear: getVal("settingMemoDear") || "ผจก. กฟส.ขก.2 ผ่าน รจก.(ท) กฟส.ขก.2",
+      memoProposerName: getVal("settingMemoProposerName") || "นายมารุต พึ่งตน",
+      memoProposerPosition: getVal("settingMemoProposerPosition") || "หผ.ปบ.กฟส.ขก.2"
     };
 
     SheetsManager.saveSettings(this.settings);
