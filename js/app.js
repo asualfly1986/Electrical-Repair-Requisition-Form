@@ -58,6 +58,11 @@ const App = {
   // ซิงค์ Google Sheets แบบอัตโนมัติในเบื้องหลัง
   async autoSyncGoogleSheets() {
     try {
+      const savedPass = localStorage.getItem("pea_sheet_password") || "";
+      if (savedPass !== "Aunkungnaja") {
+        console.warn("Auto-sync skipped: Password not verified yet.");
+        return; // ข้ามการออโต้ซิงค์ถ้ายังไม่เคยยืนยันรหัสผ่านผ่าน Modal ในอดีต
+      }
       const url = this.settings.sheetUrl || SheetsManager.DEFAULT_SHEET_URL;
       const res = await SheetsManager.fetchFromGoogleSheets(url);
       this.materials = res.data;
@@ -523,13 +528,26 @@ const App = {
     if (btnSyncSheets) {
       btnSyncSheets.addEventListener("click", async () => {
         const urlInput = document.getElementById("sheetUrlInput");
+        const passInput = document.getElementById("sheetPasswordInput");
         const url = urlInput ? urlInput.value.trim() : "";
+        const password = passInput ? passInput.value.trim() : "";
+
+        if (password !== "Aunkungnaja") {
+          this.showToast("รหัสผ่านไม่ถูกต้อง ไม่ได้รับอนุญาตให้ซิงค์ข้อมูล", "error");
+          if (passInput) {
+            passInput.value = "";
+            passInput.focus();
+          }
+          return;
+        }
+
         btnSyncSheets.disabled = true;
         btnSyncSheets.textContent = "กำลังเชื่อมต่อ...";
 
         try {
           const res = await SheetsManager.fetchFromGoogleSheets(url);
           this.settings.sheetUrl = url;
+          localStorage.setItem("pea_sheet_password", password);
           SheetsManager.saveSettings(this.settings);
           this.materials = res.data;
           this.enrichCartStockData();
@@ -538,6 +556,8 @@ const App = {
           this.renderCart();
           this.renderLivePreview();
           this.showToast(`ซิงค์ข้อมูลสำเร็จ (${res.count} รายการ)`, "success");
+          
+          if (passInput) passInput.value = "";
           this.closeAllModals();
         } catch (err) {
           this.showToast(err.message || "เชื่อมต่อไม่สำเร็จ", "error");
