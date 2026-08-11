@@ -59,7 +59,7 @@ const App = {
   async autoSyncGoogleSheets() {
     try {
       const savedPass = localStorage.getItem("pea_sheet_password") || "";
-      if (savedPass !== "Aunkungnaja") {
+      if (savedPass !== "Aunkung") {
         console.warn("Auto-sync skipped: Password not verified yet.");
         return; // ข้ามการออโต้ซิงค์ถ้ายังไม่เคยยืนยันรหัสผ่านผ่าน Modal ในอดีต
       }
@@ -435,6 +435,11 @@ const App = {
     const btnOpenSheets = document.getElementById("btnOpenSheets");
     if (btnOpenSheets) {
       btnOpenSheets.addEventListener("click", () => {
+        const password = prompt("กรุณากรอกรหัสผ่านเพื่อเข้าสู่เมนูเชื่อมต่อ Google Sheet:");
+        if (password !== "Aunkung") {
+          this.showToast("รหัสผ่านไม่ถูกต้อง ไม่สามารถเข้าใช้งานส่วนนี้ได้", "error");
+          return;
+        }
         const input = document.getElementById("sheetUrlInput");
         if (input) input.value = this.settings.sheetUrl || SheetsManager.DEFAULT_SHEET_URL;
         this.openModal("sheetsModal");
@@ -532,7 +537,7 @@ const App = {
         const url = urlInput ? urlInput.value.trim() : "";
         const password = passInput ? passInput.value.trim() : "";
 
-        if (password !== "Aunkungnaja") {
+        if (password !== "Aunkung") {
           this.showToast("รหัสผ่านไม่ถูกต้อง ไม่ได้รับอนุญาตให้ซิงค์ข้อมูล", "error");
           if (passInput) {
             passInput.value = "";
