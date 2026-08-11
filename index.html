@@ -408,12 +408,31 @@
 
   <!-- Modal: ประวัติใบเบิก -->
   <div class="modal-overlay" id="historyModal">
-    <div class="modal-container">
+    <div class="modal-container" style="max-width: 580px;">
       <div class="modal-header">
-        <div class="modal-title">ประวัติใบเบิกที่บันทึกไว้</div>
+        <div class="modal-title" style="display: flex; align-items: center; gap: 8px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+          ประวัติใบเบิกที่บันทึกไว้
+        </div>
         <button type="button" class="btn btn-secondary btn-sm btn-icon-only modal-close-btn">&times;</button>
       </div>
-      <div class="modal-body" id="historyList"></div>
+      <div class="modal-body">
+        <!-- Backup & Restore Actions -->
+        <div style="display: flex; gap: 8px; margin-bottom: 15px; background: rgba(255, 255, 255, 0.03); padding: 10px; border-radius: var(--radius-md); border: 1px solid var(--border-color); flex-wrap: wrap; justify-content: space-between; align-items: center;">
+          <span style="font-size: 0.8rem; color: var(--text-muted);">💾 สำรองและกู้คืนข้อมูลประวัติ:</span>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" id="btnExportHistory" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 4px 8px;">
+              📥 ส่งออกไฟล์ประวัติ
+            </button>
+            <label class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 4px 8px; margin: 0; cursor: pointer;">
+              📤 นำเข้าไฟล์ประวัติ
+              <input type="file" id="importHistoryInput" accept=".json" style="display: none;">
+            </label>
+          </div>
+        </div>
+
+        <div id="historyList" style="max-height: 380px; overflow-y: auto; padding-right: 4px;"></div>
+      </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary modal-close-btn">ปิด</button>
       </div>

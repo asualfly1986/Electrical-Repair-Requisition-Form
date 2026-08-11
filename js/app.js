@@ -459,6 +459,63 @@ const App = {
       });
     }
 
+    // ปุ่มส่งออกไฟล์ประวัติการเบิก (Export Backup JSON)
+    const btnExportHistory = document.getElementById("btnExportHistory");
+    if (btnExportHistory) {
+      btnExportHistory.addEventListener("click", () => {
+        const history = SheetsManager.getHistory();
+        if (history.length === 0) {
+          this.showToast("ยังไม่มีประวัติการเบิกเพื่อส่งออก", "info");
+          return;
+        }
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(history, null, 2));
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", `pea_requisition_history_backup_${new Date().toISOString().split('T')[0]}.json`);
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+        this.showToast("ส่งออกไฟล์ประวัติเรียบร้อยแล้ว", "success");
+      });
+    }
+
+    // ปุ่มนำเข้าไฟล์ประวัติการเบิก (Import Backup JSON)
+    const importHistoryInput = document.getElementById("importHistoryInput");
+    if (importHistoryInput) {
+      importHistoryInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const importedData = JSON.parse(event.target.result);
+            if (Array.isArray(importedData)) {
+              const currentHistory = SheetsManager.getHistory();
+              const mergedHistory = [...importedData];
+              currentHistory.forEach(item => {
+                if (!mergedHistory.some(m => m.id === item.id)) {
+                  mergedHistory.push(item);
+                }
+              });
+              
+              mergedHistory.sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt));
+              
+              localStorage.setItem(SheetsManager.STORAGE_KEY_HISTORY, JSON.stringify(mergedHistory));
+              this.renderHistoryList();
+              this.showToast(`นำเข้าประวัติสำเร็จ (${importedData.length} รายการ)`, "success");
+            } else {
+              this.showToast("รูปแบบไฟล์สำรองประวัติไม่ถูกต้อง", "error");
+            }
+          } catch (err) {
+            this.showToast("ไม่สามารถอ่านไฟล์สำรองประวัติได้", "error");
+          }
+          importHistoryInput.value = "";
+        };
+        reader.readAsText(file);
+      });
+    }
+
     // ปุ่มเปิดหน้าต่างเซ็นชื่อผู้เบิกออนไลน์
     const openSignatureBtn = document.getElementById("openSignatureBtn");
     if (openSignatureBtn) {
