@@ -311,7 +311,8 @@ const SheetsManager = {
       warehouseHeadName: "....................................",
       warehouseHeadPosition: "หัวหน้าคลังพัสดุ",
       approverName: "นายสุริยา นพคุณ",
-      approverPosition: "ผู้อนุมัติ",
+      approverPosition: "ผจก.กฟส.ขก.2",
+      approvalDate: "",
       // ค่าเริ่มต้น บันทึกข้อความ (Memo)
       memoFrom: "ผปบ.กฟส.ขก.2",
       memoTo: "กฟส.ขก.2",

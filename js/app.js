@@ -934,6 +934,8 @@ const App = {
     setVal("settingCheckerName", s.checkerName || "");
     setVal("settingWarehouseHeadName", s.warehouseHeadName || "");
     setVal("settingApproverName", s.approverName || "");
+    setVal("settingApproverPosition", s.approverPosition || "ผจก.กฟส.ขก.2");
+    setVal("settingApprovalDate", s.approvalDate || "");
 
     // ข้อมูลบันทึกข้อความ (Memo)
     setVal("settingMemoFrom", s.memoFrom || "ผปบ.กฟส.ขก.2");
@@ -970,6 +972,8 @@ const App = {
       checkerName: getVal("settingCheckerName"),
       warehouseHeadName: getVal("settingWarehouseHeadName"),
       approverName: getVal("settingApproverName"),
+      approverPosition: getVal("settingApproverPosition") || "ผจก.กฟส.ขก.2",
+      approvalDate: getVal("settingApprovalDate") || "",
       
       // บันทึกข้อความ (Memo)
       memoFrom: getVal("settingMemoFrom") || "ผปบ.กฟส.ขก.2",

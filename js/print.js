@@ -335,13 +335,13 @@ const PrintEngine = {
             - อนุมัติตามเสนอ<br>
             &nbsp;&nbsp;ดำเนินการในส่วนเกี่ยวข้องต่อไป
           </div>
-          <!-- แท่นเซ็นชื่อผู้จัดการย้ายลงมาอยู่ข้างใต้แล้วจัดเยื้องขวาตามลูกศรเหลือง -->
-          <div style="display: flex; justify-content: flex-end; padding-right: 60px; width: 100%;">
+          <!-- แท่นเซ็นชื่อผู้จัดการย้ายลงมาอยู่ข้างใต้แล้วจัดขยับมาทางซ้ายตามลูกศรเหลือง -->
+          <div style="display: flex; justify-content: flex-start; padding-left: 4.5cm; width: 100%;">
             <div style="text-align: center; min-width: 280px;">
               <div>ลงชื่อ _____________________.</div>
               <div style="margin-top: 8px;">(${this.escapeHtml(formData.approverName || "นาย เทอดพงศ์ ศรีมงคล")})</div>
               <div style="margin-top: 4px;">ตำแหน่ง ${this.escapeHtml(formData.approverPosition || "ผจก.กฟส.ขก.2")}</div>
-              <div style="margin-top: 8px;">วันที่ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.</div>
+              <div style="margin-top: 8px;">วันที่ &nbsp;${formData.approvalDate ? this.escapeHtml(formData.approvalDate) : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;."}</div>
             </div>
           </div>
         </div>
