@@ -51,18 +51,18 @@ const App = {
     this.initSettingsForm();
     this.initSignaturePad();
 
-    // ดึงข้อมูลเวอร์ชันล่าสุดจาก Google Sheets เบื้องหลังทันทีก่อนหน้าเว็บจะทำงานเสร็จ
+    // ดึงข้อมูลเวอร์ชันล่าสุดจาก Google Sheets เบื้องหลังทันทีก่อนหน้าเว็บจะทำงานเสร็จ (ซิงค์อัตโนมัติ 100%)
     this.autoSyncGoogleSheets();
+
+    // ตั้งเวลาซิงค์ข้อมูลสต็อกพัสดุอัตโนมัติทุกๆ 2 นาที (120,000 มิลลิวินาที)
+    setInterval(() => {
+      this.autoSyncGoogleSheets();
+    }, 120000);
   },
 
   // ซิงค์ Google Sheets แบบอัตโนมัติในเบื้องหลัง
   async autoSyncGoogleSheets() {
     try {
-      const savedPass = localStorage.getItem("pea_sheet_password") || "";
-      if (savedPass !== "Aunkung") {
-        console.warn("Auto-sync skipped: Password not verified yet.");
-        return; // ข้ามการออโต้ซิงค์ถ้ายังไม่เคยยืนยันรหัสผ่านผ่าน Modal ในอดีต
-      }
       const url = this.settings.sheetUrl || SheetsManager.DEFAULT_SHEET_URL;
       const res = await SheetsManager.fetchFromGoogleSheets(url);
       this.materials = res.data;
@@ -73,7 +73,7 @@ const App = {
       this.renderLivePreview();
       console.log("Auto-sync Google Sheets successfully.");
     } catch (e) {
-      console.warn("Auto-sync failed on page load, using cached data.", e);
+      console.warn("Auto-sync failed, using cached data.", e);
     }
   },
 
