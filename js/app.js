@@ -50,6 +50,26 @@ const App = {
     this.bindEvents();
     this.initSettingsForm();
     this.initSignaturePad();
+
+    // ดึงข้อมูลเวอร์ชันล่าสุดจาก Google Sheets เบื้องหลังทันทีก่อนหน้าเว็บจะทำงานเสร็จ
+    this.autoSyncGoogleSheets();
+  },
+
+  // ซิงค์ Google Sheets แบบอัตโนมัติในเบื้องหลัง
+  async autoSyncGoogleSheets() {
+    try {
+      const url = this.settings.sheetUrl || SheetsManager.DEFAULT_SHEET_URL;
+      const res = await SheetsManager.fetchFromGoogleSheets(url);
+      this.materials = res.data;
+      this.enrichCartStockData();
+      this.renderCategories();
+      this.renderCatalog();
+      this.renderCart();
+      this.renderLivePreview();
+      console.log("Auto-sync Google Sheets successfully.");
+    } catch (e) {
+      console.warn("Auto-sync failed on page load, using cached data.", e);
+    }
   },
 
   // อัปเดตข้อมูลสต็อก 3 แหล่งให้รายการในตะกร้าตรงกับฐานข้อมูลเสมอ

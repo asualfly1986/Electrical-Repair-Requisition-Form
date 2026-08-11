@@ -64,9 +64,10 @@ const SheetsManager = {
     const targetUrl = url || this.DEFAULT_SHEET_URL;
     const { sheetId, gid } = this.extractSheetParams(targetUrl);
 
-    const gvizJsonUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=${gid}`;
-    const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
-    const gvizCsvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=${gid}`;
+    const timestamp = Date.now();
+    const gvizJsonUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=${gid}&t=${timestamp}`;
+    const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}&t=${timestamp}`;
+    const gvizCsvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=${gid}&t=${timestamp}`;
 
     // รายการ Endpoints ที่จะทดลองเรียก
     const fetchEndpoints = [
@@ -82,7 +83,13 @@ const SheetsManager = {
 
     for (const ep of fetchEndpoints) {
       try {
-        const response = await fetch(ep.url, { cache: "no-store" });
+        const response = await fetch(ep.url, { 
+          cache: "no-store",
+          headers: {
+            "Pragma": "no-cache",
+            "Cache-Control": "no-cache"
+          }
+        });
         if (response.ok) {
           const text = await response.text();
           if (text && !text.includes("accounts.google.com") && !text.includes("<title>Sign in</title>")) {
