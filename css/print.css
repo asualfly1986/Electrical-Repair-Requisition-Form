@@ -106,6 +106,25 @@
     break-after: page !important;
   }
 
+  /* รักษาสไตล์หน้าบันทึกข้อความในโหมดพิมพ์คู่ทั้งหมดให้มีขนาด ฟอนต์ และระยะขอบเท่ากัน 100% */
+  .pea-memo-page {
+    padding: 7mm 20mm 20mm 30mm !important;
+    font-family: 'TH Sarabun PSK', 'TH Sarabun New', 'Sarabun', sans-serif !important;
+    font-size: 20pt !important;
+    line-height: 1.0 !important;
+    color: #000000 !important;
+    box-sizing: border-box !important;
+  }
+
+  .pea-memo-page p,
+  .pea-memo-page div,
+  .pea-memo-page span,
+  .pea-memo-page td {
+    font-family: 'TH Sarabun PSK', 'TH Sarabun New', 'Sarabun', sans-serif !important;
+    font-size: 20pt !important;
+    line-height: 1.0 !important;
+  }
+
   /* หน้าสุดท้าย (หรือหน้าเดียว) ห้ามขึ้นหน้าใหม่เด็ดขาด เพื่อป้องกันแผ่นเปล่า */
   .pea-a4-page:last-child {
     page-break-after: avoid !important;
