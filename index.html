@@ -418,16 +418,29 @@
       </div>
       <div class="modal-body">
         <!-- Backup & Restore Actions -->
-        <div style="display: flex; gap: 8px; margin-bottom: 15px; background: rgba(255, 255, 255, 0.03); padding: 10px; border-radius: var(--radius-md); border: 1px solid var(--border-color); flex-wrap: wrap; justify-content: space-between; align-items: center;">
-          <span style="font-size: 0.8rem; color: var(--text-muted);">💾 สำรองและกู้คืนข้อมูลประวัติ:</span>
-          <div style="display: flex; gap: 8px;">
-            <button type="button" id="btnExportHistory" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 4px 8px;">
-              📥 ส่งออกไฟล์ประวัติ
-            </button>
-            <label class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 4px 8px; margin: 0; cursor: pointer;">
-              📤 นำเข้าไฟล์ประวัติ
-              <input type="file" id="importHistoryInput" accept=".json" style="display: none;">
-            </label>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; background: rgba(255, 255, 255, 0.03); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">💾 สำรองและกู้คืนข้อมูลระบบ:</span>
+            <div style="display: flex; gap: 6px;">
+              <button type="button" id="btnExportHistory" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 4px 8px;">
+                📥 ส่งออกประวัติ (.json)
+              </button>
+              <label class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 4px 8px; margin: 0; cursor: pointer;">
+                📤 นำเข้าประวัติ (.json)
+                <input type="file" id="importHistoryInput" accept=".json" style="display: none;">
+              </label>
+            </div>
+          </div>
+          <div style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">📊 ดาวน์โหลดรายงานประวัติ:</span>
+            <div style="display: flex; gap: 6px;">
+              <button type="button" id="btnExportHistoryCsv" class="btn btn-primary btn-sm" style="font-size: 0.75rem; padding: 4px 10px; background: #10b981; border-color: #10b981;">
+                🟢 ดาวน์โหลดประวัติ (CSV)
+              </button>
+              <button type="button" id="btnExportHistoryPdf" class="btn btn-primary btn-sm" style="font-size: 0.75rem; padding: 4px 10px; background: #ef4444; border-color: #ef4444;">
+                🔴 พิมพ์รายงานประวัติ (PDF)
+              </button>
+            </div>
           </div>
         </div>
 

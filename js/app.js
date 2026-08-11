@@ -516,6 +516,186 @@ const App = {
       });
     }
 
+    // ปุ่มดาวน์โหลดประวัติเป็นไฟล์ CSV (รองรับภาษาไทยใน Microsoft Excel สมบูรณ์ 100%)
+    const btnExportHistoryCsv = document.getElementById("btnExportHistoryCsv");
+    if (btnExportHistoryCsv) {
+      btnExportHistoryCsv.addEventListener("click", () => {
+        const history = SheetsManager.getHistory();
+        if (history.length === 0) {
+          this.showToast("ยังไม่มีประวัติการเบิกเพื่อดาวน์โหลด", "info");
+          return;
+        }
+
+        // ใช้ UTF-8 BOM (\uFEFF) เพื่อบังคับให้ Microsoft Excel เปิดอ่านภาษาไทยได้ถูกต้องทันที
+        let csvContent = "\uFEFF"; 
+        csvContent += "ลำดับประวัติ,รหัสประวัติ,วันที่บันทึก,เลขที่ใบเบิก,วันที่ใบเบิก,รหัสพัสดุ,รายการพัสดุ,จำนวนเบิก,หน่วยนับ,หมายเหตุ\n";
+
+        history.forEach((entry, hIdx) => {
+          const savedAt = new Date(entry.savedAt).toLocaleString('th-TH');
+          const docNo = entry.docNo || "-";
+          const docDate = PrintEngine.formatThaiDate(entry.docDate);
+          
+          if (entry.items && entry.items.length > 0) {
+            entry.items.forEach((item) => {
+              const code = item.code || "-";
+              const name = (item.name || "").replace(/"/g, '""');
+              const qty = item.qty || 0;
+              const unit = item.unit || "ชิ้น";
+              const remark = (item.remark || "").replace(/"/g, '""');
+              
+              csvContent += `"${hIdx + 1}","${entry.id}","${savedAt}","${docNo}","${docDate}","${code}","${name}","${qty}","${unit}","${remark}"\n`;
+            });
+          } else {
+            csvContent += `"${hIdx + 1}","${entry.id}","${savedAt}","${docNo}","${docDate}","-","-","0","-","-"\n`;
+          }
+        });
+
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", `รายงานประวัติการเบิกพัสดุ_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        this.showToast("ดาวน์โหลดรายงานประวัติ (CSV) สำเร็จ", "success");
+      });
+    }
+
+    // ปุ่มสั่งพิมพ์รายงานประวัติการเบิกเป็น PDF (จัดหน้าและสไตล์รายงานสวยงาม)
+    const btnExportHistoryPdf = document.getElementById("btnExportHistoryPdf");
+    if (btnExportHistoryPdf) {
+      btnExportHistoryPdf.addEventListener("click", () => {
+        const history = SheetsManager.getHistory();
+        if (history.length === 0) {
+          this.showToast("ยังไม่มีประวัติการเบิกสำหรับพิมพ์รายงาน", "info");
+          return;
+        }
+
+        const printWindow = window.open("", "_blank");
+        if (!printWindow) {
+          this.showToast("กรุณาอนุญาตให้แสดง Pop-up หน้าต่างพิมพ์บนเบราว์เซอร์ของคุณ", "error");
+          return;
+        }
+
+        let tableRows = "";
+        let rowIdx = 1;
+        
+        history.forEach((entry) => {
+          const docNo = entry.docNo || "-";
+          const docDate = PrintEngine.formatThaiDate(entry.docDate);
+          
+          if (entry.items && entry.items.length > 0) {
+            entry.items.forEach((item) => {
+              tableRows += `
+                <tr>
+                  <td style="text-align: center;">${rowIdx++}</td>
+                  <td style="text-align: center;">${docDate}</td>
+                  <td style="text-align: center;">${docNo}</td>
+                  <td>${this.escapeHtml(item.name || "-")} <br><small style="color: #666;">รหัส: ${this.escapeHtml(item.code || "-")}</small></td>
+                  <td style="text-align: center; font-weight: bold;">${item.qty || 0}</td>
+                  <td style="text-align: center;">${this.escapeHtml(item.unit || "ชิ้น")}</td>
+                  <td>${this.escapeHtml(item.remark || "-")}</td>
+                </tr>
+              `;
+            });
+          }
+        });
+
+        printWindow.document.write(`
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>รายงานสรุปประวัติการเบิกพัสดุ กฟภ.</title>
+            <meta charset="utf-8">
+            <style>
+              body {
+                font-family: 'Sarabun', 'TH Sarabun New', sans-serif;
+                background: #ffffff;
+                color: #000000;
+                padding: 20px;
+                margin: 0;
+              }
+              .header {
+                text-align: center;
+                margin-bottom: 25px;
+              }
+              .header h1 {
+                font-size: 20px;
+                margin: 0 0 5px 0;
+              }
+              .header h2 {
+                font-size: 14px;
+                font-weight: normal;
+                margin: 0 0 15px 0;
+                color: #333;
+              }
+              .meta-info {
+                font-size: 13px;
+                margin-bottom: 15px;
+                text-align: right;
+              }
+              table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 13px;
+              }
+              th, td {
+                border: 1px solid #000000;
+                padding: 6px 8px;
+                vertical-align: middle;
+              }
+              th {
+                background-color: #f3f4f6;
+                font-weight: bold;
+              }
+              @media print {
+                body { padding: 0; }
+                @page {
+                  size: A4 portrait;
+                  margin: 15mm 10mm;
+                }
+              }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <h1>รายงานสรุปประวัติการเบิกพัสดุแก้กระแสไฟฟ้าขัดข้อง</h1>
+              <h2>การไฟฟ้าส่วนภูมิภาคสาขาเมืองขอนแก่น 2 (คลังสำรองแก้ไฟ)</h2>
+            </div>
+            <div class="meta-info">
+              วันที่พิมพ์รายงาน: ${new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 5%;">ลำดับ</th>
+                  <th style="width: 15%;">วันที่เบิก</th>
+                  <th style="width: 15%;">เลขที่ใบเบิก</th>
+                  <th style="width: 35%;">รายการพัสดุ / รหัสพัสดุ</th>
+                  <th style="width: 8%;">จำนวน</th>
+                  <th style="width: 10%;">หน่วยนับ</th>
+                  <th style="width: 12%;">หมายเหตุ</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${tableRows}
+              </tbody>
+            </table>
+            <script>
+              window.onload = function() {
+                setTimeout(function() {
+                  window.print();
+                }, 500);
+              };
+            </script>
+          </body>
+          </html>
+        `);
+        printWindow.document.close();
+      });
+    }
+
     // ปุ่มเปิดหน้าต่างเซ็นชื่อผู้เบิกออนไลน์
     const openSignatureBtn = document.getElementById("openSignatureBtn");
     if (openSignatureBtn) {
