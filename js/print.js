@@ -338,7 +338,7 @@ const PrintEngine = {
           <!-- แท่นเซ็นชื่อผู้จัดการย้ายลงมาอยู่ข้างใต้แล้วจัดขยับมาทางซ้ายตามลูกศรเหลือง -->
           <div style="display: flex; justify-content: flex-start; padding-left: 4.5cm; width: 100%;">
             <div style="text-align: center; min-width: 280px;">
-              <div>ลงชื่อ _____________________.</div>
+              <div>ลงชื่อ ....................................................</div>
               <div style="margin-top: 8px;">(${this.escapeHtml(formData.approverName || "นาย เทอดพงศ์ ศรีมงคล")})</div>
               <div style="margin-top: 4px;">ตำแหน่ง ${this.escapeHtml(formData.approverPosition || "ผจก.กฟส.ขก.2")}</div>
               <div style="margin-top: 8px;">วันที่ &nbsp;${formData.approvalDate ? this.escapeHtml(formData.approvalDate) : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;."}</div>
