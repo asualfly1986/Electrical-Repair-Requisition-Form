@@ -259,11 +259,11 @@ const PrintEngine = {
       <div class="pea-a4-page pea-memo-page">
         <!-- ส่วนหัวจดหมายบันทึกข้อความ -->
         <div class="memo-header" style="text-align: center; position: relative; margin-bottom: 25px; display: flex; flex-direction: column; align-items: center;">
-          <div style="display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%;">
-            <img src="assets/pea-logo.png" style="height: 52px; object-fit: contain;" alt="PEA LOGO">
+          <div style="display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%;">
+            <img src="assets/pea-logo-bw.png" style="height: 70px; width: 70px; object-fit: contain;" alt="PEA LOGO">
             <div style="text-align: left;">
-              <div style="font-size: 15pt; font-weight: bold; font-family: 'Sarabun', sans-serif; line-height: 1.1; color: #000000;">การไฟฟ้าส่วนภูมิภาค</div>
-              <div style="font-size: 8.5pt; font-weight: bold; font-family: 'Sarabun', sans-serif; color: #333333; letter-spacing: 0.5px; line-height: 1.1;">PROVINCIAL ELECTRICITY AUTHORITY</div>
+              <div style="font-size: 15pt; font-weight: bold; font-family: 'Sarabun', sans-serif; line-height: 1.2; color: #000000;">การไฟฟ้าส่วนภูมิภาค</div>
+              <div style="font-size: 9pt; font-weight: bold; font-family: 'Sarabun', sans-serif; color: #111111; letter-spacing: 0.5px; line-height: 1.2;">PROVINCIAL ELECTRICITY AUTHORITY</div>
             </div>
           </div>
           <div style="font-size: 21pt; font-weight: bold; margin-top: 15px; border-bottom: 2px solid #000000; width: 100%; text-align: center; padding-bottom: 8px; font-family: 'Sarabun', sans-serif; letter-spacing: 1px;">บันทึกข้อความ</div>
@@ -294,12 +294,7 @@ const PrintEngine = {
         </div>
 
         <!-- เนื้อหาจดหมายบันทึกข้อความ -->
-        <div class="memo-body" style="font-size: 14.5pt; line-height: 1.8; text-align: justify; text-indent: 2.5cm; margin-bottom: 45px; font-family: 'Sarabun', sans-serif; color: #000000; word-break: break-word;">
-          เนื่องด้วย คลังแก้กระแสไฟฟ้าขัดข้อง ${this.escapeHtml(formData.memoFrom || "ผปบ.กฟส.ขก.2")} มีความจำเป็นต้องสำรองพัสดุอุปกรณ์งานแก้กระแสไฟฟ้าขัดข้อง เพื่อใช้สำรองคลังฉุกเฉินสำหรับงานแก้กระแสไฟฟ้าขัดข้อง ให้สอดคล้องกับการใช้งานจริง
-          ดังนั้น คลังแก้กระแสไฟฟ้าขัดข้อง ${this.escapeHtml(formData.memoFrom || "ผปบ.กฟส.ขก.2")} จึงขออนุมัติเบิกพัสดุอุปกรณ์สำรองคลังฉุกเฉินแก้กระแสไฟฟ้าขัดข้อง ตามแนบรายการเบิกพัสดุคลังแก้กระแสไฟฟ้าขัดข้อง
-          <br><br>
-          <div style="text-indent: 0; text-align: center; width: 100%;">จึงเรียนมาเพื่อโปรดพิจารณาอนุมัติ</div>
-        </div>
+        <div class="memo-body" style="font-size: 14.5pt; line-height: 1.8; text-align: justify; text-indent: 2.5cm; margin-bottom: 45px; font-family: 'Sarabun', sans-serif; color: #000000; word-break: break-word; white-space: pre-wrap;">${this.escapeHtml(formData.memoBody || "")}</div>
 
         <!-- ผู้ลงนามเสนอเบิก (หผ.) -->
         <div class="memo-signatures-proposer" style="display: flex; flex-direction: column; align-items: flex-end; padding-right: 40px; margin-bottom: 45px; font-size: 14.5pt; line-height: 1.6; font-family: 'Sarabun', sans-serif; color: #000000;">

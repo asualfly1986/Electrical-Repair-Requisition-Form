@@ -944,6 +944,7 @@ const App = {
     setVal("settingMemoDear", s.memoDear || "ผจก. กฟส.ขก.2 ผ่าน รจก.(ท) กฟส.ขก.2");
     setVal("settingMemoProposerName", s.memoProposerName || "นายมารุต พึ่งตน");
     setVal("settingMemoProposerPosition", s.memoProposerPosition || "หผ.ปบ.กฟส.ขก.2");
+    setVal("settingMemoBody", s.memoBody || "");
   },
 
   // บันทึกการตั้งค่าจากฟอร์ม
@@ -978,7 +979,8 @@ const App = {
       memoRef: getVal("settingMemoRef") || "ฉ.1กบษ.(บร) 1142/2567 ลว. 25 ก.ค. 2567",
       memoDear: getVal("settingMemoDear") || "ผจก. กฟส.ขก.2 ผ่าน รจก.(ท) กฟส.ขก.2",
       memoProposerName: getVal("settingMemoProposerName") || "นายมารุต พึ่งตน",
-      memoProposerPosition: getVal("settingMemoProposerPosition") || "หผ.ปบ.กฟส.ขก.2"
+      memoProposerPosition: getVal("settingMemoProposerPosition") || "หผ.ปบ.กฟส.ขก.2",
+      memoBody: getVal("settingMemoBody") || ""
     };
 
     SheetsManager.saveSettings(this.settings);
