@@ -261,12 +261,12 @@ const PrintEngine = {
       .map(para => para.trim())
       .filter(para => para.length > 0)
       .map(para => {
-        return `<p style="text-indent: 2.2cm; margin: 0 0 10px 0; text-align: justify; font-family: 'TH Sarabun PSK', sans-serif; font-size: 16pt; line-height: 1.45;">${this.escapeHtml(para)}</p>`;
+        return `<p style="text-indent: 2.2cm; margin: 0 0 10px 0; text-align: justify; font-family: 'TH Sarabun PSK', sans-serif; font-size: 16pt; line-height: 1.0;">${this.escapeHtml(para)}</p>`;
       })
       .join("");
 
     return `
-      <div class="pea-a4-page pea-memo-page" style="font-family: 'TH Sarabun PSK', 'TH Sarabun New', 'Sarabun', sans-serif !important; font-size: 16pt !important; line-height: 1.25 !important; padding: 25mm 20mm 20mm 30mm !important; box-sizing: border-box; color: #000000; background: #ffffff;">
+      <div class="pea-a4-page pea-memo-page" style="font-family: 'TH Sarabun PSK', 'TH Sarabun New', 'Sarabun', sans-serif !important; font-size: 16pt !important; line-height: 1.0 !important; padding: 25mm 20mm 20mm 30mm !important; box-sizing: border-box; color: #000000; background: #ffffff;">
         <!-- ส่วนหัวจดหมายบันทึกข้อความ (ตราโลโก้อยู่บนซ้าย ด้านล่างเป็นข้อความการไฟฟ้าส่วนภูมิภาค) -->
         <div class="memo-header" style="text-align: left; margin-bottom: 25px;">
           <img src="assets/pea-logo-bw.png" style="height: 80px; object-fit: contain; margin-bottom: 8px;" alt="PEA LOGO">
@@ -275,7 +275,7 @@ const PrintEngine = {
         </div>
 
         <!-- รายละเอียดข้อความ จาก/ถึง (จัดวางหัวข้อแบบหนา ปรับหัวข้อให้เยื้องตรงแนว 2.2ซม.) -->
-        <div class="memo-meta" style="font-size: 16pt; line-height: 1.35; margin-bottom: 15px; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif;">
+        <div class="memo-meta" style="font-size: 16pt; line-height: 1.0; margin-bottom: 15px; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif;">
           <div style="display: flex; margin-bottom: 3px;">
             <div style="width: 55%; display: flex; align-items: flex-start;">
               <span style="font-weight: bold; min-width: 2.2cm; display: inline-block; flex-shrink: 0;">จาก</span>
@@ -316,7 +316,7 @@ const PrintEngine = {
         </div>
 
         <!-- ผู้ลงนามเสนอเบิก (หผ.) เว้นว่างระยะเซ็นสดด้านบนชื่อ ไม่มีเส้นประตามภาพ -->
-        <div class="memo-signatures-proposer" style="display: flex; flex-direction: column; align-items: flex-end; padding-right: 80px; margin-bottom: 30px; font-size: 16pt; line-height: 1.3; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif;">
+        <div class="memo-signatures-proposer" style="display: flex; flex-direction: column; align-items: flex-end; padding-right: 80px; margin-bottom: 30px; font-size: 16pt; line-height: 1.0; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif;">
           <div style="text-align: center; min-width: 250px;">
             <div style="height: 35px;"></div> <!-- พื้นที่เซ็นลายมือชื่อสด -->
             <div style="margin-top: 5px;">(${this.escapeHtml(formData.memoProposerName || "นายมารุต พึ่งตน")})</div>
@@ -325,9 +325,9 @@ const PrintEngine = {
         </div>
 
         <!-- ส่วนอนุมัติผู้จัดการ ผจก. (แยกส่วนลงชื่อย้ายมาไว้ข้างใต้ชิดขวาตามทิศทางลูกศรในภาพ) -->
-        <div class="memo-signatures-approver" style="font-size: 16pt; line-height: 1.3; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif; width: 100%; display: flex; flex-direction: column; color: #000000;">
+        <div class="memo-signatures-approver" style="font-size: 16pt; line-height: 1.0; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif; width: 100%; display: flex; flex-direction: column; color: #000000;">
           <!-- ข้อความนำส่งชิดซ้าย -->
-          <div style="font-size: 16pt; line-height: 1.3; margin-bottom: 20px; width: 100%; text-align: left;">
+          <div style="font-size: 16pt; line-height: 1.0; margin-bottom: 20px; width: 100%; text-align: left;">
             <strong>ที่</strong> &nbsp;${this.escapeHtml(formData.memoNo || "ฉ.1 ขก.2 (ปบ.)")}<br>
             <strong>เรียน</strong> &nbsp;ผจก.กฟจ.ขก., ผจก.กฟส.ขก.2,<br>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;หผ.ปบ.กฟส.ขก.2 , หผ.คพ.กฟจ.ขก.<br>
@@ -335,7 +335,7 @@ const PrintEngine = {
             &nbsp;&nbsp;ดำเนินการในส่วนเกี่ยวข้องต่อไป
           </div>
           <!-- แท่นเซ็นชื่อผู้จัดการย้ายลงมาอยู่ข้างใต้แล้วจัดขยับมาทางซ้ายตามลูกศรเหลือง -->
-          <div style="display: flex; justify-content: flex-start; padding-left: 4.5cm; width: 100%;">
+          <div style="display: flex; justify-content: flex-start; padding-left: 2.5cm; width: 100%;">
             <div style="text-align: center; min-width: 280px;">
               <div>ลงชื่อ ....................................................</div>
               <div style="margin-top: 8px;">(${this.escapeHtml(formData.approverName || "นาย เทอดพงศ์ ศรีมงคล")})</div>
