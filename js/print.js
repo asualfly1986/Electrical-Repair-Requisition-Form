@@ -269,9 +269,9 @@ const PrintEngine = {
       <div class="pea-a4-page pea-memo-page" style="font-family: 'TH Sarabun PSK', 'TH Sarabun New', 'Sarabun', sans-serif !important; font-size: 16pt !important; line-height: 1.25 !important; padding: 25mm 20mm 20mm 30mm !important; box-sizing: border-box; color: #000000; background: #ffffff;">
         <!-- ส่วนหัวจดหมายบันทึกข้อความ (ตราโลโก้อยู่บนซ้าย ด้านล่างเป็นข้อความการไฟฟ้าส่วนภูมิภาค) -->
         <div class="memo-header" style="text-align: left; margin-bottom: 25px;">
-          <img src="assets/pea-logo-bw.png" style="height: 62px; object-fit: contain; margin-bottom: 6px;" alt="PEA LOGO">
+          <img src="assets/pea-logo-bw.png" style="height: 80px; object-fit: contain; margin-bottom: 8px;" alt="PEA LOGO">
           <div style="font-size: 16pt; font-weight: bold; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif; line-height: 1.1;">การไฟฟ้าส่วนภูมิภาค</div>
-          <div style="font-size: 9.5pt; font-weight: bold; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif; letter-spacing: 0.5px; line-height: 1.1; margin-top: 1px;">PROVINCIAL ELECTRICITY AUTHORITY</div>
+          <div style="font-size: 10pt; font-weight: bold; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif; letter-spacing: 0.5px; line-height: 1.1; margin-top: 2px;">PROVINCIAL ELECTRICITY AUTHORITY</div>
         </div>
 
         <!-- รายละเอียดข้อความ จาก/ถึง (จัดวางหัวข้อแบบหนา ปรับหัวข้อให้เยื้องตรงแนว 2.2ซม.) -->
