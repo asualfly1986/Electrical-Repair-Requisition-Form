@@ -512,9 +512,10 @@
 
 /* สไตล์เฉพาะสำหรับหน้าบันทึกข้อความ (Cover Memo) */
 .pea-memo-page {
-  padding: 20mm 20mm 20mm 25mm !important; /* เว้นขอบตามระเบียบงานสารบรรณ (บน 2ซม. ซ้าย 2.5ซม. ขวา 2ซม. ล่าง 2ซม.) */
-  font-family: 'Sarabun', 'TH Sarabun New', sans-serif !important;
-  line-height: 1.6 !important;
+  padding: 25mm 20mm 20mm 30mm !important; /* จัดระยะขอบมาตรฐานงานราชการ (บน 2.5ซม, ซ้าย 3ซม, ขวา 2ซม, ล่าง 2ซม) */
+  font-family: 'TH Sarabun PSK', 'TH Sarabun New', 'Sarabun', sans-serif !important;
+  font-size: 16pt !important;
+  line-height: 1.25 !important;
   color: #000000 !important;
   box-sizing: border-box !important;
 }
@@ -522,6 +523,8 @@
 .pea-memo-page td {
   border: none !important;
   color: #000000 !important;
+  font-size: 16pt !important;
+  font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif !important;
 }
 
 .pea-memo-page table {

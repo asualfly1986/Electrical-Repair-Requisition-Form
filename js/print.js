@@ -256,72 +256,64 @@ const PrintEngine = {
     const formattedDate = this.formatThaiDate(formData.docDate || new Date(), false);
     
     return `
-      <div class="pea-a4-page pea-memo-page">
-        <!-- ส่วนหัวจดหมายบันทึกข้อความ -->
-        <div class="memo-header" style="text-align: center; position: relative; margin-bottom: 25px; display: flex; flex-direction: column; align-items: center;">
-          <div style="display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%;">
-            <img src="assets/pea-logo-bw.png" style="height: 70px; width: 70px; object-fit: contain;" alt="PEA LOGO">
-            <div style="text-align: left;">
-              <div style="font-size: 15pt; font-weight: bold; font-family: 'Sarabun', sans-serif; line-height: 1.2; color: #000000;">การไฟฟ้าส่วนภูมิภาค</div>
-              <div style="font-size: 9pt; font-weight: bold; font-family: 'Sarabun', sans-serif; color: #111111; letter-spacing: 0.5px; line-height: 1.2;">PROVINCIAL ELECTRICITY AUTHORITY</div>
-            </div>
-          </div>
-          <div style="font-size: 21pt; font-weight: bold; margin-top: 15px; border-bottom: 2px solid #000000; width: 100%; text-align: center; padding-bottom: 8px; font-family: 'Sarabun', sans-serif; letter-spacing: 1px;">บันทึกข้อความ</div>
+      <div class="pea-a4-page pea-memo-page" style="font-family: 'TH Sarabun PSK', 'TH Sarabun New', 'Sarabun', sans-serif !important; font-size: 16pt !important; line-height: 1.25 !important; padding: 25mm 20mm 20mm 30mm !important; box-sizing: border-box; color: #000000; background: #ffffff;">
+        <!-- ส่วนหัวจดหมายบันทึกข้อความ (ตราโลโก้อยู่บนซ้าย ด้านล่างเป็นข้อความการไฟฟ้าส่วนภูมิภาค) -->
+        <div class="memo-header" style="text-align: left; margin-bottom: 25px;">
+          <img src="assets/pea-logo-bw.png" style="height: 62px; object-fit: contain; margin-bottom: 6px;" alt="PEA LOGO">
+          <div style="font-size: 16pt; font-weight: bold; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif; line-height: 1.1;">การไฟฟ้าส่วนภูมิภาค</div>
+          <div style="font-size: 9.5pt; font-weight: bold; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif; letter-spacing: 0.5px; line-height: 1.1; margin-top: 1px;">PROVINCIAL ELECTRICITY AUTHORITY</div>
         </div>
 
-        <!-- รายละเอียดข้อความ จาก/ถึง -->
-        <div class="memo-meta" style="font-size: 14.5pt; line-height: 1.7; margin-bottom: 15px; font-family: 'Sarabun', sans-serif; color: #000000;">
+        <!-- รายละเอียดข้อความ จาก/ถึง (จัดวางหัวข้อแบบหนา ไม่มีเครื่องหมายโคลอนตามภาพ) -->
+        <div class="memo-meta" style="font-size: 16pt; line-height: 1.3; margin-bottom: 12px; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif;">
           <table style="width: 100%; border: none; border-collapse: collapse; margin: 0; padding: 0;">
             <tr style="border: none;">
-              <td style="border: none; padding: 3px 0; width: 55%; vertical-align: top;"><strong>จาก:</strong> ${this.escapeHtml(formData.memoFrom || "ผปบ.กฟส.ขก.2")}</td>
-              <td style="border: none; padding: 3px 0; width: 45%; vertical-align: top;"><strong>ถึง:</strong> ${this.escapeHtml(formData.memoTo || "กฟส.ขก.2")}</td>
+              <td style="border: none; padding: 3px 0; width: 55%; vertical-align: top; font-size: 16pt;"><strong>จาก</strong> &nbsp;&nbsp;&nbsp;&nbsp;${this.escapeHtml(formData.memoFrom || "ผปบ.กฟส.ขก.2")}</td>
+              <td style="border: none; padding: 3px 0; width: 45%; vertical-align: top; font-size: 16pt;"><strong>ถึง</strong> &nbsp;&nbsp;&nbsp;&nbsp;${this.escapeHtml(formData.memoTo || "กฟส.ขก.2")}</td>
             </tr>
             <tr style="border: none;">
-              <td style="border: none; padding: 3px 0; vertical-align: top;"><strong>เลขที่:</strong> ${this.escapeHtml(formData.memoNo || "ฉ.1 ขก.2(ปบ.)")}</td>
-              <td style="border: none; padding: 3px 0; vertical-align: top;"><strong>วันที่:</strong> ${formattedDate}</td>
+              <td style="border: none; padding: 3px 0; vertical-align: top; font-size: 16pt;"><strong>เลขที่</strong> &nbsp;&nbsp;${this.escapeHtml(formData.memoNo || "ฉ.1 ขก.2(ปบ.)")}</td>
+              <td style="border: none; padding: 3px 0; vertical-align: top; font-size: 16pt;"><strong>วันที่</strong> &nbsp;&nbsp;&nbsp;${formattedDate}</td>
             </tr>
             <tr style="border: none;">
-              <td style="border: none; padding: 3px 0; vertical-align: top;" colspan="2"><strong>เรื่อง:</strong> ${this.escapeHtml(formData.memoSubject || "ขออนุมัติเบิกพัสดุอุปกรณ์สำรองคลังฉุกเฉินแก้กระแสไฟฟ้าขัดข้อง")}</td>
+              <td style="border: none; padding: 3px 0; vertical-align: top; font-size: 16pt;" colspan="2"><strong>เรื่อง</strong> &nbsp;&nbsp;&nbsp;${this.escapeHtml(formData.memoSubject || "ขออนุมัติเบิกพัสดุอุปกรณ์สำรองคลังฉุกเฉินแก้กระแสไฟฟ้าขัดข้อง")}</td>
             </tr>
             <tr style="border: none;">
-              <td style="border: none; padding: 3px 0; vertical-align: top;" colspan="2"><strong>อ้างถึง:</strong> ${this.escapeHtml(formData.memoRef || "ฉ.1กบษ.(บร) 1142/2567 ลว. 25 ก.ค. 2567")}</td>
+              <td style="border: none; padding: 3px 0; vertical-align: top; font-size: 16pt;" colspan="2"><strong>อ้างถึง</strong> &nbsp;${this.escapeHtml(formData.memoRef || "ฉ.1กบษ.(บร) 1142/2567 ลว. 25 ก.ค. 2567")}</td>
             </tr>
             <tr style="border: none;">
-              <td style="border: none; padding: 3px 0; vertical-align: top;" colspan="2"><strong>เรียน:</strong> ${this.escapeHtml(formData.memoDear || "ผจก. กฟส.ขก.2 ผ่าน รจก.(ท) กฟส.ขก.2")}</td>
+              <td style="border: none; padding: 3px 0; vertical-align: top; font-size: 16pt;" colspan="2"><strong>เรียน</strong> &nbsp;&nbsp;&nbsp;${this.escapeHtml(formData.memoDear || "ผจก. กฟส.ขก.2 ผ่าน รจก.(ท) กฟส.ขก.2")}</td>
             </tr>
           </table>
           <div style="border-bottom: 1.5px solid #000000; margin-top: 10px; width: 100%;"></div>
         </div>
 
-        <!-- เนื้อหาจดหมายบันทึกข้อความ -->
-        <div class="memo-body" style="font-size: 14.5pt; line-height: 1.8; text-align: justify; text-indent: 2.5cm; margin-bottom: 45px; font-family: 'Sarabun', sans-serif; color: #000000; word-break: break-word; white-space: pre-wrap;">${this.escapeHtml(formData.memoBody || "")}</div>
+        <!-- เนื้อหาจดหมายบันทึกข้อความ (ไทยสารบรรณ 16pt เยื้องย่อหน้าและจัดชิดขอบหน้าหลังอย่างเป็นระเบียบ) -->
+        <div class="memo-body" style="font-size: 16pt; line-height: 1.45; text-align: justify; text-indent: 2.5cm; margin-bottom: 30px; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif; word-break: break-word; white-space: pre-wrap;">${this.escapeHtml(formData.memoBody || "")}</div>
 
-        <!-- ผู้ลงนามเสนอเบิก (หผ.) -->
-        <div class="memo-signatures-proposer" style="display: flex; flex-direction: column; align-items: flex-end; padding-right: 40px; margin-bottom: 45px; font-size: 14.5pt; line-height: 1.6; font-family: 'Sarabun', sans-serif; color: #000000;">
+        <!-- ผู้ลงนามเสนอเบิก (หผ.) เว้นว่างระยะเซ็นสดด้านบนชื่อ ไม่มีเส้นประตามภาพ -->
+        <div class="memo-signatures-proposer" style="display: flex; flex-direction: column; align-items: flex-end; padding-right: 80px; margin-bottom: 40px; font-size: 16pt; line-height: 1.3; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif;">
           <div style="text-align: center; min-width: 250px;">
-            <div style="height: 48px;"></div> <!-- พื้นที่เซ็นชื่อสด -->
-            <div>ลงชื่อ ....................................................</div>
+            <div style="height: 40px;"></div> <!-- พื้นที่เซ็นลายมือชื่อสด -->
             <div style="margin-top: 5px;">(${this.escapeHtml(formData.memoProposerName || "นายมารุต พึ่งตน")})</div>
-            <div style="font-weight: bold; margin-top: 2px;">${this.escapeHtml(formData.memoProposerPosition || "หผ.ปบ.กฟส.ขก.2")}</div>
+            <div style="margin-top: 2px;">${this.escapeHtml(formData.memoProposerPosition || "หผ.ปบ.กฟส.ขก.2")}</div>
           </div>
         </div>
 
-        <div style="border-top: 1.2px dashed #666666; margin-bottom: 25px; width: 100%;"></div>
-
-        <!-- ส่วนอนุมัติผู้จัดการ ผจก. -->
-        <div class="memo-signatures-approver" style="font-size: 14.5pt; line-height: 1.6; font-family: 'Sarabun', sans-serif; color: #000000; display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
-          <div style="width: 50%; font-size: 11.5pt; color: #111111; line-height: 1.5; padding-top: 5px;">
-            <strong>ที่:</strong> ${this.escapeHtml(formData.memoNo || "ฉ.1 ขก.2 (ปบ.)")}<br>
-            <strong>เรียน:</strong> ผจก.กฟจ.ขก., ผจก.กฟส.ขก.2,<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;หผ.ปบ.กฟส.ขก.2 , หผ.คพ.กฟจ.ขก.<br>
-            - อนุมัติตามเสนอ ดำเนินการในส่วนเกี่ยวข้องต่อไป
+        <!-- ส่วนอนุมัติผู้จัดการ ผจก. (ไม่มีเส้นประคั่นแบ่งครึ่งหน้ากระดาษและปิดท้าย จัดวางชิดซ้ายขวาตามต้นฉบับ) -->
+        <div class="memo-signatures-approver" style="font-size: 16pt; line-height: 1.3; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif; display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
+          <div style="width: 50%; font-size: 16pt; line-height: 1.3; padding-top: 5px;">
+            <strong>ที่</strong> &nbsp;${this.escapeHtml(formData.memoNo || "ฉ.1 ขก.2 (ปบ.)")}<br>
+            <strong>เรียน</strong> &nbsp;ผจก.กฟจ.ขก., ผจก.กฟส.ขก.2,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;หผ.ปบ.กฟส.ขก.2 , หผ.คพ.กฟจ.ขก.<br>
+            - อนุมัติตามเสนอ<br>
+            &nbsp;&nbsp;ดำเนินการในส่วนเกี่ยวข้องต่อไป
           </div>
-          <div style="text-align: center; min-width: 270px; padding-top: 5px;">
-            <div style="height: 48px;"></div> <!-- พื้นที่เซ็นชื่อผู้จัดการ -->
-            <div>ลงชื่อ ....................................................</div>
-            <div style="margin-top: 5px;">(${this.escapeHtml(formData.approverName || "นาย เทอดพงศ์ ศรีมงคล")})</div>
-            <div style="font-weight: bold; margin-top: 2px;">ตำแหน่ง ${this.escapeHtml(formData.approverPosition || "ผจก.กฟส.ขก.2")}</div>
-            <div style="margin-top: 5px;">วันที่ ............ / ............ / ............</div>
+          <div style="text-align: center; min-width: 270px; padding-top: 15px;">
+            <div>ลงชื่อ _____________________.</div>
+            <div style="margin-top: 8px;">(${this.escapeHtml(formData.approverName || "นาย เทอดพงศ์ ศรีมงคล")})</div>
+            <div style="margin-top: 4px;">ตำแหน่ง ${this.escapeHtml(formData.approverPosition || "ผจก.กฟส.ขก.2")}</div>
+            <div style="margin-top: 8px;">วันที่ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.</div>
           </div>
         </div>
       </div>
