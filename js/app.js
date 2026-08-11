@@ -758,10 +758,15 @@ const App = {
 
     container.querySelectorAll(".btn-del-history").forEach(btn => {
       btn.addEventListener("click", () => {
+        const password = prompt("กรุณากรอกรหัสผ่านเพื่อลบประวัตินี้:");
+        if (password !== "Aun") {
+          this.showToast("รหัสผ่านไม่ถูกต้อง ไม่สามารถลบประวัติได้", "error");
+          return;
+        }
         const id = btn.dataset.id;
         SheetsManager.deleteHistoryItem(id);
         this.renderHistoryList();
-        this.showToast("ลบประวัติแล้ว", "info");
+        this.showToast("ลบประวัติตามต้องการเรียบร้อยแล้ว", "info");
       });
     });
   },
