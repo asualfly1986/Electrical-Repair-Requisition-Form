@@ -327,7 +327,7 @@ const PrintEngine = {
         <!-- ส่วนอนุมัติผู้จัดการ ผจก. (แยกส่วนลงชื่อย้ายมาไว้ข้างใต้ชิดขวาตามทิศทางลูกศรในภาพ) -->
         <div class="memo-signatures-approver" style="font-size: 16pt; line-height: 1.0; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif; width: 100%; display: flex; flex-direction: column; color: #000000;">
           <!-- ข้อความนำส่งชิดซ้าย -->
-          <div style="font-size: 16pt; line-height: 1.0; margin-bottom: 20px; width: 100%; text-align: left;">
+          <div style="font-size: 16pt; line-height: 1.0; margin-bottom: 2.0cm; width: 100%; text-align: left;">
             <strong>ที่</strong> &nbsp;${this.escapeHtml(formData.memoNo || "ฉ.1 ขก.2 (ปบ.)")}<br>
             <strong>เรียน</strong> &nbsp;ผจก.กฟจ.ขก., ผจก.กฟส.ขก.2,<br>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;หผ.ปบ.กฟส.ขก.2 , หผ.คพ.กฟจ.ขก.<br>
