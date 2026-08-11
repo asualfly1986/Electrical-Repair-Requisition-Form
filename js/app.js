@@ -483,6 +483,23 @@ const App = {
       });
     }
 
+    // ปุ่มเปิดหน้าบันทึกคำสั่ง (ต้องใส่รหัสผ่าน Aun)
+    const btnOpenOrderDirective = document.getElementById("btnOpenOrderDirective");
+    if (btnOpenOrderDirective) {
+      btnOpenOrderDirective.addEventListener("click", () => {
+        const pwd = prompt("🔐 กรุณาใส่รหัสผ่านเพื่อเข้าสู่หน้าบันทึกคำสั่ง:");
+        if (pwd === null) return;
+        if (pwd !== "Aun") {
+          this.showToast("❌ รหัสผ่านไม่ถูกต้อง! (การเข้าหน้าบันทึกคำสั่งต้องใช้รหัส Aun)", "error");
+          return;
+        }
+        this.openOrderDirectiveModal();
+      });
+    }
+
+    // ผูก Event สำหรับระบบบันทึกคำสั่งอนุมัติพัสดุอุปกรณ์คลัง
+    this.setupOrderDirectiveEvents();
+
     // ปุ่มส่งออกไฟล์ประวัติการเบิก (Export Backup JSON)
     const btnExportHistory = document.getElementById("btnExportHistory");
     if (btnExportHistory) {
@@ -1362,6 +1379,163 @@ const App = {
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;");
+  },
+
+  // คีย์จัดเก็บข้อมูลบันทึกคำสั่งอนุมัติพัสดุอุปกรณ์คลัง
+  STORAGE_KEY_ORDER_DIRECTIVE: "pea_requisition_order_directive",
+
+  openOrderDirectiveModal() {
+    this.initOrderDirectiveForm();
+    this.openModal("orderDirectiveModal");
+  },
+
+  initOrderDirectiveForm() {
+    let directiveData = {
+      notes: "",
+      pdfDataUrl: null,
+      pdfFileName: "อนุมัติอุปกรณ์คลัง.PDF",
+      lastUpdated: null
+    };
+
+    try {
+      const stored = localStorage.getItem(this.STORAGE_KEY_ORDER_DIRECTIVE);
+      if (stored) {
+        directiveData = { ...directiveData, ...JSON.parse(stored) };
+      }
+    } catch (e) {
+      console.warn("Error reading order directive data", e);
+    }
+
+    // กำหนดข้อความบันทึก
+    const notesEl = document.getElementById("orderDirectiveNotes");
+    if (notesEl) {
+      notesEl.value = directiveData.notes || "";
+    }
+
+    // กำหนดไฟล์ PDF Viewer
+    const iframeEl = document.getElementById("orderPdfIframe");
+    const nameEl = document.getElementById("orderPdfFileName");
+    const downloadBtn = document.getElementById("btnDownloadOrderPdf");
+
+    if (directiveData.pdfDataUrl) {
+      if (iframeEl) iframeEl.src = directiveData.pdfDataUrl;
+      if (nameEl) nameEl.textContent = directiveData.pdfFileName || "ไฟล์ PDF กำหนดเอง.pdf";
+      if (downloadBtn) {
+        downloadBtn.href = directiveData.pdfDataUrl;
+        downloadBtn.download = directiveData.pdfFileName || "อนุมัติอุปกรณ์คลัง.pdf";
+      }
+    } else {
+      if (iframeEl) iframeEl.src = "assets/order-approval.pdf";
+      if (nameEl) nameEl.textContent = "อนุมัติอุปกรณ์คลัง.PDF (ไฟล์ตั้งต้น)";
+      if (downloadBtn) {
+        downloadBtn.href = "assets/order-approval.pdf";
+        downloadBtn.download = "อนุมัติอุปกรณ์คลัง.pdf";
+      }
+    }
+
+    // กำหนดเวลาอัปเดตล่าสุด
+    const lastUpdatedEl = document.getElementById("orderDirectiveLastUpdated");
+    if (lastUpdatedEl) {
+      if (directiveData.lastUpdated) {
+        const thaiDate = PrintManager.formatThaiDate(new Date(directiveData.lastUpdated), true);
+        lastUpdatedEl.textContent = `อัปเดตล่าสุด: ${thaiDate}`;
+      } else {
+        lastUpdatedEl.textContent = "อัปเดตล่าสุด: ยังไม่มีการบันทึก";
+      }
+    }
+  },
+
+  setupOrderDirectiveEvents() {
+    // 1. ปุ่มเปลี่ยนไฟล์ PDF
+    const btnUpload = document.getElementById("btnUploadOrderPdf");
+    const fileInput = document.getElementById("orderPdfFileInput");
+    if (btnUpload && fileInput) {
+      btnUpload.addEventListener("click", () => fileInput.click());
+      fileInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        if (file.type !== "application/pdf") {
+          this.showToast("กรุณาเลือกเฉพาะไฟล์ PDF เท่านั้น", "error");
+          return;
+        }
+
+        // อ่านไฟล์ PDF เป็น Base64 Data URL
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const dataUrl = event.target.result;
+          this.tempOrderPdfDataUrl = dataUrl;
+          this.tempOrderPdfFileName = file.name;
+
+          const iframeEl = document.getElementById("orderPdfIframe");
+          const nameEl = document.getElementById("orderPdfFileName");
+          const downloadBtn = document.getElementById("btnDownloadOrderPdf");
+
+          if (iframeEl) iframeEl.src = dataUrl;
+          if (nameEl) nameEl.textContent = `${file.name} (ยังไม่บันทึก)`;
+          if (downloadBtn) {
+            downloadBtn.href = dataUrl;
+            downloadBtn.download = file.name;
+          }
+
+          this.showToast("📄 โหลดไฟล์ PDF ใหม่สำเร็จ อย่าลืมกด '💾 บันทึกคำสั่ง'", "info");
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // 2. ปุ่มรีเซ็ตกลับเป็นไฟล์ตั้งต้น
+    const btnReset = document.getElementById("btnResetOrderPdf");
+    if (btnReset) {
+      btnReset.addEventListener("click", () => {
+        this.tempOrderPdfDataUrl = null;
+        this.tempOrderPdfFileName = "อนุมัติอุปกรณ์คลัง.PDF";
+
+        const iframeEl = document.getElementById("orderPdfIframe");
+        const nameEl = document.getElementById("orderPdfFileName");
+        const downloadBtn = document.getElementById("btnDownloadOrderPdf");
+
+        if (iframeEl) iframeEl.src = "assets/order-approval.pdf";
+        if (nameEl) nameEl.textContent = "อนุมัติอุปกรณ์คลัง.PDF (ไฟล์ตั้งต้น)";
+        if (downloadBtn) {
+          downloadBtn.href = "assets/order-approval.pdf";
+          downloadBtn.download = "อนุมัติอุปกรณ์คลัง.pdf";
+        }
+
+        this.showToast("🔄 รีเซ็ตเป็นไฟล์ตั้งต้นแล้ว อย่าลืมกด '💾 บันทึกคำสั่ง'", "info");
+      });
+    }
+
+    // 3. ปุ่มบันทึกคำสั่ง
+    const btnSave = document.getElementById("btnSaveOrderDirective");
+    if (btnSave) {
+      btnSave.addEventListener("click", () => {
+        const notesEl = document.getElementById("orderDirectiveNotes");
+        const notes = notesEl ? notesEl.value.trim() : "";
+
+        let currentData = {};
+        try {
+          const stored = localStorage.getItem(this.STORAGE_KEY_ORDER_DIRECTIVE);
+          if (stored) currentData = JSON.parse(stored);
+        } catch (e) {}
+
+        const updatedData = {
+          notes: notes,
+          pdfDataUrl: (this.tempOrderPdfDataUrl !== undefined) ? this.tempOrderPdfDataUrl : (currentData.pdfDataUrl || null),
+          pdfFileName: (this.tempOrderPdfFileName !== undefined) ? this.tempOrderPdfFileName : (currentData.pdfFileName || "อนุมัติอุปกรณ์คลัง.PDF"),
+          lastUpdated: new Date().toISOString()
+        };
+
+        try {
+          localStorage.setItem(this.STORAGE_KEY_ORDER_DIRECTIVE, JSON.stringify(updatedData));
+          this.showToast("✅ บันทึกรายละเอียดคำสั่งอนุมัติเรียบร้อยแล้ว", "success");
+          this.initOrderDirectiveForm();
+        } catch (err) {
+          console.error("Error saving order directive data", err);
+          this.showToast("❌ ไม่สามารถบันทึกได้ (ไฟล์ PDF มีขนาดใหญ่เกินขีดจำกัดเบราว์เซอร์)", "error");
+        }
+      });
+    }
   },
 
   showToast(message, type = "info") {

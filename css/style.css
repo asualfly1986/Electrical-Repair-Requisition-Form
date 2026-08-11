@@ -808,6 +808,17 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Order Directive Modal Layout for Mobile */
+@media (max-width: 768px) {
+  .order-directive-grid {
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+  }
+  #orderPdfIframe {
+    height: 380px !important;
+  }
+}
+
 @keyframes slideInRight {
   from { opacity: 0; transform: translateX(30px); }
   to { opacity: 1; transform: translateX(0); }
