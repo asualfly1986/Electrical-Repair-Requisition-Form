@@ -308,7 +308,6 @@ const PrintEngine = {
             <span style="font-weight: bold; min-width: 2.2cm; display: inline-block; flex-shrink: 0;">เรียน</span>
             <span style="flex: 1;">${this.escapeHtml(formData.memoDear || "ผจก. กฟส.ขก.2 ผ่าน รจก.(ท) กฟส.ขก.2")}</span>
           </div>
-          <div style="border-bottom: 1.5px solid #000000; margin-top: 10px; width: 100%;"></div>
         </div>
 
         <!-- เนื้อหาจดหมายบันทึกข้อความ (ไทยสารบรรณ 16pt ทุกย่อหน้าจะถูกเยื้องเริ่มต้นที่แนวเดียวกัน) -->
