@@ -252,8 +252,75 @@ const PrintEngine = {
       .replace(/'/g, "&#039;");
   },
 
-  // สั่งพิมพ์
+  // สั่งพิมพ์ (รองรับเบราว์เซอร์บนคอมพิวเตอร์ และระบบพิมพ์/เซฟ PDF บนมือถือ & iPad)
   printDocument() {
-    window.print();
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    if (isMobile) {
+      // เปิดหน้าต่างใหม่สำหรับการพิมพ์ (Mobile Print Workaround เพื่อให้เรียก Dialog พิมพ์ของระบบปฏิบัติการมือถือขึ้นมาสำเร็จ)
+      const printWindow = window.open("", "_blank");
+      if (printWindow) {
+        let stylesHtml = "";
+        // คัดลอก CSS ทั้งหมดในหน้าปัจจุบัน
+        document.querySelectorAll('link[rel="stylesheet"], style').forEach(el => {
+          stylesHtml += el.outerHTML;
+        });
+
+        const previewContent = document.getElementById("livePreviewContainer").innerHTML;
+
+        printWindow.document.write(`
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>พิมพ์ใบเบิกพัสดุ กฟภ.</title>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            ${stylesHtml}
+            <style>
+              body {
+                background: #ffffff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+              }
+              .pea-a4-page {
+                box-shadow: none !important;
+                border: none !important;
+                margin: 0 auto !important;
+              }
+              @media print {
+                .pea-a4-page {
+                  page-break-inside: avoid !important;
+                  break-inside: avoid !important;
+                }
+                .pea-a4-page:not(:last-child) {
+                  page-break-after: always !important;
+                  break-after: page !important;
+                }
+              }
+            </style>
+          </head>
+          <body>
+            <div id="printDocumentArea">
+              ${previewContent}
+            </div>
+            <script>
+              window.onload = function() {
+                setTimeout(function() {
+                  window.print();
+                }, 500);
+              };
+            </script>
+          </body>
+          </html>
+        `);
+        printWindow.document.close();
+      } else {
+        // กรณีเบราว์เซอร์มือถือบล็อกหน้าต่างใหม่ ให้ถอยกลับมาใช้การพิมพ์หน้าตรงปกติ
+        window.print();
+      }
+    } else {
+      // บน Desktop สามารถเรียกใช้ print() ของหน้าหลักได้ทันทีอย่างสมบูรณ์
+      window.print();
+    }
   }
 };
