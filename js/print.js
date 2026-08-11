@@ -261,7 +261,7 @@ const PrintEngine = {
       .map(para => para.trim())
       .filter(para => para.length > 0)
       .map(para => {
-        return `<p style="text-indent: 2.2cm; margin: 0 0 10px 0; text-align: justify; font-family: 'TH Sarabun PSK', sans-serif; font-size: 16pt; line-height: 1.0;">${this.escapeHtml(para)}</p>`;
+        return `<p style="text-indent: 2.2cm; margin: 0 0 10px 0; text-align: justify; font-family: 'TH Sarabun PSK', 'TH Sarabun New', 'Sarabun', sans-serif; font-size: 16pt; line-height: 1.0;">${this.escapeHtml(para)}</p>`;
       })
       .join("");
 
