@@ -268,7 +268,7 @@ const PrintEngine = {
     return `
       <div class="pea-a4-page pea-memo-page" style="font-family: 'TH Sarabun PSK', 'TH Sarabun New', 'Sarabun', sans-serif !important; font-size: 20pt !important; line-height: 1.0 !important; padding: 12mm 20mm 20mm 30mm !important; box-sizing: border-box; color: #000000; background: #ffffff;">
         <!-- ส่วนหัวจดหมายบันทึกข้อความ (ตราโลโก้อยู่บนซ้าย ด้านล่างเป็นข้อความการไฟฟ้าส่วนภูมิภาค) -->
-        <div class="memo-header" style="text-align: left; margin-bottom: 25px;">
+        <div class="memo-header" style="text-align: left; margin-bottom: 8px;">
           <img src="assets/pea-logo-bw.png" style="height: 104px; object-fit: contain; margin-bottom: 8px;" alt="PEA LOGO">
           <div style="font-size: 20pt; font-weight: bold; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif; line-height: 1.1;">การไฟฟ้าส่วนภูมิภาค</div>
           <div style="font-size: 10pt; font-weight: bold; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif; letter-spacing: 0.5px; line-height: 1.1; margin-top: 2px;">PROVINCIAL ELECTRICITY AUTHORITY</div>
@@ -316,7 +316,7 @@ const PrintEngine = {
         </div>
 
         <!-- ผู้ลงนามเสนอเบิก (หผ.) เว้นว่างระยะเซ็นสดด้านบนชื่อ ไม่มีเส้นประตามภาพ -->
-        <div class="memo-signatures-proposer" style="display: flex; flex-direction: column; align-items: flex-end; padding-right: 80px; margin-bottom: 30px; font-size: 20pt; line-height: 1.0; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif;">
+        <div class="memo-signatures-proposer" style="display: flex; flex-direction: column; align-items: flex-end; padding-right: 80px; margin-bottom: 10px; font-size: 20pt; line-height: 1.0; font-family: 'TH Sarabun PSK', 'TH Sarabun New', sans-serif;">
           <div style="text-align: center; min-width: 250px;">
             <div style="height: 35px;"></div> <!-- พื้นที่เซ็นลายมือชื่อสด -->
             <div style="margin-top: 5px;">(${this.escapeHtml(formData.memoProposerName || "นายมารุต พึ่งตน")})</div>
