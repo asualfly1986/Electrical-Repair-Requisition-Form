@@ -41,6 +41,8 @@
   --stock-wms-bg: rgba(192, 132, 252, 0.12);
   --stock-sloc: #f59e0b;
   --stock-sloc-bg: rgba(245, 158, 11, 0.14);
+  --stock-2601: #10b981;
+  --stock-2601-bg: rgba(16, 185, 129, 0.14);
   
   /* Shadows & Radius */
   --radius-sm: 6px;
@@ -497,6 +499,12 @@ body {
   background: var(--stock-sloc-bg);
   color: var(--stock-sloc);
   border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.stock-badge.has-stock-2601 {
+  background: var(--stock-2601-bg);
+  color: var(--stock-2601);
+  border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .stock-badge.zero-stock {

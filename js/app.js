@@ -36,7 +36,8 @@ const App = {
           standardQuota: mat ? mat.standardQuota : "",
           stockMB52: mat ? mat.stockMB52 : "0",
           stockWMS: mat ? mat.stockWMS : "0",
-          stockSloc0023: mat ? mat.stockSloc0023 : "0"
+          stockSloc0023: mat ? mat.stockSloc0023 : "0",
+          stock2601: mat ? mat.stock2601 : "0"
         };
       });
     } else {
@@ -78,7 +79,7 @@ const App = {
     }
   },
 
-  // อัปเดตข้อมูลสต็อก 3 แหล่งให้รายการในตะกร้าตรงกับฐานข้อมูลเสมอ
+  // อัปเดตข้อมูลสต็อก 4 แหล่งให้รายการในตะกร้าตรงกับฐานข้อมูลเสมอ
   enrichCartStockData() {
     this.cart.forEach(item => {
       const mat = this.materials.find(m => (m.code && m.code === item.code) || (m.name && m.name === item.name));
@@ -86,6 +87,7 @@ const App = {
         item.stockMB52 = mat.stockMB52 || "0";
         item.stockWMS = mat.stockWMS || "0";
         item.stockSloc0023 = mat.stockSloc0023 || "0";
+        item.stock2601 = mat.stock2601 || "0";
         item.standardQuota = mat.standardQuota || "";
       }
     });
@@ -138,11 +140,13 @@ const App = {
       const mb52 = this.parseStockNum(m.stockMB52);
       const wms = this.parseStockNum(m.stockWMS);
       const sloc = this.parseStockNum(m.stockSloc0023);
+      const s2601 = this.parseStockNum(m.stock2601);
 
+      if (this.stockFilter === "has_2601" && s2601 <= 0) return false;
       if (this.stockFilter === "has_mb52" && mb52 <= 0) return false;
       if (this.stockFilter === "has_wms" && wms <= 0) return false;
       if (this.stockFilter === "has_sloc" && sloc <= 0) return false;
-      if (this.stockFilter === "has_any" && (mb52 <= 0 && wms <= 0 && sloc <= 0)) return false;
+      if (this.stockFilter === "has_any" && (mb52 <= 0 && wms <= 0 && sloc <= 0 && s2601 <= 0)) return false;
 
       // ตัวกรองค้นหา
       if (!q) return true;
@@ -171,10 +175,12 @@ const App = {
       const mb52Num = this.parseStockNum(item.stockMB52);
       const wmsNum = this.parseStockNum(item.stockWMS);
       const slocNum = this.parseStockNum(item.stockSloc0023);
+      const s2601Num = this.parseStockNum(item.stock2601);
 
       const mb52Class = mb52Num > 0 ? "has-stock-mb52" : "zero-stock";
       const wmsClass = wmsNum > 0 ? "has-stock-wms" : "zero-stock";
       const slocClass = slocNum > 0 ? "has-stock-sloc" : "zero-stock";
+      const s2601Class = s2601Num > 0 ? "has-stock-2601" : "zero-stock";
 
       return `
         <div class="material-item">
@@ -191,8 +197,11 @@ const App = {
               <span style="color: var(--text-dim);">${item.category || ""}</span>
             </div>
 
-            <!-- แถบแสดงค่าคงเหลือใน MB52, WMS และคลัง กฟจ.ขอนแก่น (sloc 0023) -->
+            <!-- แถบแสดงค่าคงเหลือใน 2601, MB52, WMS และคลัง กฟจ.ขอนแก่น (sloc 0023) -->
             <div class="stock-badge-group">
+              <span class="stock-badge ${s2601Class}" title="คงเหลือจริง (storage location 2601)">
+                คงเหลือจริง(2601): ${item.stock2601 || "0"}
+              </span>
               <span class="stock-badge ${mb52Class}" title="คงเหลือในระบบ MB52">
                 MB52: ${item.stockMB52 || "0"}
               </span>
@@ -239,15 +248,18 @@ const App = {
         const mb52 = mat ? mat.stockMB52 : (item.stockMB52 || "0");
         const wms = mat ? mat.stockWMS : (item.stockWMS || "0");
         const sloc = mat ? mat.stockSloc0023 : (item.stockSloc0023 || "0");
+        const stock2601 = mat ? mat.stock2601 : (item.stock2601 || "0");
         const quota = mat ? mat.standardQuota : (item.standardQuota || "");
 
         const mb52Num = this.parseStockNum(mb52);
         const wmsNum = this.parseStockNum(wms);
         const slocNum = this.parseStockNum(sloc);
+        const s2601Num = this.parseStockNum(stock2601);
 
         const mb52Class = mb52Num > 0 ? "has-stock-mb52" : "zero-stock";
         const wmsClass = wmsNum > 0 ? "has-stock-wms" : "zero-stock";
         const slocClass = slocNum > 0 ? "has-stock-sloc" : "zero-stock";
+        const s2601Class = s2601Num > 0 ? "has-stock-2601" : "zero-stock";
 
         return `
           <tr>
@@ -262,8 +274,11 @@ const App = {
                   ${quota ? `<span class="quota-pill">เกณฑ์: ${quota}</span>` : ""}
                 </div>
 
-                <!-- แสดงค่าคงเหลือครบ 3 แหล่งในรายการเบิกปัจจุบัน -->
+                <!-- แสดงค่าคงเหลือครบ 4 แหล่งในรายการเบิกปัจจุบัน -->
                 <div class="stock-badge-group cart-stock-group">
+                  <span class="stock-badge ${s2601Class}" title="คงเหลือจริง (storage location 2601)">
+                    คงเหลือจริง(2601): ${stock2601}
+                  </span>
                   <span class="stock-badge ${mb52Class}" title="คงเหลือใน MB52">
                     MB52: ${mb52}
                   </span>
@@ -798,7 +813,8 @@ const App = {
           remark, 
           stockMB52: "-", 
           stockWMS: "-", 
-          stockSloc0023: "-" 
+          stockSloc0023: "-",
+          stock2601: "-" 
         });
         customItemForm.reset();
         this.closeAllModals();
@@ -890,7 +906,7 @@ const App = {
     }
   },
 
-  // เพิ่มพัสดุลงในตะกร้า (ผูกข้อมูลคงเหลือ 3 แหล่งอัตโนมัติ)
+  // เพิ่มพัสดุลงในตะกร้า (ผูกข้อมูลคงเหลือ 4 แหล่งอัตโนมัติ)
   addItemToCart(item) {
     const mat = this.materials.find(m => (m.code && m.code === item.code) || (m.name && m.name === item.name));
     const fullItem = {
@@ -899,7 +915,8 @@ const App = {
       standardQuota: mat ? mat.standardQuota : (item.standardQuota || ""),
       stockMB52: mat ? mat.stockMB52 : (item.stockMB52 || "0"),
       stockWMS: mat ? mat.stockWMS : (item.stockWMS || "0"),
-      stockSloc0023: mat ? mat.stockSloc0023 : (item.stockSloc0023 || "0")
+      stockSloc0023: mat ? mat.stockSloc0023 : (item.stockSloc0023 || "0"),
+      stock2601: mat ? mat.stock2601 : (item.stock2601 || "0")
     };
 
     const existingIndex = this.cart.findIndex(i => i.code && i.code === fullItem.code);
