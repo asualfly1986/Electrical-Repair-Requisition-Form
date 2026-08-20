@@ -152,10 +152,10 @@ const SheetsManager = {
         const category = (match && match.category) ? match.category : "อุปกรณ์ระบบไฟฟ้าและบำรุงรักษา";
 
         const standardQuota = cells[4] || (match ? match.standardQuota : "") || "";
+        const stock2601 = cells[5] || (match ? match.stock2601 : "0") || "0";
         const stockMB52 = cells[6] || (match ? match.stockMB52 : "0") || "0";
         const stockWMS = cells[7] || (match ? match.stockWMS : "0") || "0";
         const stockSloc0023 = cells[8] || (match ? match.stockSloc0023 : "0") || "0";
-        const stock2601 = cells[9] || (match ? match.stock2601 : "0") || "0";
 
         if (rawCode || name) {
           result.push({
@@ -164,10 +164,10 @@ const SheetsManager = {
             name: name,
             unit: unit,
             standardQuota: standardQuota,
+            stock2601: stock2601,
             stockMB52: stockMB52,
             stockWMS: stockWMS,
             stockSloc0023: stockSloc0023,
-            stock2601: stock2601,
             category: category
           });
         }
@@ -239,10 +239,10 @@ const SheetsManager = {
       const category = (match && match.category) ? match.category : "อุปกรณ์ระบบไฟฟ้าและบำรุงรักษา";
 
       const standardQuota = (cols[4] ? cols[4].replace(/^["']|["']$/g, '').trim() : "") || (match ? match.standardQuota : "") || "";
+      const stock2601 = (cols[5] ? cols[5].replace(/^["']|["']$/g, '').trim() : "") || (match ? match.stock2601 : "0") || "0";
       const stockMB52 = (cols[6] ? cols[6].replace(/^["']|["']$/g, '').trim() : "") || (match ? match.stockMB52 : "0") || "0";
       const stockWMS = (cols[7] ? cols[7].replace(/^["']|["']$/g, '').trim() : "") || (match ? match.stockWMS : "0") || "0";
       const stockSloc0023 = (cols[8] ? cols[8].replace(/^["']|["']$/g, '').trim() : "") || (match ? match.stockSloc0023 : "0") || "0";
-      const stock2601 = (cols[9] ? cols[9].replace(/^["']|["']$/g, '').trim() : "") || (match ? match.stock2601 : "0") || "0";
 
       if (rawCode || name) {
         result.push({
@@ -251,10 +251,10 @@ const SheetsManager = {
           name: name,
           unit: unit,
           standardQuota: standardQuota,
+          stock2601: stock2601,
           stockMB52: stockMB52,
           stockWMS: stockWMS,
           stockSloc0023: stockSloc0023,
-          stock2601: stock2601,
           category: category
         });
       }
