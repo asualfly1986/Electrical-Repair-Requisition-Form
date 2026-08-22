@@ -1584,21 +1584,39 @@
               </div>
             </div>
 
-            <div class="stat-grid-2">
+            <div class="stat-grid-3">
               <div class="input-group">
-                <label class="input-label"><span>สะสมหุ้นสหกรณ์ฯ/เดือน</span></label>
+                <label class="input-label"><span>สะสมหุ้น/เดือน</span></label>
                 <div class="input-wrap">
                   <input type="number" class="form-input" id="pea_coopSharePerMonth" value="1000" min="0" required oninput="onRetirementInput()">
                   <span class="input-unit">บาท/ด.</span>
                 </div>
               </div>
               <div class="input-group">
-                <label class="input-label"><span>มูลค่าหุ้นสหกรณ์ปัจจุบัน</span></label>
+                <label class="input-label"><span>มูลค่าหุ้นปัจจุบัน</span></label>
                 <div class="input-wrap">
                   <input type="number" class="form-input" id="pea_coopShareCurrent" value="50000" min="0" required oninput="onRetirementInput()">
                   <span class="input-unit">บาท</span>
                 </div>
               </div>
+              <div class="input-group">
+                <label class="input-label"><span>ปันผลทบต้น</span></label>
+                <div class="input-wrap">
+                  <input type="number" step="0.1" class="form-input" id="pea_coopReturn" value="4.5" min="0" max="20" required oninput="onRetirementInput()">
+                  <span class="input-unit">%/ปี</span>
+                </div>
+              </div>
+            </div>
+            <div class="chips-row" style="margin-top:-6px; margin-bottom:8px;">
+              <span style="font-size:0.75rem; color:var(--text-muted); align-self:center;">ปันผลสหกรณ์:</span>
+              <span class="chip" onclick="setVal('pea_coopReturn', 4.0)">4.0%</span>
+              <span class="chip" onclick="setVal('pea_coopReturn', 4.5)">4.5% (ทั่วไป)</span>
+              <span class="chip" onclick="setVal('pea_coopReturn', 5.0)">5.0%</span>
+              <span class="chip" onclick="setVal('pea_coopReturn', 5.5)">5.5%</span>
+              <span class="chip" onclick="setVal('pea_coopReturn', 6.0)">6.0%</span>
+            </div>
+            <div style="background:var(--card-sub); border-radius:10px; padding:8px 12px; font-size:0.78rem; color:var(--text-muted); margin-top:4px;">
+              💡 หุ้นสหกรณ์ฯ จะถูกคำนวณแบบทบต้นตามอัตราเงินปันผลต่อปีที่ระบุ (จำลองการนำเงินปันผลสะสมเพิ่มในหุ้น)
             </div>
           </div>
         </div>
@@ -1775,6 +1793,14 @@
               <span class="slider-val num-font" id="adjVal_savings">-</span>
             </div>
             <input type="range" id="adj_savings" min="0" max="30000" step="500" oninput="onAdjustChanged()">
+          </div>
+
+          <div class="slider-box">
+            <div class="slider-header">
+              <span>อัตราเงินปันผลหุ้นสหกรณ์ฯ ทบต้น</span>
+              <span class="slider-val num-font" id="adjVal_coopReturn">-</span>
+            </div>
+            <input type="range" id="adj_coopReturn" min="0" max="10" step="0.1" oninput="onAdjustChanged()">
           </div>
 
           <div class="slider-box">
@@ -1971,6 +1997,7 @@
       pea_preRetireReturn: 5,
       pea_coopSharePerMonth: 1000,
       pea_coopShareCurrent: 50000,
+      pea_coopReturn: 4.5,
       pea_employeeRate: 3,
       pea_employerRate: 9,
       pea_pfReturn: 5,
@@ -2287,6 +2314,7 @@
         preRetireReturn: num('pea_preRetireReturn'),
         coopSharePerMonth: num('pea_coopSharePerMonth'),
         coopShareCurrent: num('pea_coopShareCurrent'),
+        coopReturn: num('pea_coopReturn'),
         employeeRate: num('pea_employeeRate'),
         employerRate: num('pea_employerRate'),
         pfReturn: num('pea_pfReturn'),
@@ -2317,12 +2345,14 @@
         totalNeeded = expenseAtRetirement * (1 - Math.pow(1 + realMonthlyRate, -months2)) / realMonthlyRate * (1 + realMonthlyRate);
       }
 
-      // Provident Fund (กสช.) calculation & Yearly Simulation
+      // Provident Fund (กสช.) & Savings & Coop Shares with Compounding
       let pfBalance = inp.pfAccumulated + inp.pfContributed + inp.pfAccumulatedGain + inp.pfContributedGain;
       let curSalary = inp.salary;
       const pfMonthlyReturn = Math.pow(1 + inp.pfReturn / 100, 1 / 12) - 1;
       const preMonthlyReturn = Math.pow(1 + inp.preRetireReturn / 100, 1 / 12) - 1;
+      const coopMonthlyReturn = Math.pow(1 + inp.coopReturn / 100, 1 / 12) - 1;
       let other = inp.initialSavings;
+      let coop = inp.coopShareCurrent;
 
       const yearlyData = [];
       yearlyData.push({
@@ -2330,8 +2360,8 @@
         salary: curSalary,
         pf: pfBalance,
         other: other,
-        coop: inp.coopShareCurrent,
-        total: pfBalance + other + inp.coopShareCurrent
+        coop: coop,
+        total: pfBalance + other + coop
       });
 
       for (let y = 0; y < n1; y++) {
@@ -2339,23 +2369,23 @@
         for (let m = 0; m < 12; m++) {
           pfBalance = pfBalance * (1 + pfMonthlyReturn) + monthlyContrib;
           other = other * (1 + preMonthlyReturn) + inp.monthlySavings;
+          coop = coop * (1 + coopMonthlyReturn) + inp.coopSharePerMonth;
         }
         curSalary = curSalary * (1 + inp.salaryGrowth / 100);
-        const coopVal = inp.coopShareCurrent + (inp.coopSharePerMonth * (y + 1) * 12);
         
         yearlyData.push({
           age: inp.currentAge + y + 1,
           salary: curSalary,
           pf: pfBalance,
           other: other,
-          coop: coopVal,
-          total: pfBalance + other + coopVal
+          coop: coop,
+          total: pfBalance + other + coop
         });
       }
       
       const pfFutureValue = pfBalance;
       const otherFutureValue = other;
-      const coopFutureValue = inp.coopShareCurrent + (inp.coopSharePerMonth * n1 * 12);
+      const coopFutureValue = coop;
 
       const totalAvailable = pfFutureValue + otherFutureValue + coopFutureValue;
       const diff = totalAvailable - totalNeeded;
@@ -2450,6 +2480,7 @@
       $('adj_pfRate').value = inp.employeeRate;
       $('adj_savings').value = inp.monthlySavings;
       $('adj_savings').max = Math.max(30000, inp.monthlySavings * 3);
+      $('adj_coopReturn').value = inp.coopReturn;
       $('adj_expense').value = inp.desiredExpenseToday;
       $('adj_expense').max = Math.max(80000, Math.round(inp.desiredExpenseToday * 2.5 / 1000) * 1000);
       $('adj_retireAge').value = inp.retireAge;
@@ -2462,6 +2493,7 @@
     function refreshAdjustLabels() {
       $('adjVal_pfRate').textContent = parseFloat($('adj_pfRate').value).toFixed(1) + '%';
       $('adjVal_savings').textContent = fmt($('adj_savings').value) + ' บาท/ด.';
+      $('adjVal_coopReturn').textContent = parseFloat($('adj_coopReturn').value).toFixed(1) + '%/ปี';
       $('adjVal_expense').textContent = fmt($('adj_expense').value) + ' บาท/ด.';
       $('adjVal_retireAge').textContent = $('adj_retireAge').value + ' ปี';
     }
@@ -2476,6 +2508,7 @@
       const adj = Object.assign({}, baseRetirementInputs, {
         employeeRate: parseFloat($('adj_pfRate').value),
         monthlySavings: parseFloat($('adj_savings').value),
+        coopReturn: parseFloat($('adj_coopReturn').value),
         desiredExpenseToday: parseFloat($('adj_expense').value),
         retireAge: parseInt($('adj_retireAge').value, 10)
       });
@@ -2497,18 +2530,22 @@
       let pfBalance = adj.pfAccumulated + adj.pfContributed + adj.pfAccumulatedGain + adj.pfContributedGain;
       let curSalary = adj.salary;
       const pfMonthlyReturn = Math.pow(1 + adj.pfReturn / 100, 1 / 12) - 1;
+      const preMonthlyReturn = Math.pow(1 + adj.preRetireReturn / 100, 1 / 12) - 1;
+      const coopMonthlyReturn = Math.pow(1 + adj.coopReturn / 100, 1 / 12) - 1;
+      let other = adj.initialSavings;
+      let coop = adj.coopShareCurrent;
+
       for (let y = 0; y < n1; y++) {
         const monthlyContrib = curSalary * (adj.employeeRate / 100 + adj.employerRate / 100);
-        for (let m = 0; m < 12; m++) pfBalance = pfBalance * (1 + pfMonthlyReturn) + monthlyContrib;
+        for (let m = 0; m < 12; m++) {
+          pfBalance = pfBalance * (1 + pfMonthlyReturn) + monthlyContrib;
+          other = other * (1 + preMonthlyReturn) + adj.monthlySavings;
+          coop = coop * (1 + coopMonthlyReturn) + adj.coopSharePerMonth;
+        }
         curSalary = curSalary * (1 + adj.salaryGrowth / 100);
       }
 
-      const preMonthlyReturn = Math.pow(1 + adj.preRetireReturn / 100, 1 / 12) - 1;
-      let other = adj.initialSavings;
-      const months1 = n1 * 12;
-      for (let m = 0; m < months1; m++) other = other * (1 + preMonthlyReturn) + adj.monthlySavings;
-
-      const coopFutureValue = adj.coopShareCurrent + (adj.coopSharePerMonth * months1);
+      const coopFutureValue = coop;
       const totalAvailable = pfBalance + other + coopFutureValue;
       const diff = totalAvailable - totalNeeded;
       const percent = totalNeeded > 0 ? (totalAvailable / totalNeeded * 100) : 100;
@@ -2599,6 +2636,7 @@
           pea_preRetireReturn: 5.5,
           pea_coopSharePerMonth: 2000,
           pea_coopShareCurrent: 120000,
+          pea_coopReturn: 4.8,
           pea_employeeRate: 5,
           pea_employerRate: 11,
           pea_pfReturn: 5.5,
