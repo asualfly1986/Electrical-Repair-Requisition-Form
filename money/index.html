@@ -1067,15 +1067,18 @@
     }
 
     @media print {
-      body { padding: 15px; background: #fff; color: #000; font-size: 10pt; }
-      .app-header, .bottom-nav, .btn, .chips-row, .slider-box, .btn-sync, .theme-toggle-btn, .scenario-grid, .solution-btn, .accordion-header::after { display: none !important; }
-      .tab-panel { display: block !important; margin-bottom: 20px; page-break-after: auto; }
-      .card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; margin-bottom: 12px; }
-      .hero-stat-card { background: #5B21B6 !important; color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .print-header { display: block !important; text-align: center; margin-bottom: 15px; border-bottom: 2px solid #5B21B6; padding-bottom: 8px; }
-      .print-header h2 { font-size: 16pt; color: #5B21B6; margin: 0; }
-      .print-header p { font-size: 9pt; color: #666; margin: 2px 0 0; }
+      body { padding: 10px 20px; background: #fff; color: #000; font-size: 9pt; }
+      .app-header, .bottom-nav, .btn, .chips-row, .slider-box, .btn-sync, .theme-toggle-btn, .scenario-grid, .solution-btn, .accordion-header::after, #tab-cashflow, #tab-networth, #tab-settings { display: none !important; }
+      .tab-panel { display: block !important; margin-bottom: 0; }
+      .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; margin-bottom: 8px; padding: 10px 14px; }
+      .hero-stat-card { background: #5B21B6 !important; color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 12px 14px; margin-bottom: 8px; }
+      .print-header { display: block !important; text-align: center; margin-bottom: 10px; border-bottom: 2px solid #5B21B6; padding-bottom: 6px; }
+      .print-header h2 { font-size: 13pt; color: #5B21B6; margin: 0; font-weight: 700; }
+      .print-header p { font-size: 8pt; color: #555; margin: 2px 0 0; }
       .table-wrap { display: block !important; }
+      .score-card { margin-bottom: 8px; padding: 8px 12px; }
+      .countdown-banner { margin-bottom: 8px; padding: 8px 12px; }
+      .stat-grid-2, .stat-grid-3 { margin-bottom: 8px; }
     }
     .print-header { display: none; }
   </style>
@@ -1084,8 +1087,8 @@
 
   <!-- PRINT REPORT HEADER (Only visible when printing / PDF export) -->
   <div class="print-header">
-    <h2>⚡ การไฟฟ้าส่วนภูมิภาค (PEA) - รายงานสรุปแผนการเงินและเป้าหมายเกษียณอายุ</h2>
-    <p>จัดทำโดยระบบ PEA Financial & Retirement Engine 2.1 | วันที่พิมพ์: <span id="printDateText">-</span></p>
+    <h2>⚡ การไฟฟ้าส่วนภูมิภาค (PEA) - รายงานสรุปแผนการเงินและเป้าหมายเกษียณอายุ (Financial Health Dashboard)</h2>
+    <p>ระบบ PEA Financial & Retirement Engine 2.3 | วันที่พิมพ์รายงาน: <span id="printDateText">-</span></p>
   </div>
 
   <!-- TOP HEADER -->
@@ -1118,6 +1121,16 @@
     <!-- ==================== TAB 1: ภาพรวม (DASHBOARD) ==================== -->
     <div class="tab-panel active" id="tab-dashboard">
       
+      <!-- Cashflow Deficit Alert (Shown if Net Cashflow < 0) -->
+      <div id="dashCashflowDeficitAlert" style="display:none; background:linear-gradient(135deg, #FEF2F2, #FEE2E2); border:1.5px solid #EF4444; border-radius:12px; padding:12px 14px; margin-bottom:14px; font-size:0.82rem; line-height:1.5;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+          <b style="color:#B91C1C; font-size:0.9rem;">⚠️ เตือนกระแสเงินสดติดลบ (<span id="dashDeficitAmount" class="num-font">0</span> ฿/ด.)</b>
+          <span class="badge badge-red">รายจ่ายเกินรายรับ</span>
+        </div>
+        <p style="color:#7F1D1D; margin:0 0 6px;">คุณกำลังมีรายจ่ายมากกว่ารายรับรวม หากไม่ปรับลดรายจ่าย เงินออมสะสมจะถูกดึงมาชดเชยจนหมด และไม่สามารถออมเงินตามแผนเกษียณได้จริง</p>
+        <button type="button" class="btn btn-outline" style="padding:6px 12px; font-size:0.76rem; border-color:#EF4444; color:#B91C1C; background:#fff; width:auto;" onclick="switchTab('cashflow')">ไปตรวจสอบงบรายจ่าย →</button>
+      </div>
+
       <!-- Net Worth Hero Card -->
       <div class="hero-stat-card">
         <div class="hero-stat-label">
@@ -1126,16 +1139,16 @@
         </div>
         <div class="hero-stat-value num-font" id="dashNetWorth">0 บาท</div>
         <div class="hero-stat-sub">
-          <span>สินทรัพย์ <b class="num-font" id="dashTotalAssets">0</b></span>
+          <span>สินทรัพย์รวม <b class="num-font" id="dashTotalAssets">0</b></span>
           <span>·</span>
-          <span>หนี้สิน <b class="num-font" id="dashTotalLiabilities">0</b></span>
+          <span>หนี้สินรวม <b class="num-font" id="dashTotalLiabilities">0</b></span>
         </div>
 
-        <!-- Interactive Asset Breakdown Bar -->
+        <!-- Interactive Asset Breakdown Bar with Liquid vs Personal separation -->
         <div style="margin-top:14px; background:rgba(0,0,0,0.18); border-radius:10px; padding:10px 12px; border:1px solid rgba(255,255,255,0.12);">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; font-size:0.75rem;">
             <span style="color:var(--pea-gold-light); font-weight:600;">📊 สัดส่วนสินทรัพย์ของคุณ (Asset Breakdown):</span>
-            <span style="opacity:0.85; font-size:0.7rem;">แตะเพื่อดูรายละเอียด</span>
+            <span style="opacity:0.9; font-size:0.72rem;">💎 เพื่อเกษียณ: <b id="nwLiquidPct" class="num-font">0%</b></span>
           </div>
           
           <div class="comp-track" style="height:12px; border-radius:6px; overflow:hidden; display:flex; background:rgba(255,255,255,0.15); margin-bottom:8px;">
@@ -1143,15 +1156,20 @@
             <div id="nwSegPF" style="background:var(--pea-gold); width:40%; height:100%; transition:width 0.4s ease;" title="กสช. กฟภ."></div>
             <div id="nwSegCoop" style="background:#2DD4BF; width:20%; height:100%; transition:width 0.4s ease;" title="หุ้นสหกรณ์"></div>
             <div id="nwSegInvest" style="background:#A78BFA; width:10%; height:100%; transition:width 0.4s ease;" title="การลงทุน"></div>
-            <div id="nwSegReal" style="background:#FB923C; width:10%; height:100%; transition:width 0.4s ease;" title="อสังหาฯ/อื่นๆ"></div>
+            <div id="nwSegReal" style="background:#FB923C; width:10%; height:100%; transition:width 0.4s ease;" title="อสังหาฯ/ของใช้ส่วนตัว"></div>
           </div>
 
           <div style="display:flex; flex-wrap:wrap; gap:6px 10px; font-size:0.72rem;">
-            <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:7px; height:7px; border-radius:50%; background:#38BDF8;"></span>เงินสด <b id="nwValCash">0฿ (0%)</b></span>
-            <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:7px; height:7px; border-radius:50%; background:var(--pea-gold);"></span>กสช. <b id="nwValPF">0฿ (0%)</b></span>
-            <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:7px; height:7px; border-radius:50%; background:#2DD4BF;"></span>สหกรณ์ <b id="nwValCoop">0฿ (0%)</b></span>
-            <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:7px; height:7px; border-radius:50%; background:#A78BFA;"></span>ลงทุน <b id="nwValInvest">0฿ (0%)</b></span>
-            <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:7px; height:7px; border-radius:50%; background:#FB923C;"></span>อสังหา/อื่น <b id="nwValReal">0฿ (0%)</b></span>
+            <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:7px; height:7px; border-radius:50%; background:#38BDF8;"></span>เงินสด <b id="nwValCash">0฿</b></span>
+            <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:7px; height:7px; border-radius:50%; background:var(--pea-gold);"></span>กสช. <b id="nwValPF">0฿</b></span>
+            <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:7px; height:7px; border-radius:50%; background:#2DD4BF;"></span>สหกรณ์ <b id="nwValCoop">0฿</b></span>
+            <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:7px; height:7px; border-radius:50%; background:#A78BFA;"></span>ลงทุน <b id="nwValInvest">0฿</b></span>
+            <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:7px; height:7px; border-radius:50%; background:#FB923C;"></span>อสังหา/ส่วนตัว <b id="nwValReal">0฿</b></span>
+          </div>
+
+          <div style="margin-top:8px; padding-top:6px; border-top:1px dashed rgba(255,255,255,0.15); display:flex; justify-content:space-between; font-size:0.72rem; opacity:0.92; flex-wrap:wrap; gap:4px;">
+            <span>💎 <b>สินทรัพย์เพื่อเกษียณ (Liquid):</b> <span id="nwLiquidTotalVal" class="num-font">-</span></span>
+            <span>🏠 <b>สินทรัพย์ส่วนตัว (Personal):</b> <span id="nwPersonalTotalVal" class="num-font">-</span></span>
           </div>
         </div>
       </div>
@@ -1466,11 +1484,14 @@
 
       <!-- NW SUB 1: สินทรัพย์ (ASSETS) -->
       <div id="nw-sub-assets">
+        
+        <!-- Group 1: สินทรัพย์เพื่อการเกษียณ / สภาพคล่องทางการเงิน -->
         <div class="card">
-          <div class="card-header">
-            <div class="card-title"><span class="icon">💰</span><span>สินทรัพย์ทั้งหมด (Assets)</span></div>
-            <span class="badge badge-green">รวม: <span class="num-font" id="nwTotalAssetsBadge">0</span> ฿</span>
+          <div class="card-header" style="margin-bottom:6px;">
+            <div class="card-title" style="font-size:0.95rem;"><span class="icon">💎</span><span>1. สินทรัพย์เพื่อการเกษียณ & การเงิน (Liquid Assets)</span></div>
+            <span class="badge badge-green" id="subtotalLiquidAssetsBadge">0 ฿</span>
           </div>
+          <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:12px;">สินทรัพย์สภาพคล่องสูงสำหรับใช้ดำรงชีพหลังเกษียณ (นำไปคำนวณแผนเกษียณ)</p>
 
           <div class="input-group">
             <label class="input-label"><span>เงินสด / บัญชีออมทรัพย์</span><span class="input-hint">สภาพคล่อง</span></label>
@@ -1489,14 +1510,6 @@
           </div>
 
           <div class="input-group">
-            <label class="input-label"><span>กองทุนรวม / หุ้น / ตราสารหนี้</span></label>
-            <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="ast_investment" value="50000" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
-            </div>
-          </div>
-
-          <div class="input-group">
             <label class="input-label"><span>กองทุนสำรองเลี้ยงชีพ (กสช.) / RMF / SSF</span></label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="ast_provident" value="515000" oninput="onDataChanged()">
@@ -1505,7 +1518,24 @@
           </div>
 
           <div class="input-group">
-            <label class="input-label"><span>อสังหาริมทรัพย์ (บ้าน / คอนโด / ที่ดิน)</span></label>
+            <label class="input-label"><span>กองทุนรวม / พอร์ตหุ้น / ตราสารหนี้</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="ast_investment" value="50000" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Group 2: สินทรัพย์ใช้ส่วนตัว & สภาพคล่องต่ำ -->
+        <div class="card">
+          <div class="card-header" style="margin-bottom:6px;">
+            <div class="card-title" style="font-size:0.95rem;"><span class="icon">🏠</span><span>2. สินทรัพย์ใช้ส่วนตัว & สภาพคล่องต่ำ (Personal Assets)</span></div>
+            <span class="badge badge-gold" id="subtotalPersonalAssetsBadge">0 ฿</span>
+          </div>
+          <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:12px;">สินทรัพย์ที่ใช้ประโยชน์ในชีวิตประจำวัน ไม่นำมาทยอยจ่ายเป็นค่าใช้จ่ายเกษียณ</p>
+
+          <div class="input-group">
+            <label class="input-label"><span>อสังหาริมทรัพย์ที่อยู่อาศัย (บ้าน / คอนโด / ที่ดิน)</span></label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="ast_realestate" value="0" oninput="onDataChanged()">
               <span class="input-unit">บาท</span>
@@ -1886,8 +1916,12 @@
               <span class="chip" onclick="setVal('pea_coopReturn', 5.5)">5.5%</span>
               <span class="chip" onclick="setVal('pea_coopReturn', 6.0)">6.0%</span>
             </div>
-            <div style="background:var(--card-sub); border-radius:10px; padding:8px 12px; font-size:0.78rem; color:var(--text-muted); margin-top:4px;">
-              💡 หุ้นสหกรณ์ฯ จะถูกคำนวณแบบทบต้นตามอัตราเงินปันผลต่อปีที่ระบุ (จำลองการนำเงินปันผลสะสมเพิ่มในหุ้น)
+            <div class="input-group" style="margin-top:10px;">
+              <label class="input-label"><span>รูปแบบการจัดการเงินปันผลสหกรณ์ กฟภ.</span></label>
+              <select class="form-input" id="pea_coopDividendOption" onchange="onRetirementInput()">
+                <option value="reinvest" selected>🔄 นำเงินปันผล Reinvest ซื้อหุ้นสหกรณ์ทบต้น (เพิ่มมูลค่าพอร์ต)</option>
+                <option value="payout">💵 รับเป็นเงินสดรายปีเข้ากระแสเงินสด (ไม่นำมาทบต้นในหุ้น)</option>
+              </select>
             </div>
           </div>
         </div>
@@ -1985,6 +2019,15 @@
 
       <!-- RESULTS SECTION -->
       <div id="peaResultsSection">
+
+        <!-- Cashflow Deficit Alert in Retirement Tab -->
+        <div id="retireCashflowDeficitAlert" style="display:none; background:linear-gradient(135deg, #FEF2F2, #FEE2E2); border:1.5px solid #EF4444; border-radius:12px; padding:12px 14px; margin-bottom:16px; font-size:0.82rem; line-height:1.5;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <b style="color:#B91C1C; font-size:0.9rem;">⚠️ คำเตือน: กระแสเงินสดรายเดือนปัจจุบันติดลบ (<span id="retireDeficitAmount" class="num-font">0</span> ฿/ด.)</b>
+            <span class="badge badge-red">เงินออมจริงลดลง</span>
+          </div>
+          <p style="color:#7F1D1D; margin:0;">แผนเกษียณข้างล่างคำนวณบนสมมติฐานว่าคุณสามารถสะสมเงินออมได้ต่อเนื่อง แต่เนื่องจากปัจจุบันมีรายจ่ายเกินรายรับ หากไม่ปรับลดรายจ่าย เงินออมจริงจะถูกดึงมาใช้ก่อนถึงวันเกษียณ</p>
+        </div>
 
         <!-- Sensitivity Analysis Scenario Bar -->
         <div class="card" style="margin-bottom:16px;">
@@ -2819,8 +2862,16 @@
 
     // 1-Click Sync from Financial Statement to Retirement Calculator
     function syncFromFinancialStatement() {
+      const totalIncome = state.inc_salary + state.inc_business + state.inc_rent + state.inc_dividend + state.inc_bonus + state.inc_other;
+      let totalDebtMonthly = 0;
+      if (state.debts) state.debts.forEach(d => totalDebtMonthly += (d.monthly || 0));
+      const totalExpense = state.exp_housing + state.exp_car + state.exp_home + state.exp_family + state.exp_insurance + state.exp_lifestyle + totalDebtMonthly + state.exp_saving + state.exp_tax;
+      const netSavings = totalIncome - totalExpense;
+
       $('pea_salary').value = state.inc_salary;
-      $('pea_monthlySavings').value = state.exp_saving;
+      // If cash flow is negative, effective extra monthly savings must be capped at 0
+      const effectiveMonthlySavings = Math.max(0, netSavings + state.exp_saving);
+      $('pea_monthlySavings').value = effectiveMonthlySavings;
       
       const totalCash = state.ast_cash + state.ast_fixed;
       $('pea_initialSavings').value = totalCash;
@@ -2838,7 +2889,7 @@
       }
 
       onRetirementInput();
-      alert('⚡ เชื่อมโยงข้อมูลเงินเดือน เงินออม และค่าใช้จ่ายจากงบการเงินเข้าสู่แผนเกษียณเรียบร้อยแล้ว!');
+      alert('⚡ เชื่อมโยงข้อมูลเงินเดือน เงินออม (ปรับตามกระแสเงินสดจริง) และค่าใช้จ่ายเข้าสู่แผนเกษียณเรียบร้อยแล้ว!');
     }
 
     // ==================== CALCULATION & RENDERING ====================
@@ -2882,13 +2933,35 @@
       if ($('cfDebtAutoSummary')) $('cfDebtAutoSummary').textContent = fmt(totalDebtMonthly) + ' ฿/ด.';
       if ($('nwTotalLiabBadge')) $('nwTotalLiabBadge').textContent = fmt(totalDebtPrincipal);
 
-      // 2. Cash Flow Calculation
+      // 2. Cash Flow Calculation & Logic Correction
       const totalIncome = state.inc_salary + state.inc_business + state.inc_rent + state.inc_dividend + state.inc_bonus + state.inc_other;
       const totalExpense = state.exp_housing + state.exp_car + state.exp_home + state.exp_family + state.exp_insurance + state.exp_lifestyle + totalDebtMonthly + state.exp_saving + state.exp_tax;
       const netSavings = totalIncome - totalExpense;
       const totalSavingsWithExp = netSavings + state.exp_saving;
-      const savingsRate = totalIncome > 0 ? (totalSavingsWithExp / totalIncome * 100) : 0;
       
+      // True Net Savings Rate Logic:
+      // If Net Savings is negative, user is in deficit (spending from cash/debt), so net savings rate is 0%
+      let savingsRate = 0;
+      if (netSavings < 0) {
+        savingsRate = 0;
+        $('sumSavingsRate').textContent = '0.0% (⚠️ รายจ่ายเกินรายรับ)';
+        $('dashSavingsRate').textContent = '0% (⚠️ ติดลบ)';
+        if ($('dashCashflowDeficitAlert')) {
+          $('dashCashflowDeficitAlert').style.display = 'block';
+          if ($('dashDeficitAmount')) $('dashDeficitAmount').textContent = fmt(Math.abs(netSavings));
+        }
+        if ($('retireCashflowDeficitAlert')) {
+          $('retireCashflowDeficitAlert').style.display = 'block';
+          if ($('retireDeficitAmount')) $('retireDeficitAmount').textContent = fmt(Math.abs(netSavings));
+        }
+      } else {
+        savingsRate = totalIncome > 0 ? (totalSavingsWithExp / totalIncome * 100) : 0;
+        $('sumSavingsRate').textContent = fmt2(savingsRate) + '%';
+        $('dashSavingsRate').textContent = fmt2(savingsRate) + '%';
+        if ($('dashCashflowDeficitAlert')) $('dashCashflowDeficitAlert').style.display = 'none';
+        if ($('retireCashflowDeficitAlert')) $('retireCashflowDeficitAlert').style.display = 'none';
+      }
+
       // DSR (Debt Service Ratio)
       const dsr = totalIncome > 0 ? (totalDebtMonthly / totalIncome * 100) : 0;
 
@@ -2899,36 +2972,40 @@
       $('sumExpense').textContent = fmt(totalExpense) + ' ฿';
       $('sumNetSavings').textContent = (netSavings >= 0 ? '+' : '') + fmt(netSavings) + ' บาท';
       $('sumNetSavings').style.color = netSavings >= 0 ? 'var(--text-main)' : 'var(--danger)';
-      $('sumSavingsRate').textContent = fmt2(savingsRate) + '%';
-      $('sumDebtRatio').textContent = fmt2(dsr) + '%' + (dsr > 40 ? ' (⚠️ เกิน 40%)' : ' (ปลอดภัย)');
-      $('sumDebtRatio').style.color = dsr > 40 ? 'var(--danger)' : 'var(--text-main)';
+      $('sumDebtRatio').textContent = fmt2(dsr) + '%' + (dsr > 45 ? ' (⚠️ เกิน 45% เสี่ยงสูง)' : (dsr > 30 ? ' (🟡 เฝ้าระวัง)' : ' (🟢 ปลอดภัย)'));
+      $('sumDebtRatio').style.color = dsr > 45 ? 'var(--danger)' : (dsr > 30 ? '#D97706' : 'var(--text-main)');
 
       // Update DSR Card UI
       if ($('dsrBadge')) {
         $('dsrBadge').textContent = `DSR ${fmt2(dsr)}%`;
-        $('dsrBadge').className = 'badge ' + (dsr > 40 ? 'badge-red' : (dsr > 30 ? 'badge-gold' : 'badge-green'));
+        $('dsrBadge').className = 'badge ' + (dsr > 45 ? 'badge-red' : (dsr > 30 ? 'badge-gold' : 'badge-green'));
       }
       if ($('dsrRateVal')) $('dsrRateVal').textContent = fmt2(dsr) + '%';
 
       let dsrVerdict = '';
       if (dsr <= 30) {
-        dsrVerdict = '✅ <b>สภาพคล่องปลอดภัยมาก:</b> ภาระหนี้สินผ่อนชำระต่ำกว่า 30% ของรายรับ มีเงินเหลือออมและลงทุนสม่ำเสมอ';
-      } else if (dsr <= 40) {
-        dsrVerdict = '🟡 <b>อยู่ในเกณฑ์ควบคุม:</b> ภาระผ่อนอยู่ระหว่าง 30-40% ควรระวังการก่อหนี้ใหม่เพิ่ม';
+        dsrVerdict = '🟢 <b>สภาพคล่องปลอดภัยมาก:</b> ภาระหนี้สินผ่อนชำระต่ำกว่า 30% ของรายรับ มีเงินเหลือออมและลงทุนสม่ำเสมอ';
+      } else if (dsr <= 45) {
+        dsrVerdict = '🟡 <b>อยู่ในเกณฑ์เฝ้าระวัง:</b> ภาระผ่อนอยู่ระหว่าง 30-45% ควรชะลอการก่อหนี้ใหม่เพิ่ม';
       } else {
-        dsrVerdict = '🔴 <b>ภาระหนี้สูงเกินเกณฑ์ 40%:</b> สภาพคล่องตึงตัว แนะนำใช้กลยุทธ์ Debt Avalanche หรือ Snowball เร่งลดหนี้ดอกเบี้ยสูง';
+        dsrVerdict = '🔴 <b>ภาระหนี้สูงเกินเกณฑ์ 45%:</b> สภาพคล่องตึงตัว แนะนำใช้กลยุทธ์ Debt Avalanche หรือ Snowball เร่งลดหนี้ดอกเบี้ยสูง';
       }
       if ($('dsrVerdictText')) $('dsrVerdictText').innerHTML = dsrVerdict;
 
-      // 3. Net Worth Calculation
-      const totalAssets = state.ast_cash + state.ast_fixed + state.ast_investment + state.ast_provident + state.ast_realestate + state.ast_personal + state.ast_business + state.ast_other;
+      // 3. Net Worth Calculation (Separating Liquid Retirement Assets vs Personal Assets)
+      const liquidRetirementAssets = state.ast_cash + state.ast_fixed + state.ast_provident + state.ast_investment + (state.pea_coopShareCurrent || 0);
+      const personalAssets = state.ast_realestate + state.ast_personal + state.ast_business + state.ast_other;
+      const totalAssets = liquidRetirementAssets + personalAssets;
       const totalLiabilities = totalDebtPrincipal;
       const netWorth = totalAssets - totalLiabilities;
       
       const monthlyLivingExp = totalExpense - state.exp_saving;
       const emergencyMonths = (monthlyLivingExp > 0) ? ((state.ast_cash + state.ast_fixed) / monthlyLivingExp) : 0;
 
-      // Update Net Worth UI
+      // Update Net Worth Subtotals & UI
+      if ($('subtotalLiquidAssetsBadge')) $('subtotalLiquidAssetsBadge').textContent = fmt(liquidRetirementAssets) + ' ฿';
+      if ($('subtotalPersonalAssetsBadge')) $('subtotalPersonalAssetsBadge').textContent = fmt(personalAssets) + ' ฿';
+
       $('nwTotalAssetsBadge').textContent = fmt(totalAssets);
       $('nwSumAssets').textContent = fmt(totalAssets) + ' ฿';
       $('nwSumLiab').textContent = fmt(totalLiabilities) + ' ฿';
@@ -2951,11 +3028,10 @@
       $('dashTotalLiabilities').textContent = fmt(totalLiabilities) + ' ฿';
       $('dashNetCashflow').textContent = (netSavings >= 0 ? '+' : '') + fmt(netSavings) + ' ฿';
       $('dashNetCashflow').className = 'mini-value num-font ' + (netSavings >= 0 ? 'green' : 'red');
-      $('dashSavingsRate').textContent = fmt2(savingsRate) + '%';
       $('dashEmergencyMonths').textContent = fmt2(emergencyMonths) + ' ด.';
       $('dashEmergencySub').textContent = (emergencyMonths >= 3) ? 'อยู่ในเกณฑ์ดี' : 'ควรเพิ่มสภาพคล่อง';
 
-      renderNetWorthBreakdown();
+      renderNetWorthBreakdown(liquidRetirementAssets, personalAssets, totalAssets);
       renderDebtStrategy();
 
       // Countdown
@@ -2969,8 +3045,10 @@
     }
 
     // Interactive Asset Distribution Renderer
-    function renderNetWorthBreakdown() {
-      const totalAssets = state.ast_cash + state.ast_fixed + state.ast_investment + state.ast_provident + state.ast_realestate + state.ast_personal + state.ast_business + state.ast_other;
+    function renderNetWorthBreakdown(liquidRetirementAssets, personalAssets, totalAssets) {
+      if (!totalAssets) {
+        totalAssets = state.ast_cash + state.ast_fixed + state.ast_investment + state.ast_provident + state.ast_realestate + state.ast_personal + state.ast_business + state.ast_other;
+      }
       if (totalAssets <= 0) return;
 
       const cash = state.ast_cash + state.ast_fixed;
@@ -2979,11 +3057,15 @@
       const invest = Math.max(0, state.ast_investment);
       const real = state.ast_realestate + state.ast_personal + state.ast_business + state.ast_other;
 
+      if (!liquidRetirementAssets) liquidRetirementAssets = cash + pf + coop + invest;
+      if (!personalAssets) personalAssets = real;
+
       const pCash = (cash / totalAssets * 100);
       const pPF = (pf / totalAssets * 100);
       const pCoop = (coop / totalAssets * 100);
       const pInvest = (invest / totalAssets * 100);
       const pReal = (real / totalAssets * 100);
+      const pLiquid = (liquidRetirementAssets / totalAssets * 100);
 
       if ($('nwSegCash')) $('nwSegCash').style.width = pCash + '%';
       if ($('nwSegPF')) $('nwSegPF').style.width = pPF + '%';
@@ -2996,6 +3078,10 @@
       if ($('nwValCoop')) $('nwValCoop').textContent = `${fmt(coop)} ฿ (${pCoop.toFixed(0)}%)`;
       if ($('nwValInvest')) $('nwValInvest').textContent = `${fmt(invest)} ฿ (${pInvest.toFixed(0)}%)`;
       if ($('nwValReal')) $('nwValReal').textContent = `${fmt(real)} ฿ (${pReal.toFixed(0)}%)`;
+
+      if ($('nwLiquidPct')) $('nwLiquidPct').textContent = pLiquid.toFixed(0) + '%';
+      if ($('nwLiquidTotalVal')) $('nwLiquidTotalVal').textContent = `${fmt(liquidRetirementAssets)} ฿ (${pLiquid.toFixed(0)}%)`;
+      if ($('nwPersonalTotalVal')) $('nwPersonalTotalVal').textContent = `${fmt(personalAssets)} ฿ (${(100 - pLiquid).toFixed(0)}%)`;
     }
 
     // Navigation & Scroll Helpers for Actionable Gap Resolver
@@ -3090,6 +3176,7 @@
         coopSharePerMonth: num('pea_coopSharePerMonth'),
         coopShareCurrent: num('pea_coopShareCurrent'),
         coopReturn: num('pea_coopReturn'),
+        coopDividendOption: $('pea_coopDividendOption') ? $('pea_coopDividendOption').value : (state.pea_coopDividendOption || 'reinvest'),
         useStepEmployerRate: $('pea_useStepEmployerRate') ? $('pea_useStepEmployerRate').checked : true,
         enableSeverance: $('pea_enableSeverance') ? $('pea_enableSeverance').checked : true,
         employeeRate: num('pea_employeeRate'),
@@ -3130,7 +3217,7 @@
         }
       }
 
-      // Provident Fund (กสช.) with Step Match, Savings & Coop Shares Compounding
+      // Provident Fund (กสช.) with Step Match, Savings & Coop Shares
       let pfBalance = inp.pfAccumulated + inp.pfContributed + inp.pfAccumulatedGain + inp.pfContributedGain;
       let curSalary = inp.salary;
       const pfMonthlyReturn = Math.pow(1 + inp.pfReturn / 100, 1 / 12) - 1;
@@ -3162,7 +3249,11 @@
         for (let m = 0; m < 12; m++) {
           pfBalance = pfBalance * (1 + pfMonthlyReturn) + monthlyContrib;
           other = other * (1 + preMonthlyReturn) + inp.monthlySavings;
-          coop = coop * (1 + coopMonthlyReturn) + inp.coopSharePerMonth;
+          if (inp.coopDividendOption === 'payout') {
+            coop = coop + inp.coopSharePerMonth;
+          } else {
+            coop = coop * (1 + coopMonthlyReturn) + inp.coopSharePerMonth;
+          }
         }
         curSalary = curSalary * (1 + inp.salaryGrowth / 100);
         
@@ -3310,7 +3401,11 @@
           for (let m = 0; m < 12; m++) {
             pf = pf * (1 + mPf) + contrib;
             other = other * (1 + mPre) + inp.monthlySavings;
-            coop = coop * (1 + mCoop) + inp.coopSharePerMonth;
+            if (inp.coopDividendOption === 'payout') {
+              coop = coop + inp.coopSharePerMonth;
+            } else {
+              coop = coop * (1 + mCoop) + inp.coopSharePerMonth;
+            }
           }
           sal = sal * (1 + inp.salaryGrowth / 100);
         }
@@ -3609,7 +3704,11 @@
         for (let m = 0; m < 12; m++) {
           pfBalance = pfBalance * (1 + pfMonthlyReturn) + monthlyContrib;
           other = other * (1 + preMonthlyReturn) + adj.monthlySavings;
-          coop = coop * (1 + coopMonthlyReturn) + adj.coopSharePerMonth;
+          if (adj.coopDividendOption === 'payout') {
+            coop = coop + adj.coopSharePerMonth;
+          } else {
+            coop = coop * (1 + coopMonthlyReturn) + adj.coopSharePerMonth;
+          }
         }
         curSalary = curSalary * (1 + adj.salaryGrowth / 100);
       }
