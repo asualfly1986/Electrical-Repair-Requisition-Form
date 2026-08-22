@@ -1,0 +1,2625 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>PEA วางแผนการเงิน & แผนเกษียณ</title>
+  
+  <!-- PWA & iOS Meta Tags -->
+  <meta name="theme-color" content="#3D1F6E">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PEA Finance">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="apple-touch-icon" href="icon.svg">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --pea-dark: #1E0B38;
+      --pea-purple: #3D1F6E;
+      --pea-purple-light: #5B32A3;
+      --pea-purple-soft: #8A6BC8;
+      --pea-purple-bg: #F4F0FB;
+      --pea-purple-tint: #ECE5F8;
+      
+      --pea-gold: #FFB627;
+      --pea-gold-dark: #E69500;
+      --pea-gold-light: #FFF1D6;
+      
+      --success: #10B981;
+      --success-bg: #ECFDF5;
+      --success-dark: #047857;
+      
+      --warning: #F59E0B;
+      --warning-bg: #FEF3C7;
+      
+      --danger: #EF4444;
+      --danger-bg: #FEF2F2;
+      --danger-dark: #B91C1C;
+      
+      --info: #3B82F6;
+      --info-bg: #EFF6FF;
+      
+      --bg: #F8F9FC;
+      --card-bg: #FFFFFF;
+      --card-sub: #F9FAFB;
+      --text-main: #1F2937;
+      --text-muted: #6B7280;
+      --border: #E5E7EB;
+      --border-focus: #5B32A3;
+      --nav-bg: rgba(255, 255, 255, 0.94);
+      --table-header: #F3F4F6;
+      
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --shadow-sm: 0 2px 8px rgba(36, 17, 72, 0.04);
+      --shadow-md: 0 8px 24px rgba(36, 17, 72, 0.08);
+      --shadow-lg: 0 16px 36px rgba(36, 17, 72, 0.12);
+      
+      --safe-bottom: env(safe-area-inset-bottom, 16px);
+      --safe-top: env(safe-area-inset-top, 16px);
+    }
+
+    [data-theme="dark"] {
+      --pea-dark: #0F051D;
+      --pea-purple: #4A2485;
+      --pea-purple-light: #7042C1;
+      --pea-purple-soft: #9F82DB;
+      --pea-purple-bg: #22143D;
+      --pea-purple-tint: #2C1B4D;
+      
+      --bg: #110920;
+      --card-bg: #1B1033;
+      --card-sub: #251842;
+      --text-main: #F3F4F6;
+      --text-muted: #9CA3AF;
+      --border: #312154;
+      --border-focus: #9F82DB;
+      --nav-bg: rgba(27, 16, 51, 0.94);
+      --table-header: #271948;
+      
+      --success-bg: rgba(16, 185, 129, 0.15);
+      --danger-bg: rgba(239, 68, 68, 0.15);
+      --warning-bg: rgba(245, 158, 11, 0.15);
+      --info-bg: rgba(59, 130, 246, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+
+    body {
+      font-family: 'Prompt', 'Sarabun', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding-bottom: calc(78px + var(--safe-bottom));
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+    }
+
+    input, button, select, textarea {
+      font-family: inherit;
+      user-select: text;
+    }
+
+    .num-font {
+      font-family: 'Chakra Petch', 'Prompt', sans-serif;
+      font-feature-settings: "tnum";
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ---------- APP HEADER ---------- */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: linear-gradient(135deg, var(--pea-dark), var(--pea-purple));
+      color: #fff;
+      padding: calc(10px + var(--safe-top)) 16px 12px;
+      box-shadow: 0 4px 20px rgba(30, 11, 56, 0.25);
+    }
+
+    .header-content {
+      max-width: 760px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--pea-gold), var(--pea-gold-dark));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(255, 182, 39, 0.4);
+      flex-shrink: 0;
+    }
+
+    .brand-icon svg {
+      width: 24px;
+      height: 24px;
+      fill: #1E0B38;
+    }
+
+    .brand-info h1 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      color: #fff;
+    }
+
+    .brand-info p {
+      font-size: 0.73rem;
+      color: #D8CFEE;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .theme-toggle-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      color: #fff;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .save-status {
+      font-size: 0.72rem;
+      color: #E2D9F3;
+      background: rgba(255, 255, 255, 0.12);
+      padding: 4px 10px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      backdrop-filter: blur(8px);
+    }
+
+    .save-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: var(--pea-gold);
+    }
+    .save-dot.synced { background-color: var(--success); }
+
+    /* ---------- MAIN CONTAINER ---------- */
+    .app-main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 16px 14px;
+    }
+
+    /* ---------- TAB PANELS ---------- */
+    .tab-panel {
+      display: none;
+      animation: fadeIn 0.25s ease-out;
+    }
+    .tab-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---------- SEGMENTED CONTROLS (SUB-TABS) ---------- */
+    .segmented-control {
+      display: flex;
+      background: var(--pea-purple-tint);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 16px;
+      gap: 4px;
+    }
+
+    .seg-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 9px 4px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--pea-purple-soft);
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .seg-btn.active {
+      background: var(--card-bg);
+      color: var(--text-main);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    /* ---------- CARDS ---------- */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      padding: 18px 16px;
+      margin-bottom: 16px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      gap: 8px;
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .card-title .icon {
+      font-size: 1.2rem;
+    }
+
+    .badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 999px;
+      letter-spacing: 0.02em;
+    }
+    .badge-gold { background: var(--pea-gold-light); color: var(--pea-gold-dark); }
+    .badge-purple { background: var(--pea-purple-tint); color: var(--pea-purple-soft); }
+    .badge-green { background: var(--success-bg); color: var(--success); }
+    .badge-red { background: var(--danger-bg); color: var(--danger); }
+    .badge-blue { background: var(--info-bg); color: var(--info); }
+
+    /* ---------- HERO CARDS ---------- */
+    .hero-stat-card {
+      background: linear-gradient(135deg, var(--pea-purple), var(--pea-dark));
+      color: #fff;
+      border-radius: var(--radius-lg);
+      padding: 22px 20px;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-stat-card::after {
+      content: '';
+      position: absolute;
+      right: -30px;
+      top: -30px;
+      width: 140px;
+      height: 140px;
+      background: radial-gradient(circle, rgba(255, 182, 39, 0.25) 0%, rgba(255, 182, 39, 0) 70%);
+      border-radius: 50%;
+    }
+
+    .hero-stat-label {
+      font-size: 0.84rem;
+      color: #D8CFEE;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .hero-stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    .hero-stat-sub {
+      font-size: 0.82rem;
+      color: #E2D9F3;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ---------- HEALTH SCORE RADAR CARD ---------- */
+    .score-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      padding: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .score-circle {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: conic-gradient(var(--pea-gold) var(--score-deg, 0deg), var(--border) 0deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .score-circle-inner {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .score-number {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1;
+    }
+    .score-max {
+      font-size: 0.6rem;
+      color: var(--text-muted);
+    }
+
+    .score-details {
+      flex: 1;
+    }
+
+    .score-title {
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 3px;
+    }
+
+    .score-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+
+    /* ---------- STAT GRID ---------- */
+    .stat-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .stat-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .mini-stat {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .mini-stat.highlight {
+      background: var(--pea-purple-bg);
+      border-color: var(--border-focus);
+    }
+
+    .mini-label {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .mini-value {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .mini-value.green { color: var(--success); }
+    .mini-value.red { color: var(--danger); }
+    .mini-value.gold { color: var(--pea-gold-dark); }
+
+    .mini-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ---------- COUNTDOWN BANNER ---------- */
+    .countdown-banner {
+      background: linear-gradient(135deg, var(--pea-purple-tint), var(--pea-purple-bg));
+      border: 1px solid var(--pea-purple-soft);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .countdown-text {
+      font-size: 0.84rem;
+      color: var(--text-main);
+    }
+    .countdown-num {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--pea-purple-light);
+    }
+
+    /* ---------- INPUT FIELDS (MOBILE TOUCH FRIENDLY) ---------- */
+    .input-group {
+      margin-bottom: 14px;
+    }
+
+    .input-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .input-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .form-input {
+      width: 100%;
+      background: var(--card-sub);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-main);
+      transition: all 0.2s ease;
+      font-family: 'Chakra Petch', 'Prompt', sans-serif;
+    }
+
+    .form-input:focus {
+      outline: none;
+      background: var(--card-bg);
+      border-color: var(--pea-purple-light);
+      box-shadow: 0 0 0 4px rgba(91, 50, 163, 0.15);
+    }
+
+    .input-unit {
+      position: absolute;
+      right: 14px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+      pointer-events: none;
+    }
+
+    /* Quick Number Presets / Helpers */
+    .chips-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    .chips-row::-webkit-scrollbar { display: none; }
+
+    .chip {
+      background: var(--pea-purple-tint);
+      border: 1px solid var(--border);
+      color: var(--pea-purple-soft);
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .chip:active {
+      background: var(--pea-purple-light);
+      color: #fff;
+    }
+
+    /* ---------- BUTTONS ---------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 13px 18px;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--pea-gold), var(--pea-gold-dark));
+      color: #1E0B38;
+      box-shadow: 0 6px 18px rgba(240, 153, 26, 0.35);
+    }
+
+    .btn-purple {
+      background: linear-gradient(135deg, var(--pea-purple-light), var(--pea-purple));
+      color: #FFFFFF;
+      box-shadow: 0 6px 18px rgba(61, 31, 110, 0.25);
+    }
+
+    .btn-outline {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      color: var(--text-main);
+    }
+    .btn-outline:active {
+      background: var(--card-sub);
+    }
+
+    .btn-sync {
+      background: var(--pea-purple-bg);
+      border: 1.5px dashed var(--pea-purple-soft);
+      color: var(--pea-purple-soft);
+      padding: 11px 16px;
+      border-radius: 12px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    /* ---------- GAUGE & VISUALIZATIONS ---------- */
+    .gauge-card {
+      text-align: center;
+      padding: 20px 16px 16px;
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 16px;
+    }
+
+    .gauge-svg {
+      width: 240px;
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .gauge-readout {
+      font-family: 'Chakra Petch', sans-serif;
+      font-weight: 700;
+      font-size: 1.85rem;
+      margin-top: -24px;
+      margin-bottom: 4px;
+    }
+
+    .verdict-box {
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      margin-top: 12px;
+      text-align: left;
+      border-left: 5px solid #6B7280;
+    }
+    .verdict-box.positive {
+      background: var(--success-bg);
+      border-color: var(--success);
+      color: var(--success);
+    }
+    .verdict-box.negative {
+      background: var(--danger-bg);
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+    .verdict-box h4 {
+      font-size: 0.95rem;
+      margin-bottom: 3px;
+    }
+    .verdict-box p {
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: var(--text-main);
+    }
+
+    /* Stacked comparison bars */
+    .comp-bar-container {
+      margin-top: 14px;
+    }
+    .comp-row {
+      margin-bottom: 10px;
+    }
+    .comp-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .comp-track {
+      background: var(--card-sub);
+      height: 20px;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+    }
+    .comp-seg {
+      height: 100%;
+      transition: width 0.4s ease;
+    }
+    .seg-pf { background: var(--pea-purple-light); }
+    .seg-other { background: var(--pea-gold); }
+    .seg-coop { background: #0D9488; }
+    .seg-needed { background: #6B7280; }
+
+    .comp-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    /* ---------- SLIDERS (ลองปรับแผน) ---------- */
+    .slider-box {
+      background: var(--pea-purple-bg);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.86rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .slider-val {
+      color: var(--pea-purple-light);
+      font-weight: 700;
+    }
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--pea-purple-light);
+      height: 6px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    /* ---------- LIST ITEMS & ROW BREAKDOWN ---------- */
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 11px 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 0.9rem;
+    }
+    .breakdown-row:last-child {
+      border-bottom: none;
+    }
+    .breakdown-row.total {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-main);
+      padding-top: 14px;
+      border-top: 2px solid var(--border);
+      border-bottom: none;
+    }
+
+    /* ---------- ACCORDION SECTIONS ---------- */
+    .accordion {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      background: var(--card-bg);
+    }
+    .accordion-header {
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card-bg);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+    .accordion-header .arrow {
+      transition: transform 0.25s ease;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .accordion.open .accordion-header .arrow {
+      transform: rotate(180deg);
+    }
+    .accordion-body {
+      padding: 0 16px 16px;
+      display: none;
+    }
+    .accordion.open .accordion-body {
+      display: block;
+    }
+
+    /* ---------- TABLE STYLING FOR YEARLY PROJECTION ---------- */
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-top: 10px;
+    }
+    .proj-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      text-align: right;
+    }
+    .proj-table th {
+      background: var(--table-header);
+      padding: 8px 10px;
+      font-weight: 600;
+      color: var(--text-main);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .proj-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .proj-table tr.retire-milestone {
+      background: var(--pea-purple-tint);
+      font-weight: 700;
+    }
+
+    /* ---------- BOTTOM NAVIGATION (NATIVE MOBILE FEEL) ---------- */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border);
+      padding: 6px 6px calc(6px + var(--safe-bottom));
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-container {
+      max-width: 760px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .nav-tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 6px 2px;
+      border-radius: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-tab svg {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+      transition: transform 0.2s ease;
+    }
+
+    .nav-tab span {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .nav-tab.active {
+      color: var(--pea-purple-light);
+    }
+
+    .nav-tab.active svg {
+      transform: translateY(-2px);
+      color: var(--pea-purple-light);
+    }
+
+    /* Responsive adjustments for desktop */
+    @media (min-width: 768px) {
+      body { padding-bottom: 40px; }
+      .bottom-nav {
+        position: sticky;
+        top: 60px;
+        bottom: auto;
+        border-top: none;
+        border-bottom: 1px solid var(--border);
+        padding: 8px 16px;
+        margin-bottom: 16px;
+      }
+      .nav-tab { flex-direction: row; gap: 8px; padding: 8px 16px; }
+      .nav-tab span { font-size: 0.85rem; }
+    }
+
+    @media print {
+      body { padding: 0; background: #fff; color: #000; }
+      .app-header, .bottom-nav, .btn, .chips-row, .slider-box, .btn-sync, .theme-toggle-btn { display: none !important; }
+      .tab-panel { display: block !important; margin-bottom: 30px; }
+      .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER -->
+  <header class="app-header">
+    <div class="header-content">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+        </div>
+        <div class="brand-info">
+          <h1>PEA Financial Planner</h1>
+          <p>งบการเงินส่วนบุคคล & แผนเกษียณ กฟภ.</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="theme-toggle-btn" onclick="toggleDarkMode()" title="สลับโหมดมืด/สว่าง">
+          <span id="themeIcon">🌙</span>
+        </button>
+        <div class="save-status">
+          <span class="save-dot synced" id="saveDot"></span>
+          <span id="saveStatusText">พร้อม</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="app-main">
+
+    <!-- ==================== TAB 1: ภาพรวม (DASHBOARD) ==================== -->
+    <div class="tab-panel active" id="tab-dashboard">
+      
+      <!-- Net Worth Hero Card -->
+      <div class="hero-stat-card">
+        <div class="hero-stat-label">
+          <span>มูลค่าความมั่งคั่งสุทธิ (Net Worth)</span>
+          <span class="badge badge-gold" id="dashHealthBadge">มั่นคง</span>
+        </div>
+        <div class="hero-stat-value num-font" id="dashNetWorth">0 บาท</div>
+        <div class="hero-stat-sub">
+          <span>สินทรัพย์ <b class="num-font" id="dashTotalAssets">0</b></span>
+          <span>·</span>
+          <span>หนี้สิน <b class="num-font" id="dashTotalLiabilities">0</b></span>
+        </div>
+      </div>
+
+      <!-- Financial Health Scorecard (5-Dimensions) -->
+      <div class="score-card">
+        <div class="score-circle" id="scoreCircle">
+          <div class="score-circle-inner">
+            <span class="score-number num-font" id="scoreNumber">0</span>
+            <span class="score-max">/100</span>
+          </div>
+        </div>
+        <div class="score-details">
+          <div class="score-title" id="scoreTitle">คะแนนสุขภาพการเงิน</div>
+          <div class="score-desc" id="scoreDesc">ประเมินจาก 5 มิติ: เงินออม, ภาระหนี้, สภาพคล่อง, หนี้สินต่อสินทรัพย์ และความพร้อมวัยเกษียณ</div>
+        </div>
+      </div>
+
+      <!-- Retirement Countdown Banner -->
+      <div class="countdown-banner">
+        <div class="countdown-text">
+          <span>⏳ นับถอยหลังสู่วันเกษียณอายุ:</span><br>
+          <span style="font-size:0.75rem; color:var(--text-muted);">เหลือเวลาสร้างความมั่นคง</span>
+        </div>
+        <div class="countdown-num num-font" id="dashCountdownText">0 ปี 0 ด.</div>
+      </div>
+
+      <!-- Quick Metrics Grid -->
+      <div class="stat-grid-2">
+        <div class="mini-stat">
+          <span class="mini-label">กระแสเงินสดสุทธิ / เดือน</span>
+          <div class="mini-value num-font" id="dashNetCashflow">0 ฿</div>
+          <div class="mini-sub">อัตราการออม <b id="dashSavingsRate">0%</b></div>
+        </div>
+        <div class="mini-stat">
+          <span class="mini-label">เงินสำรองฉุกเฉิน</span>
+          <div class="mini-value num-font" id="dashEmergencyMonths">0.0 เดือน</div>
+          <div class="mini-sub" id="dashEmergencySub">เป้าหมาย 3-6 เดือน</div>
+        </div>
+      </div>
+
+      <!-- Retirement Readiness Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="icon">⚡</span>
+            <span>ความพร้อมแผนเกษียณ กฟภ.</span>
+          </div>
+          <button type="button" class="badge badge-purple" onclick="switchTab('retirement')">ดูแผนละเอียด →</button>
+        </div>
+
+        <div class="gauge-card" style="border:none; padding: 0; box-shadow:none; margin-bottom: 8px;">
+          <svg class="gauge-svg" viewBox="0 0 300 160" aria-hidden="true">
+            <path d="M30,140 A110,110 0 0 1 270,140" fill="none" stroke="var(--border)" stroke-width="20" stroke-linecap="round" pathLength="100"/>
+            <path id="dashGaugeProgress" d="M30,140 A110,110 0 0 1 270,140" fill="none" stroke="#EF4444" stroke-width="20" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/>
+            <g id="dashGaugeNeedle" transform="rotate(-90 150 140)">
+              <line x1="150" y1="140" x2="150" y2="40" stroke="var(--text-main)" stroke-width="4" stroke-linecap="round"/>
+            </g>
+            <circle cx="150" cy="140" r="8" fill="var(--text-main)"/>
+            <text x="26" y="156" font-size="11" fill="var(--text-muted)" font-family="Prompt">0%</text>
+            <text x="232" y="156" font-size="11" fill="var(--text-muted)" font-family="Prompt">150%</text>
+          </svg>
+          <div class="gauge-readout num-font" id="dashGaugeReadout">0%</div>
+        </div>
+
+        <div class="verdict-box" id="dashVerdictBox">
+          <h4 id="dashVerdictTitle">กำลังประเมินแผนเกษียณ</h4>
+          <p id="dashVerdictDesc">กรอกข้อมูลเงินเดือนและเงินออมของคุณเพื่อเริ่มประเมินความพร้อม</p>
+        </div>
+      </div>
+
+      <!-- Quick Action Menu -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="icon">🚀</span>
+            <span>เมนูลัดใช้งานด่วน</span>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <button class="btn btn-outline" onclick="switchTab('cashflow')">💰 บันทึกรายรับ - รายจ่ายรายเดือน</button>
+          <button class="btn btn-outline" onclick="switchTab('networth')">🏦 จัดการสินทรัพย์และหนี้สิน</button>
+          <button class="btn btn-primary" onclick="switchTab('retirement')">⚡ คำนวณและปรับแผนเกษียณ กฟภ.</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ==================== TAB 2: งบกระแสเงินสด (CASH FLOW) ==================== -->
+    <div class="tab-panel" id="tab-cashflow">
+      
+      <div class="segmented-control">
+        <button class="seg-btn active" onclick="switchCFSub('income', this)">📥 รายรับ</button>
+        <button class="seg-btn" onclick="switchCFSub('expense', this)">📤 รายจ่าย</button>
+        <button class="seg-btn" onclick="switchCFSub('summary', this)">📊 สรุปผล</button>
+      </div>
+
+      <!-- CF SUB 1: รายรับ (INCOME) -->
+      <div id="cf-sub-income">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="icon">💵</span><span>รายรับต่อเดือน (Income)</span></div>
+            <span class="badge badge-green">รวม: <span class="num-font" id="cfTotalIncomeBadge">0</span> ฿</span>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>เงินเดือนประจำ (บาท/เดือน)</span><span class="input-hint">หลัก</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="inc_salary" value="35000" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+            <div class="chips-row">
+              <span class="chip" onclick="setVal('inc_salary', 25000)">25k</span>
+              <span class="chip" onclick="setVal('inc_salary', 35000)">35k</span>
+              <span class="chip" onclick="setVal('inc_salary', 50000)">50k</span>
+              <span class="chip" onclick="setVal('inc_salary', 70000)">70k</span>
+              <span class="chip" onclick="setVal('inc_salary', 100000)">100k</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>รายได้จากธุรกิจส่วนตัว / อาชีพเสริม</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="inc_business" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>รายได้จากค่าเช่า</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="inc_rent" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>เงินปันผล / ดอกเบี้ยรับ (เฉลี่ยต่อเดือน)</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="inc_dividend" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>โบนัส (เฉลี่ยต่อเดือน = โบนัสทั้งปี ÷ 12)</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="inc_bonus" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>รายได้อื่นๆ</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="inc_other" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <button class="btn btn-purple" onclick="switchCFSub('expense', document.querySelectorAll('#tab-cashflow .seg-btn')[1])">ถัดไป: กรอกรายจ่าย →</button>
+        </div>
+      </div>
+
+      <!-- CF SUB 2: รายจ่าย (EXPENSES) -->
+      <div id="cf-sub-expense" style="display:none;">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="icon">💳</span><span>รายจ่ายต่อเดือน (Expenses)</span></div>
+            <span class="badge badge-red">รวม: <span class="num-font" id="cfTotalExpenseBadge">0</span> ฿</span>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>ค่าผ่อนบ้าน / ค่าเช่าห้อง</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="exp_housing" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>ค่าผ่อนรถยนต์ / มอเตอร์ไซค์</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="exp_car" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>ค่าใช้จ่ายในบ้าน (อาหาร / ค่าน้ำ-ไฟ / ของใช้)</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="exp_home" value="12000" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>ค่าเลี้ยงดูบุตร / ครอบครัว / การศึกษา</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="exp_family" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>เบี้ยประกันภัย (สุขภาพ/ชีวิต/รถ เฉลี่ยต่อเดือน)</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="exp_insurance" value="1500" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>ค่าใช้จ่ายส่วนตัว / ท่องเที่ยว / ไลฟ์สไตล์</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="exp_lifestyle" value="5000" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>ชำระหนี้บัตรเครดิต / สินเชื่อส่วนบุคคล</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="exp_debt" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>เงินออม / เงินลงทุนรายเดือน</span><span class="input-hint">ออมเพิ่ม</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="exp_saving" value="3000" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>ภาษี และ อื่นๆ</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="exp_tax" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" onclick="switchCFSub('summary', document.querySelectorAll('#tab-cashflow .seg-btn')[2])">ดูสรุปกระแสเงินสด →</button>
+        </div>
+      </div>
+
+      <!-- CF SUB 3: สรุปผล (SUMMARY) -->
+      <div id="cf-sub-summary" style="display:none;">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="icon">📊</span><span>สรุปกระแสเงินสดรายเดือน</span></div>
+          </div>
+
+          <div class="stat-grid-2">
+            <div class="mini-stat highlight">
+              <span class="mini-label">รวมรายรับ</span>
+              <div class="mini-value num-font green" id="sumIncome">0 ฿</div>
+            </div>
+            <div class="mini-stat">
+              <span class="mini-label">รวมรายจ่าย</span>
+              <div class="mini-value num-font red" id="sumExpense">0 ฿</div>
+            </div>
+          </div>
+
+          <div class="card" style="background:var(--pea-purple-bg); border-color:var(--border-focus); margin-bottom:14px;">
+            <div class="hero-stat-label" style="color:var(--pea-purple-soft);">เงินออมสุทธิต่อเดือน (รายรับ - รายจ่าย)</div>
+            <div class="hero-stat-value num-font" id="sumNetSavings" style="color:var(--text-main); font-size:1.8rem;">0 บาท</div>
+          </div>
+
+          <div class="breakdown-row">
+            <span>อัตราการออม (% ของรายรับ)</span>
+            <span class="num-font" id="sumSavingsRate" style="font-weight:700;">0%</span>
+          </div>
+          <div class="breakdown-row">
+            <span>อัตราการจ่ายหนี้ (DTI)</span>
+            <span class="num-font" id="sumDebtRatio" style="font-weight:700;">0%</span>
+          </div>
+
+          <div style="margin-top:12px; padding:12px; border-radius:10px; background:var(--card-sub); font-size:0.8rem; color:var(--text-muted);">
+            💡 <b>คำแนะนำสุขภาพทางการเงิน:</b>
+            <ul style="padding-left:18px; margin-top:4px;">
+              <li>ควรรักษาอัตราการออมอย่างน้อย <b>20% ของรายรับ</b></li>
+              <li>อัตราการจ่ายหนี้สินรวม <b>ไม่ควรเกิน 40% ของรายรับ</b></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ==================== TAB 3: งบดุล & สินทรัพย์ (NET WORTH) ==================== -->
+    <div class="tab-panel" id="tab-networth">
+
+      <div class="segmented-control">
+        <button class="seg-btn active" onclick="switchNWSub('assets', this)">💎 สินทรัพย์</button>
+        <button class="seg-btn" onclick="switchNWSub('liabilities', this)">📉 หนี้สิน</button>
+        <button class="seg-btn" onclick="switchNWSub('summary', this)">🏛️ งบดุลสุทธิ</button>
+      </div>
+
+      <!-- NW SUB 1: สินทรัพย์ (ASSETS) -->
+      <div id="nw-sub-assets">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="icon">💰</span><span>สินทรัพย์ทั้งหมด (Assets)</span></div>
+            <span class="badge badge-green">รวม: <span class="num-font" id="nwTotalAssetsBadge">0</span> ฿</span>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>เงินสด / บัญชีออมทรัพย์</span><span class="input-hint">สภาพคล่อง</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="ast_cash" value="100000" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>เงินฝากประจำ</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="ast_fixed" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>กองทุนรวม / หุ้น / ตราสารหนี้</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="ast_investment" value="50000" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>กองทุนสำรองเลี้ยงชีพ (กสช.) / RMF / SSF</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="ast_provident" value="515000" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>อสังหาริมทรัพย์ (บ้าน / คอนโด / ที่ดิน)</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="ast_realestate" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>ทรัพย์สินส่วนตัว (รถยนต์ / ทองคำ / ของสะสม)</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="ast_personal" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>มูลค่าธุรกิจส่วนตัว</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="ast_business" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>สินทรัพย์อื่นๆ</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="ast_other" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <button class="btn btn-purple" onclick="switchNWSub('liabilities', document.querySelectorAll('#tab-networth .seg-btn')[1])">ถัดไป: กรอกหนี้สิน →</button>
+        </div>
+      </div>
+
+      <!-- NW SUB 2: หนี้สิน (LIABILITIES) -->
+      <div id="nw-sub-liabilities" style="display:none;">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="icon">🧾</span><span>หนี้สินทั้งหมด (Liabilities)</span></div>
+            <span class="badge badge-red">รวม: <span class="num-font" id="nwTotalLiabBadge">0</span> ฿</span>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>ยอดคงค้างสินเชื่อบ้าน</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="lia_home" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>ยอดคงค้างสินเชื่อรถยนต์</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="lia_car" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>ยอดคงค้างหนี้บัตรเครดิต</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="lia_card" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>ยอดคงค้างสินเชื่อส่วนบุคคล</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="lia_personal" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>หนี้เพื่อการศึกษา (กยศ./กรอ.)</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="lia_edu" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label"><span>หนี้สินอื่นๆ</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="lia_other" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท</span>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" onclick="switchNWSub('summary', document.querySelectorAll('#tab-networth .seg-btn')[2])">ดูสรุปงบดุลสุทธิ →</button>
+        </div>
+      </div>
+
+      <!-- NW SUB 3: สรุปงบดุล (NET WORTH SUMMARY) -->
+      <div id="nw-sub-summary" style="display:none;">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="icon">🏛️</span><span>งบดุลส่วนบุคคล (Net Worth Statement)</span></div>
+          </div>
+
+          <div class="hero-stat-card" style="margin-bottom:14px;">
+            <div class="hero-stat-label">มูลค่าสุทธิ (สินทรัพย์ - หนี้สิน)</div>
+            <div class="hero-stat-value num-font" id="nwNetWorthVal">0 บาท</div>
+            <div class="hero-stat-sub">
+              <span>ความมั่งคั่งสุทธิส่วนบุคคล</span>
+            </div>
+          </div>
+
+          <div class="breakdown-row">
+            <span>รวมสินทรัพย์ (Assets)</span>
+            <span class="num-font green" id="nwSumAssets" style="font-weight:700;">0 ฿</span>
+          </div>
+          <div class="breakdown-row">
+            <span>รวมหนี้สิน (Liabilities)</span>
+            <span class="num-font red" id="nwSumLiab" style="font-weight:700;">0 ฿</span>
+          </div>
+          <div class="breakdown-row">
+            <span>สภาพคล่องสำรองฉุกเฉิน (เงินสด ÷ รายจ่าย)</span>
+            <span class="num-font" id="nwEmergencyCoverage" style="font-weight:700;">0 เดือน</span>
+          </div>
+
+          <div style="margin-top:14px; padding:12px; border-radius:10px; background:var(--pea-purple-bg); font-size:0.82rem; color:var(--pea-purple-soft);">
+            🛡️ <b>การประเมินเงินสำรองฉุกเฉิน:</b>
+            <div id="nwEmergencyVerdict" style="margin-top:4px; font-weight:600; color:var(--text-main);">-</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ==================== TAB 4: คำนวณเกษียณ กฟภ. (PEA RETIREMENT) ==================== -->
+    <div class="tab-panel" id="tab-retirement">
+
+      <button class="btn btn-sync" onclick="syncFromFinancialStatement()">
+        <span>⚡ ดึงข้อมูลจากงบการเงินส่วนบุคคลอัตโนมัติ (1-Click Sync)</span>
+      </button>
+
+      <!-- Accordion Form: Inputs -->
+      <form id="peaForm" onsubmit="event.preventDefault(); calculateRetirement();">
+        
+        <!-- หมวด 1: ข้อมูลเบื้องต้น -->
+        <div class="accordion open">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span>📌 หมวด 1: ข้อมูลเบื้องต้น</span>
+            <span class="arrow">▼</span>
+          </div>
+          <div class="accordion-body">
+            <div class="stat-grid-2">
+              <div class="input-group">
+                <label class="input-label"><span>อายุปัจจุบัน</span></label>
+                <div class="input-wrap">
+                  <input type="number" class="form-input" id="pea_currentAge" value="35" min="18" max="75" required oninput="onRetirementInput()">
+                  <span class="input-unit">ปี</span>
+                </div>
+              </div>
+              <div class="input-group">
+                <label class="input-label"><span>อายุเกษียณ</span></label>
+                <div class="input-wrap">
+                  <input type="number" class="form-input" id="pea_retireAge" value="60" min="40" max="75" required oninput="onRetirementInput()">
+                  <span class="input-unit">ปี</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-grid-2">
+              <div class="input-group">
+                <label class="input-label"><span>อายุขัยประมาณ</span></label>
+                <div class="input-wrap">
+                  <input type="number" class="form-input" id="pea_lifeExpectancy" value="85" min="50" max="110" required oninput="onRetirementInput()">
+                  <span class="input-unit">ปี</span>
+                </div>
+              </div>
+              <div class="input-group">
+                <label class="input-label"><span>อัตราขึ้นเงินเดือน</span></label>
+                <div class="input-wrap">
+                  <input type="number" step="0.1" class="form-input" id="pea_salaryGrowth" value="3" min="0" max="15" required oninput="onRetirementInput()">
+                  <span class="input-unit">%/ปี</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label class="input-label"><span>เงินเดือนปัจจุบัน</span></label>
+              <div class="input-wrap">
+                <input type="number" class="form-input" id="pea_salary" value="35000" min="0" required oninput="onRetirementInput()">
+                <span class="input-unit">บาท</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- หมวด 2: เงินที่ต้องใช้ตอนเกษียณ -->
+        <div class="accordion open">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span>🎯 หมวด 2: เงินที่ต้องใช้ตอนเกษียณ</span>
+            <span class="arrow">▼</span>
+          </div>
+          <div class="accordion-body">
+            <div class="input-group">
+              <label class="input-label"><span>เงินที่ต้องการใช้หลังเกษียณ (มูลค่าปัจจุบัน)</span></label>
+              <div class="input-wrap">
+                <input type="number" class="form-input" id="pea_desiredExpenseToday" value="20000" min="0" required oninput="onRetirementInput()">
+                <span class="input-unit">บาท/ด.</span>
+              </div>
+            </div>
+
+            <div class="stat-grid-2">
+              <div class="input-group">
+                <label class="input-label"><span>อัตราเงินเฟ้อเฉลี่ย</span></label>
+                <div class="input-wrap">
+                  <input type="number" step="0.1" class="form-input" id="pea_inflation" value="3" min="0" max="15" required oninput="onRetirementInput()">
+                  <span class="input-unit">%/ปี</span>
+                </div>
+              </div>
+              <div class="input-group">
+                <label class="input-label"><span>ผลตอบแทนหลังเกษียณ</span></label>
+                <div class="input-wrap">
+                  <input type="number" step="0.1" class="form-input" id="pea_postRetireReturn" value="3" min="0" max="15" required oninput="onRetirementInput()">
+                  <span class="input-unit">%/ปี</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="background:var(--pea-purple-bg); border-radius:10px; padding:10px 14px; font-size:0.82rem; display:flex; justify-content:space-between; align-items:center;">
+              <span style="color:var(--pea-purple-soft);">เงินที่ต้องใช้จริง ณ วันเกษียณ (ปรับเงินเฟ้อ):</span>
+              <b class="num-font" id="pea_futureExpenseLive" style="color:var(--text-main); font-size:0.95rem;">- บาท/ด.</b>
+            </div>
+          </div>
+        </div>
+
+        <!-- หมวด 3: การออมส่วนบุคคล & หุ้นสหกรณ์ -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span>🌱 หมวด 3: การออม & หุ้นสหกรณ์ฯ</span>
+            <span class="arrow">▼</span>
+          </div>
+          <div class="accordion-body">
+            <div class="input-group">
+              <label class="input-label"><span>เงินออมอื่นๆ ต่อเดือน (นอกเหนือกสช.+หุ้นสหกรณ์)</span></label>
+              <div class="input-wrap">
+                <input type="number" class="form-input" id="pea_monthlySavings" value="3000" min="0" required oninput="onRetirementInput()">
+                <span class="input-unit">บาท/ด.</span>
+              </div>
+            </div>
+
+            <div class="stat-grid-2">
+              <div class="input-group">
+                <label class="input-label"><span>เงินออมตั้งต้นที่มีอยู่</span></label>
+                <div class="input-wrap">
+                  <input type="number" class="form-input" id="pea_initialSavings" value="100000" min="0" required oninput="onRetirementInput()">
+                  <span class="input-unit">บาท</span>
+                </div>
+              </div>
+              <div class="input-group">
+                <label class="input-label"><span>ผลตอบแทนเงินออม</span></label>
+                <div class="input-wrap">
+                  <input type="number" step="0.1" class="form-input" id="pea_preRetireReturn" value="5" min="0" max="20" required oninput="onRetirementInput()">
+                  <span class="input-unit">%/ปี</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-grid-2">
+              <div class="input-group">
+                <label class="input-label"><span>สะสมหุ้นสหกรณ์ฯ/เดือน</span></label>
+                <div class="input-wrap">
+                  <input type="number" class="form-input" id="pea_coopSharePerMonth" value="1000" min="0" required oninput="onRetirementInput()">
+                  <span class="input-unit">บาท/ด.</span>
+                </div>
+              </div>
+              <div class="input-group">
+                <label class="input-label"><span>มูลค่าหุ้นสหกรณ์ปัจจุบัน</span></label>
+                <div class="input-wrap">
+                  <input type="number" class="form-input" id="pea_coopShareCurrent" value="50000" min="0" required oninput="onRetirementInput()">
+                  <span class="input-unit">บาท</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- หมวด 4: กองทุนสำรองเลี้ยงชีพ (กสช.) -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span>⚡ หมวด 4: กองทุนสำรองเลี้ยงชีพ (กสช.)</span>
+            <span class="arrow">▼</span>
+          </div>
+          <div class="accordion-body">
+            <div class="stat-grid-3">
+              <div class="input-group">
+                <label class="input-label"><span>สะสม (เรา)</span></label>
+                <div class="input-wrap">
+                  <input type="number" step="0.5" class="form-input" id="pea_employeeRate" value="3" min="2" max="15" required oninput="onRetirementInput()">
+                  <span class="input-unit">%</span>
+                </div>
+              </div>
+              <div class="input-group">
+                <label class="input-label"><span>สมทบ (กฟภ.)</span></label>
+                <div class="input-wrap">
+                  <input type="number" step="0.5" class="form-input" id="pea_employerRate" value="9" min="2" max="15" required oninput="onRetirementInput()">
+                  <span class="input-unit">%</span>
+                </div>
+              </div>
+              <div class="input-group">
+                <label class="input-label"><span>ผลตอบแทน</span></label>
+                <div class="input-wrap">
+                  <input type="number" step="0.1" class="form-input" id="pea_pfReturn" value="5" min="0" max="20" required oninput="onRetirementInput()">
+                  <span class="input-unit">%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-grid-2">
+              <div class="input-group">
+                <label class="input-label"><span>เงินสะสม ล่าสุด</span></label>
+                <div class="input-wrap">
+                  <input type="number" class="form-input" id="pea_pfAccumulated" value="200000" min="0" required oninput="onRetirementInput()">
+                  <span class="input-unit">บาท</span>
+                </div>
+              </div>
+              <div class="input-group">
+                <label class="input-label"><span>เงินสมทบ ล่าสุด</span></label>
+                <div class="input-wrap">
+                  <input type="number" class="form-input" id="pea_pfContributed" value="250000" min="0" required oninput="onRetirementInput()">
+                  <span class="input-unit">บาท</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-grid-2">
+              <div class="input-group">
+                <label class="input-label"><span>ผลประโยชน์สะสม</span></label>
+                <div class="input-wrap">
+                  <input type="number" class="form-input" id="pea_pfAccumulatedGain" value="30000" min="0" required oninput="onRetirementInput()">
+                  <span class="input-unit">บาท</span>
+                </div>
+              </div>
+              <div class="input-group">
+                <label class="input-label"><span>ผลประโยชน์สมทบ</span></label>
+                <div class="input-wrap">
+                  <input type="number" class="form-input" id="pea_pfContributedGain" value="35000" min="0" required oninput="onRetirementInput()">
+                  <span class="input-unit">บาท</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="margin-bottom:18px;">⚡ คำนวณแผนเกษียณ</button>
+      </form>
+
+      <!-- RESULTS SECTION -->
+      <div id="peaResultsSection">
+        
+        <!-- Gauge Card -->
+        <div class="gauge-card">
+          <span class="badge badge-purple" style="margin-bottom:8px; display:inline-block;">เป้าหมายความพร้อม 100%</span>
+          <svg class="gauge-svg" viewBox="0 0 300 170" aria-hidden="true">
+            <path d="M30,150 A120,120 0 0 1 270,150" fill="none" stroke="var(--border)" stroke-width="22" stroke-linecap="round" pathLength="100"/>
+            <path id="resGaugeProgress" d="M30,150 A120,120 0 0 1 270,150" fill="none" stroke="#EF4444" stroke-width="22" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/>
+            <line x1="150" y1="150" x2="150" y2="34" stroke="var(--text-main)" stroke-width="2" transform="rotate(30 150 150)" opacity="0.4"/>
+            <g id="resGaugeNeedle" transform="rotate(-90 150 150)">
+              <line x1="150" y1="150" x2="150" y2="45" stroke="var(--text-main)" stroke-width="4" stroke-linecap="round"/>
+            </g>
+            <circle cx="150" cy="150" r="9" fill="var(--text-main)"/>
+            <text x="20" y="168" font-size="11" fill="var(--text-muted)" font-family="Prompt">0%</text>
+            <text x="235" y="168" font-size="11" fill="var(--text-muted)" font-family="Prompt">150%</text>
+            <text x="205" y="32" font-size="10" fill="var(--text-muted)" font-family="Prompt">เป้าหมาย 100%</text>
+          </svg>
+          <div class="gauge-readout num-font" id="resGaugeReadout">0%</div>
+
+          <div class="verdict-box" id="resVerdictCard">
+            <h4 id="resVerdictTitle">-</h4>
+            <p id="resVerdictDesc">-</p>
+          </div>
+        </div>
+
+        <!-- 3 Stats Cards -->
+        <div class="stat-grid-3">
+          <div class="mini-stat">
+            <span class="mini-label">เงินที่ต้องมี</span>
+            <div class="mini-value num-font" id="resStatNeeded" style="font-size:1rem;">-</div>
+          </div>
+          <div class="mini-stat highlight">
+            <span class="mini-label">เงินที่จะมี</span>
+            <div class="mini-value num-font" id="resStatAvailable" style="font-size:1rem;">-</div>
+          </div>
+          <div class="mini-stat" id="resDiffCard">
+            <span class="mini-label">ส่วนต่าง (เกิน/ขาด)</span>
+            <div class="mini-value num-font" id="resStatDiff" style="font-size:1rem;">-</div>
+          </div>
+        </div>
+
+        <!-- Breakdown Bars -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="icon">📊</span><span>เปรียบเทียบสัดส่วนเงินก้อน</span></div>
+          </div>
+
+          <div class="comp-bar-container">
+            <div class="comp-row">
+              <div class="comp-label-row">
+                <span>เงินที่คาดว่าจะมี</span>
+                <span class="num-font" id="barAvailVal">-</span>
+              </div>
+              <div class="comp-track">
+                <div class="comp-seg seg-pf" id="barPF" style="width:0%" title="กสช."></div>
+                <div class="comp-seg seg-other" id="barOther" style="width:0%" title="เงินออมอื่น"></div>
+                <div class="comp-seg seg-coop" id="barCoop" style="width:0%" title="หุ้นสหกรณ์"></div>
+              </div>
+            </div>
+
+            <div class="comp-row">
+              <div class="comp-label-row">
+                <span>เงินที่ต้องใช้</span>
+                <span class="num-font" id="barNeedVal">-</span>
+              </div>
+              <div class="comp-track">
+                <div class="comp-seg seg-needed" id="barNeeded" style="width:0%"></div>
+              </div>
+            </div>
+
+            <div class="comp-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:var(--pea-purple-light);"></span><span>กสช. กฟภ.</span></div>
+              <div class="legend-item"><span class="legend-dot" style="background:var(--pea-gold);"></span><span>เงินออมอื่นๆ</span></div>
+              <div class="legend-item"><span class="legend-dot" style="background:#0D9488;"></span><span>หุ้นสหกรณ์ฯ</span></div>
+              <div class="legend-item"><span class="legend-dot" style="background:#6B7280;"></span><span>เงินที่ต้องใช้</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Adjuster (ลองปรับแผน) -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="icon">🎛️</span><span>ลองปรับแผนแบบ Real-time</span></div>
+            <button class="badge badge-purple" style="border:none; cursor:pointer;" onclick="resetAdjustSliders()">รีเซ็ตค่าเดิม</button>
+          </div>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:14px;">เลื่อนตัวควบคุมด้านล่างเพื่อดูผลกระทบต่อเป้าหมายได้ทันที</p>
+
+          <div class="slider-box">
+            <div class="slider-header">
+              <span>อัตราเงินสะสม กสช. (ส่วนของเรา)</span>
+              <span class="slider-val num-font" id="adjVal_pfRate">-</span>
+            </div>
+            <input type="range" id="adj_pfRate" min="2" max="15" step="0.5" oninput="onAdjustChanged()">
+          </div>
+
+          <div class="slider-box">
+            <div class="slider-header">
+              <span>เงินออมอื่นๆ เพิ่มเติมต่อเดือน</span>
+              <span class="slider-val num-font" id="adjVal_savings">-</span>
+            </div>
+            <input type="range" id="adj_savings" min="0" max="30000" step="500" oninput="onAdjustChanged()">
+          </div>
+
+          <div class="slider-box">
+            <div class="slider-header">
+              <span>เงินที่ต้องการใช้หลังเกษียณ (มูลค่าปัจจุบัน)</span>
+              <span class="slider-val num-font" id="adjVal_expense">-</span>
+            </div>
+            <input type="range" id="adj_expense" min="5000" max="80000" step="500" oninput="onAdjustChanged()">
+          </div>
+
+          <div class="slider-box">
+            <div class="slider-header">
+              <span>อายุที่ต้องการเกษียณ</span>
+              <span class="slider-val num-font" id="adjVal_retireAge">-</span>
+            </div>
+            <input type="range" id="adj_retireAge" min="45" max="70" step="1" oninput="onAdjustChanged()">
+          </div>
+
+          <div class="card" style="background:var(--pea-purple-bg); border-color:var(--border-focus); margin:0;">
+            <span class="mini-label" style="color:var(--pea-purple-soft);">ผลลัพธ์หลังปรับแผนจำลอง:</span>
+            <div class="num-font" id="adjResultText" style="font-weight:700; font-size:1.05rem; margin-top:2px;">-</div>
+          </div>
+        </div>
+
+        <!-- NEW: Year-by-Year Simulation Projection Table -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="icon">📈</span><span>ตารางจำลองเงินทุนเติบโตปีต่อปี</span></div>
+            <button class="badge badge-purple" onclick="toggleProjTable()" id="btnToggleProj">ดูตารางละเอียด ▼</button>
+          </div>
+          <p style="font-size:0.8rem; color:var(--text-muted);">จำลองการเติบโตของ กสช. เงินออม และยอดเงินคงเหลือตลอดช่วงชีวิต</p>
+          
+          <div class="table-wrap" id="projTableWrap" style="display:none;">
+            <table class="proj-table">
+              <thead>
+                <tr>
+                  <th style="text-align:center;">อายุ</th>
+                  <th>เงินเดือน</th>
+                  <th>ยอด กสช.</th>
+                  <th>เงินออมอื่น</th>
+                  <th>หุ้นสหกรณ์</th>
+                  <th>รวมเงินทุน</th>
+                </tr>
+              </thead>
+              <tbody id="projTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ==================== TAB 5: ตั้งค่า & จัดการข้อมูล (SETTINGS & BACKUP) ==================== -->
+    <div class="tab-panel" id="tab-settings">
+      
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="icon">💾</span><span>สำรองและจัดการข้อมูล</span></div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <button class="btn btn-outline" onclick="loadSampleData()">
+            <span>⚡ โหลดตัวอย่างข้อมูลพนักงาน กฟภ.</span>
+          </button>
+          
+          <button class="btn btn-purple" onclick="exportDataBackup()">
+            <span>📤 ส่งออกไฟล์สำรองข้อมูล (Export JSON)</span>
+          </button>
+
+          <label class="btn btn-outline" style="cursor:pointer; margin:0;">
+            <span>📥 นำเข้าไฟล์สำรองข้อมูล (Import JSON)</span>
+            <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="importDataBackup(event)">
+          </label>
+
+          <button class="btn btn-outline" onclick="window.print()">
+            <span>🖨️ พิมพ์รายงานสรุป / บันทึกเป็น PDF</span>
+          </button>
+
+          <button class="btn btn-outline" style="color:var(--danger); border-color:#FECACA;" onclick="confirmResetAll()">
+            <span>🗑️ ล้างข้อมูลทั้งหมดเป็นค่าเริ่มต้น</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- How to Install on Mobile Guide -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="icon">📱</span><span>วิธีติดตั้งแอปบนหน้าจอมือถือ</span></div>
+        </div>
+        <div style="font-size:0.84rem; color:var(--text-main); line-height:1.6;">
+          <p><b>สำหรับ iPhone / iPad (Safari):</b></p>
+          <ol style="padding-left:20px; margin-bottom:12px;">
+            <li>แตะปุ่มแชร์ <b>Share (ไอคอนสี่เหลี่ยมลูกศรชี้ขึ้น)</b> ที่แถบด้านล่าง</li>
+            <li>เลื่อนลงมาเลือก <b>"เพิ่มไปยังหน้าจอโฮม (Add to Home Screen)"</b></li>
+            <li>แตะ <b>"เพิ่ม (Add)"</b> ที่มุมบนขวา</li>
+          </ol>
+
+          <p><b>สำหรับ Android (Chrome):</b></p>
+          <ol style="padding-left:20px;">
+            <li>แตะปุ่มเมนู <b>3 จุด (⋮)</b> ที่มุมบนขวา</li>
+            <li>เลือก <b>"ติดตั้งแอป (Install App)"</b> หรือ <b>"เพิ่มลงในหน้าจอหลัก (Add to Home screen)"</b></li>
+          </ol>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- BOTTOM NAVIGATION BAR (FIXED) -->
+  <nav class="bottom-nav">
+    <div class="nav-container">
+      <button class="nav-tab active" onclick="switchTab('dashboard', this)">
+        <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+        <span>ภาพรวม</span>
+      </button>
+      <button class="nav-tab" onclick="switchTab('cashflow', this)">
+        <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+        <span>กระแสเงินสด</span>
+      </button>
+      <button class="nav-tab" onclick="switchTab('networth', this)">
+        <svg viewBox="0 0 24 24"><path d="M4 10v7h3v-7H4zm6 0v7h3v-7h-3zM2 22h19v-3H2v3zm14-12v7h3v-7h-3zm-4.5-9L2 6v2h19V6l-9.5-5z"/></svg>
+        <span>งบดุล</span>
+      </button>
+      <button class="nav-tab" onclick="switchTab('retirement', this)">
+        <svg viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+        <span>แผนเกษียณ</span>
+      </button>
+      <button class="nav-tab" onclick="switchTab('settings', this)">
+        <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+        <span>จัดการ</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+  <script>
+    const STORAGE_KEY = 'pea_finance_app_data_v2';
+    const THEME_KEY = 'pea_finance_theme';
+    const $ = id => document.getElementById(id);
+    const num = id => parseFloat($(id).value) || 0;
+    const fmt = n => isFinite(n) ? Math.round(n).toLocaleString('th-TH') : '0';
+    const fmt2 = n => isFinite(n) ? n.toLocaleString('th-TH', {minimumFractionDigits: 1, maximumFractionDigits: 1}) : '0.0';
+
+    // State
+    let state = {
+      // Cash flow Income
+      inc_salary: 35000,
+      inc_business: 0,
+      inc_rent: 0,
+      inc_dividend: 0,
+      inc_bonus: 0,
+      inc_other: 0,
+      // Cash flow Expenses
+      exp_housing: 0,
+      exp_car: 0,
+      exp_home: 12000,
+      exp_family: 0,
+      exp_insurance: 1500,
+      exp_lifestyle: 5000,
+      exp_debt: 0,
+      exp_saving: 3000,
+      exp_tax: 0,
+      // Net Worth Assets
+      ast_cash: 100000,
+      ast_fixed: 0,
+      ast_investment: 50000,
+      ast_provident: 515000,
+      ast_realestate: 0,
+      ast_personal: 0,
+      ast_business: 0,
+      ast_other: 0,
+      // Net Worth Liabilities
+      lia_home: 0,
+      lia_car: 0,
+      lia_card: 0,
+      lia_personal: 0,
+      lia_edu: 0,
+      lia_other: 0,
+      // Retirement inputs
+      pea_currentAge: 35,
+      pea_retireAge: 60,
+      pea_lifeExpectancy: 85,
+      pea_salaryGrowth: 3,
+      pea_salary: 35000,
+      pea_desiredExpenseToday: 20000,
+      pea_inflation: 3,
+      pea_postRetireReturn: 3,
+      pea_monthlySavings: 3000,
+      pea_initialSavings: 100000,
+      pea_preRetireReturn: 5,
+      pea_coopSharePerMonth: 1000,
+      pea_coopShareCurrent: 50000,
+      pea_employeeRate: 3,
+      pea_employerRate: 9,
+      pea_pfReturn: 5,
+      pea_pfAccumulated: 200000,
+      pea_pfContributed: 250000,
+      pea_pfAccumulatedGain: 30000,
+      pea_pfContributedGain: 35000
+    };
+
+    let baseRetirementInputs = null;
+    let autoSaveTimer = null;
+
+    // Initialize App
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      loadSavedData();
+      renderAll();
+      initServiceWorker();
+    });
+
+    // Dark Mode Toggle
+    function initTheme() {
+      const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      $('themeIcon').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    }
+
+    function toggleDarkMode() {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem(THEME_KEY, next);
+      $('themeIcon').textContent = next === 'dark' ? '☀️' : '🌙';
+    }
+
+    // PWA Service Worker Registration
+    function initServiceWorker() {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration error:', err));
+      }
+    }
+
+    // Tab Navigation
+    function switchTab(tabId, el) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      
+      const target = $('tab-' + tabId);
+      if (target) target.classList.add('active');
+      
+      if (el) {
+        el.classList.add('active');
+      } else {
+        const tabs = document.querySelectorAll('.nav-tab');
+        const map = { 'dashboard': 0, 'cashflow': 1, 'networth': 2, 'retirement': 3, 'settings': 4 };
+        if (tabs[map[tabId]]) tabs[map[tabId]].classList.add('active');
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Cashflow Sub-tabs
+    function switchCFSub(subId, el) {
+      ['income', 'expense', 'summary'].forEach(id => {
+        $('cf-sub-' + id).style.display = (id === subId) ? 'block' : 'none';
+      });
+      el.parentElement.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    // Net Worth Sub-tabs
+    function switchNWSub(subId, el) {
+      ['assets', 'liabilities', 'summary'].forEach(id => {
+        $('nw-sub-' + id).style.display = (id === subId) ? 'block' : 'none';
+      });
+      el.parentElement.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    // Accordion Toggle
+    function toggleAccordion(header) {
+      header.parentElement.classList.toggle('open');
+    }
+
+    // Toggle Projection Table
+    function toggleProjTable() {
+      const wrap = $('projTableWrap');
+      const btn = $('btnToggleProj');
+      if (wrap.style.display === 'none') {
+        wrap.style.display = 'block';
+        btn.textContent = 'ซ่อนตาราง ▲';
+      } else {
+        wrap.style.display = 'none';
+        btn.textContent = 'ดูตารางละเอียด ▼';
+      }
+    }
+
+    // Helper for quick chip buttons
+    function setVal(id, val) {
+      $(id).value = val;
+      onDataChanged();
+    }
+
+    // Collect all inputs to state
+    function collectInputs() {
+      Object.keys(state).forEach(key => {
+        const el = $(key);
+        if (el) {
+          state[key] = parseFloat(el.value) || 0;
+        }
+      });
+    }
+
+    // Populate inputs from state
+    function populateInputs() {
+      Object.keys(state).forEach(key => {
+        const el = $(key);
+        if (el) el.value = state[key];
+      });
+    }
+
+    // Event Handler on any data change
+    function onDataChanged() {
+      collectInputs();
+      renderAll();
+      triggerAutoSave();
+    }
+
+    function onRetirementInput() {
+      collectInputs();
+      calculateRetirement();
+      triggerAutoSave();
+    }
+
+    // Auto-save debounced
+    function triggerAutoSave() {
+      $('saveDot').className = 'save-dot';
+      $('saveStatusText').textContent = 'บันทึก...';
+      clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(() => {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        $('saveDot').className = 'save-dot synced';
+        $('saveStatusText').textContent = 'บันทึกแล้ว';
+      }, 500);
+    }
+
+    function loadSavedData() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('pea_finance_app_data_v1');
+        if (saved) {
+          state = Object.assign({}, state, JSON.parse(saved));
+        }
+      } catch (e) {
+        console.error('Failed to load saved data', e);
+      }
+      populateInputs();
+    }
+
+    // 1-Click Sync from Financial Statement to Retirement Calculator
+    function syncFromFinancialStatement() {
+      $('pea_salary').value = state.inc_salary;
+      $('pea_monthlySavings').value = state.exp_saving;
+      
+      const totalCash = state.ast_cash + state.ast_fixed;
+      $('pea_initialSavings').value = totalCash;
+      
+      const currentExpenses = state.exp_home + state.exp_insurance + state.exp_lifestyle;
+      if (currentExpenses > 0) {
+        $('pea_desiredExpenseToday').value = currentExpenses;
+      }
+
+      if (state.ast_provident > 0 && (state.pea_pfAccumulated + state.pea_pfContributed === 0)) {
+        $('pea_pfAccumulated').value = Math.round(state.ast_provident * 0.45);
+        $('pea_pfContributed').value = Math.round(state.ast_provident * 0.45);
+        $('pea_pfAccumulatedGain').value = Math.round(state.ast_provident * 0.05);
+        $('pea_pfContributedGain').value = Math.round(state.ast_provident * 0.05);
+      }
+
+      onRetirementInput();
+      alert('⚡ เชื่อมโยงข้อมูลเงินเดือน เงินออม และค่าใช้จ่ายจากงบการเงินเข้าสู่แผนเกษียณเรียบร้อยแล้ว!');
+    }
+
+    // ==================== CALCULATION & RENDERING ====================
+    function renderAll() {
+      // 1. Cash Flow Calculation
+      const totalIncome = state.inc_salary + state.inc_business + state.inc_rent + state.inc_dividend + state.inc_bonus + state.inc_other;
+      const totalExpense = state.exp_housing + state.exp_car + state.exp_home + state.exp_family + state.exp_insurance + state.exp_lifestyle + state.exp_debt + state.exp_saving + state.exp_tax;
+      const netSavings = totalIncome - totalExpense;
+      const totalSavingsWithExp = netSavings + state.exp_saving;
+      const savingsRate = totalIncome > 0 ? (totalSavingsWithExp / totalIncome * 100) : 0;
+      
+      const totalDebtPayment = state.exp_housing + state.exp_car + state.exp_debt;
+      const debtRatio = totalIncome > 0 ? (totalDebtPayment / totalIncome * 100) : 0;
+
+      // Update Cash Flow UI
+      $('cfTotalIncomeBadge').textContent = fmt(totalIncome);
+      $('cfTotalExpenseBadge').textContent = fmt(totalExpense);
+      $('sumIncome').textContent = fmt(totalIncome) + ' ฿';
+      $('sumExpense').textContent = fmt(totalExpense) + ' ฿';
+      $('sumNetSavings').textContent = (netSavings >= 0 ? '+' : '') + fmt(netSavings) + ' บาท';
+      $('sumNetSavings').style.color = netSavings >= 0 ? 'var(--text-main)' : 'var(--danger)';
+      $('sumSavingsRate').textContent = fmt2(savingsRate) + '%';
+      $('sumDebtRatio').textContent = fmt2(debtRatio) + '%' + (debtRatio > 40 ? ' (⚠️ เกิน 40%)' : ' (ปลอดภัย)');
+      $('sumDebtRatio').style.color = debtRatio > 40 ? 'var(--danger)' : 'var(--text-main)';
+
+      // 2. Net Worth Calculation
+      const totalAssets = state.ast_cash + state.ast_fixed + state.ast_investment + state.ast_provident + state.ast_realestate + state.ast_personal + state.ast_business + state.ast_other;
+      const totalLiabilities = state.lia_home + state.lia_car + state.lia_card + state.lia_personal + state.lia_edu + state.lia_other;
+      const netWorth = totalAssets - totalLiabilities;
+      
+      const monthlyLivingExp = totalExpense - state.exp_saving;
+      const emergencyMonths = (monthlyLivingExp > 0) ? ((state.ast_cash + state.ast_fixed) / monthlyLivingExp) : 0;
+
+      // Update Net Worth UI
+      $('nwTotalAssetsBadge').textContent = fmt(totalAssets);
+      $('nwTotalLiabBadge').textContent = fmt(totalLiabilities);
+      $('nwSumAssets').textContent = fmt(totalAssets) + ' ฿';
+      $('nwSumLiab').textContent = fmt(totalLiabilities) + ' ฿';
+      $('nwNetWorthVal').textContent = fmt(netWorth) + ' บาท';
+      $('nwEmergencyCoverage').textContent = fmt2(emergencyMonths) + ' เท่า';
+
+      let emVerdict = '';
+      if (emergencyMonths >= 6) {
+        emVerdict = '✅ ยอดเยี่ยม! มีเงินสำรองฉุกเฉิน ' + fmt2(emergencyMonths) + ' เดือน (เกินเกณฑ์แนะนำ 6 เดือน)';
+      } else if (emergencyMonths >= 3) {
+        emVerdict = '🟡 เหมาะสม มีเงินสำรองฉุกเฉิน ' + fmt2(emergencyMonths) + ' เดือน (อยู่ในเกณฑ์มาตรฐาน 3-6 เดือน)';
+      } else {
+        emVerdict = '🔴 ควรเพิ่มเงินสำรองฉุกเฉิน ตอนนี้มีเพียง ' + fmt2(emergencyMonths) + ' เดือน (แนะนำให้มีอย่างน้อย 3-6 เดือน)';
+      }
+      $('nwEmergencyVerdict').textContent = emVerdict;
+
+      // 3. Update Dashboard
+      $('dashNetWorth').textContent = fmt(netWorth) + ' บาท';
+      $('dashTotalAssets').textContent = fmt(totalAssets) + ' ฿';
+      $('dashTotalLiabilities').textContent = fmt(totalLiabilities) + ' ฿';
+      $('dashNetCashflow').textContent = (netSavings >= 0 ? '+' : '') + fmt(netSavings) + ' ฿';
+      $('dashNetCashflow').className = 'mini-value num-font ' + (netSavings >= 0 ? 'green' : 'red');
+      $('dashSavingsRate').textContent = fmt2(savingsRate) + '%';
+      $('dashEmergencyMonths').textContent = fmt2(emergencyMonths) + ' ด.';
+      $('dashEmergencySub').textContent = (emergencyMonths >= 3) ? 'อยู่ในเกณฑ์ดี' : 'ควรเพิ่มสภาพคล่อง';
+
+      // Countdown
+      const yearsLeft = Math.max(state.pea_retireAge - state.pea_currentAge, 0);
+      const monthsLeft = yearsLeft * 12;
+      $('dashCountdownText').textContent = `${yearsLeft} ปี (${monthsLeft} งวดเงินเดือน)`;
+
+      // 4. Calculate Retirement & Financial Score
+      calculateRetirement();
+      calculateFinancialScore(savingsRate, debtRatio, emergencyMonths, totalAssets, totalLiabilities);
+    }
+
+    // 5-Dimension Financial Health Score
+    function calculateFinancialScore(savingsRate, debtRatio, emergencyMonths, assets, liabilities) {
+      let score = 0;
+      
+      // Dim 1: Savings rate (20 pts)
+      if (savingsRate >= 20) score += 20;
+      else if (savingsRate >= 10) score += 12;
+      else if (savingsRate > 0) score += 6;
+
+      // Dim 2: Debt-to-income (20 pts)
+      if (debtRatio <= 30) score += 20;
+      else if (debtRatio <= 40) score += 14;
+      else if (debtRatio <= 50) score += 6;
+
+      // Dim 3: Emergency Fund (20 pts)
+      if (emergencyMonths >= 6) score += 20;
+      else if (emergencyMonths >= 3) score += 14;
+      else if (emergencyMonths >= 1) score += 7;
+
+      // Dim 4: Solvency Net Worth / Assets (20 pts)
+      const solvency = assets > 0 ? ((assets - liabilities) / assets) : 1;
+      if (solvency >= 0.7) score += 20;
+      else if (solvency >= 0.5) score += 14;
+      else if (solvency >= 0.3) score += 8;
+
+      // Dim 5: Retirement readiness (20 pts)
+      const retirePct = parseFloat($('resGaugeReadout').textContent) || 0;
+      if (retirePct >= 100) score += 20;
+      else if (retirePct >= 80) score += 15;
+      else if (retirePct >= 50) score += 8;
+
+      // Render Score
+      $('scoreNumber').textContent = score;
+      const deg = (score / 100) * 360;
+      $('scoreCircle').style.setProperty('--score-deg', `${deg}deg`);
+
+      let title = 'สุขภาพการเงินดีเยี่ยม 🎉';
+      let desc = 'ฐานะทางการเงินแข็งแกร่งมาก มีทั้งสภาพคล่อง วินัยการออม และแผนเกษียณที่พร้อมสมบูรณ์';
+      if (score < 50) {
+        title = 'ควรปรับปรุงแผนการเงิน ⚠️';
+        desc = 'แนะนำให้เร่งสร้างเงินสำรองฉุกเฉิน ลดภาระหนี้ และเพิ่มอัตราสะสม กสช. เพื่อความมั่นคง';
+      } else if (score < 75) {
+        title = 'สุขภาพการเงินปานกลาง 👍';
+        desc = 'โครงสร้างการเงินอยู่ในเกณฑ์ดี สามารถยกระดับความมั่งคั่งได้โดยเพิ่มการลงทุนระยะยาว';
+      }
+
+      $('scoreTitle').textContent = title;
+      $('scoreDesc').textContent = desc;
+    }
+
+    // ==================== PEA RETIREMENT ENGINE ====================
+    function calculateRetirement() {
+      const inp = {
+        currentAge: num('pea_currentAge'),
+        retireAge: num('pea_retireAge'),
+        lifeExpectancy: num('pea_lifeExpectancy'),
+        salary: num('pea_salary'),
+        salaryGrowth: num('pea_salaryGrowth'),
+        desiredExpenseToday: num('pea_desiredExpenseToday'),
+        inflation: num('pea_inflation'),
+        postRetireReturn: num('pea_postRetireReturn'),
+        monthlySavings: num('pea_monthlySavings'),
+        initialSavings: num('pea_initialSavings'),
+        preRetireReturn: num('pea_preRetireReturn'),
+        coopSharePerMonth: num('pea_coopSharePerMonth'),
+        coopShareCurrent: num('pea_coopShareCurrent'),
+        employeeRate: num('pea_employeeRate'),
+        employerRate: num('pea_employerRate'),
+        pfReturn: num('pea_pfReturn'),
+        pfAccumulated: num('pea_pfAccumulated'),
+        pfContributed: num('pea_pfContributed'),
+        pfAccumulatedGain: num('pea_pfAccumulatedGain'),
+        pfContributedGain: num('pea_pfContributedGain')
+      };
+
+      const n1 = Math.max(inp.retireAge - inp.currentAge, 0);
+      const n2 = Math.max(inp.lifeExpectancy - inp.retireAge, 0);
+
+      // Future desired expense
+      const expenseAtRetirement = inp.desiredExpenseToday * Math.pow(1 + inp.inflation / 100, n1);
+      $('pea_futureExpenseLive').textContent = fmt(expenseAtRetirement) + ' บาท/ด.';
+
+      // Real rate of return post-retirement
+      const realReturn = (1 + inp.postRetireReturn / 100) / (1 + inp.inflation / 100) - 1;
+      const realMonthlyRate = Math.pow(1 + realReturn, 1 / 12) - 1;
+      const months2 = n2 * 12;
+
+      let totalNeeded = 0;
+      if (months2 <= 0) {
+        totalNeeded = 0;
+      } else if (Math.abs(realMonthlyRate) < 1e-9) {
+        totalNeeded = expenseAtRetirement * months2;
+      } else {
+        totalNeeded = expenseAtRetirement * (1 - Math.pow(1 + realMonthlyRate, -months2)) / realMonthlyRate * (1 + realMonthlyRate);
+      }
+
+      // Provident Fund (กสช.) calculation & Yearly Simulation
+      let pfBalance = inp.pfAccumulated + inp.pfContributed + inp.pfAccumulatedGain + inp.pfContributedGain;
+      let curSalary = inp.salary;
+      const pfMonthlyReturn = Math.pow(1 + inp.pfReturn / 100, 1 / 12) - 1;
+      const preMonthlyReturn = Math.pow(1 + inp.preRetireReturn / 100, 1 / 12) - 1;
+      let other = inp.initialSavings;
+
+      const yearlyData = [];
+      yearlyData.push({
+        age: inp.currentAge,
+        salary: curSalary,
+        pf: pfBalance,
+        other: other,
+        coop: inp.coopShareCurrent,
+        total: pfBalance + other + inp.coopShareCurrent
+      });
+
+      for (let y = 0; y < n1; y++) {
+        const monthlyContrib = curSalary * (inp.employeeRate / 100 + inp.employerRate / 100);
+        for (let m = 0; m < 12; m++) {
+          pfBalance = pfBalance * (1 + pfMonthlyReturn) + monthlyContrib;
+          other = other * (1 + preMonthlyReturn) + inp.monthlySavings;
+        }
+        curSalary = curSalary * (1 + inp.salaryGrowth / 100);
+        const coopVal = inp.coopShareCurrent + (inp.coopSharePerMonth * (y + 1) * 12);
+        
+        yearlyData.push({
+          age: inp.currentAge + y + 1,
+          salary: curSalary,
+          pf: pfBalance,
+          other: other,
+          coop: coopVal,
+          total: pfBalance + other + coopVal
+        });
+      }
+      
+      const pfFutureValue = pfBalance;
+      const otherFutureValue = other;
+      const coopFutureValue = inp.coopShareCurrent + (inp.coopSharePerMonth * n1 * 12);
+
+      const totalAvailable = pfFutureValue + otherFutureValue + coopFutureValue;
+      const diff = totalAvailable - totalNeeded;
+      const percent = totalNeeded > 0 ? (totalAvailable / totalNeeded * 100) : 100;
+
+      const res = { n1, n2, expenseAtRetirement, totalNeeded, pfFutureValue, otherFutureValue, coopFutureValue, totalAvailable, diff, percent, yearlyData };
+
+      renderRetirementResults(res);
+      renderYearlyTable(res.yearlyData, inp.retireAge);
+      baseRetirementInputs = inp;
+      initAdjustSliders(inp);
+    }
+
+    function renderRetirementResults(res) {
+      const positive = res.diff >= 0;
+      const pctClamped = Math.max(0, Math.min(150, res.percent));
+      const frac = pctClamped / 150;
+      const angle = -90 + (frac * 180);
+      const offset = 100 - (frac * 100);
+
+      let color = '#EF4444';
+      if (res.percent >= 100) color = '#10B981';
+      else if (res.percent >= 80) color = '#F59E0B';
+
+      // Update Result Gauge
+      $('resGaugeNeedle').setAttribute('transform', `rotate(${angle} 150 150)`);
+      $('resGaugeProgress').setAttribute('stroke-dashoffset', offset);
+      $('resGaugeProgress').setAttribute('stroke', color);
+      $('resGaugeReadout').textContent = res.percent.toFixed(0) + '%';
+      $('resGaugeReadout').style.color = color;
+
+      // Update Dashboard Mini Gauge
+      $('dashGaugeNeedle').setAttribute('transform', `rotate(${angle} 150 140)`);
+      $('dashGaugeProgress').setAttribute('stroke-dashoffset', offset);
+      $('dashGaugeProgress').setAttribute('stroke', color);
+      $('dashGaugeReadout').textContent = res.percent.toFixed(0) + '%';
+      $('dashGaugeReadout').style.color = color;
+
+      // Update Verdict Texts
+      const title = positive ? '🎉 แผนเกษียณของคุณพร้อมและเพียงพอ!' : '⚠️ แผนเกษียณยังขาดอยู่ ต้องปรับแผน';
+      const desc = positive
+        ? `คาดว่าจะมีเงิน <b>เกิน</b> เป้าหมายอยู่ <b>${fmt(res.diff)} บาท</b> ณ วันเกษียณ แผนการเงินมั่นคงมาก`
+        : `คาดว่าจะมีเงิน <b>ขาด</b> เป้าหมายอยู่ <b>${fmt(Math.abs(res.diff))} บาท</b> ลองเลื่อนปรับอัตราเงินสะสมหรือเงินออมในแถบด้านล่าง`;
+
+      $('resVerdictCard').className = 'verdict-box ' + (positive ? 'positive' : 'negative');
+      $('resVerdictTitle').textContent = title;
+      $('resVerdictDesc').innerHTML = desc;
+
+      $('dashVerdictBox').className = 'verdict-box ' + (positive ? 'positive' : 'negative');
+      $('dashVerdictTitle').textContent = title;
+      $('dashVerdictDesc').innerHTML = desc;
+
+      // 3 Stat cards
+      $('resStatNeeded').textContent = fmt(res.totalNeeded) + ' ฿';
+      $('resStatAvailable').textContent = fmt(res.totalAvailable) + ' ฿';
+      $('resStatDiff').textContent = (positive ? '+' : '-') + fmt(Math.abs(res.diff)) + ' ฿';
+      $('resStatDiff').className = 'mini-value num-font ' + (positive ? 'green' : 'red');
+
+      // Breakdown bars
+      const maxVal = Math.max(res.totalNeeded, res.totalAvailable, 1);
+      $('barPF').style.width = (res.pfFutureValue / maxVal * 100) + '%';
+      $('barOther').style.width = (res.otherFutureValue / maxVal * 100) + '%';
+      $('barCoop').style.width = (res.coopFutureValue / maxVal * 100) + '%';
+      $('barNeeded').style.width = (res.totalNeeded / maxVal * 100) + '%';
+
+      $('barAvailVal').textContent = fmt(res.totalAvailable) + ' บาท (กสช. ' + fmt(res.pfFutureValue) + ')';
+      $('barNeedVal').textContent = fmt(res.totalNeeded) + ' บาท';
+    }
+
+    function renderYearlyTable(data, retireAge) {
+      const tbody = $('projTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      data.forEach(row => {
+        const tr = document.createElement('tr');
+        if (row.age === retireAge) tr.className = 'retire-milestone';
+        tr.innerHTML = `
+          <td style="text-align:center; font-weight:600;">${row.age} ${row.age === retireAge ? '⚡' : ''}</td>
+          <td class="num-font">${fmt(row.salary)}</td>
+          <td class="num-font">${fmt(row.pf)}</td>
+          <td class="num-font">${fmt(row.other)}</td>
+          <td class="num-font">${fmt(row.coop)}</td>
+          <td class="num-font" style="font-weight:700;">${fmt(row.total)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // ==================== RETIREMENT SIMULATION SLIDERS ====================
+    function initAdjustSliders(inp) {
+      $('adj_pfRate').value = inp.employeeRate;
+      $('adj_savings').value = inp.monthlySavings;
+      $('adj_savings').max = Math.max(30000, inp.monthlySavings * 3);
+      $('adj_expense').value = inp.desiredExpenseToday;
+      $('adj_expense').max = Math.max(80000, Math.round(inp.desiredExpenseToday * 2.5 / 1000) * 1000);
+      $('adj_retireAge').value = inp.retireAge;
+      $('adj_retireAge').min = inp.currentAge + 1;
+      
+      refreshAdjustLabels();
+      recomputeAdjust();
+    }
+
+    function refreshAdjustLabels() {
+      $('adjVal_pfRate').textContent = parseFloat($('adj_pfRate').value).toFixed(1) + '%';
+      $('adjVal_savings').textContent = fmt($('adj_savings').value) + ' บาท/ด.';
+      $('adjVal_expense').textContent = fmt($('adj_expense').value) + ' บาท/ด.';
+      $('adjVal_retireAge').textContent = $('adj_retireAge').value + ' ปี';
+    }
+
+    function onAdjustChanged() {
+      refreshAdjustLabels();
+      recomputeAdjust();
+    }
+
+    function recomputeAdjust() {
+      if (!baseRetirementInputs) return;
+      const adj = Object.assign({}, baseRetirementInputs, {
+        employeeRate: parseFloat($('adj_pfRate').value),
+        monthlySavings: parseFloat($('adj_savings').value),
+        desiredExpenseToday: parseFloat($('adj_expense').value),
+        retireAge: parseInt($('adj_retireAge').value, 10)
+      });
+
+      if (adj.lifeExpectancy <= adj.retireAge) return;
+
+      const n1 = Math.max(adj.retireAge - adj.currentAge, 0);
+      const n2 = Math.max(adj.lifeExpectancy - adj.retireAge, 0);
+      const expenseAtRetirement = adj.desiredExpenseToday * Math.pow(1 + adj.inflation / 100, n1);
+      const realReturn = (1 + adj.postRetireReturn / 100) / (1 + adj.inflation / 100) - 1;
+      const realMonthlyRate = Math.pow(1 + realReturn, 1 / 12) - 1;
+      const months2 = n2 * 12;
+
+      let totalNeeded = 0;
+      if (months2 <= 0) totalNeeded = 0;
+      else if (Math.abs(realMonthlyRate) < 1e-9) totalNeeded = expenseAtRetirement * months2;
+      else totalNeeded = expenseAtRetirement * (1 - Math.pow(1 + realMonthlyRate, -months2)) / realMonthlyRate * (1 + realMonthlyRate);
+
+      let pfBalance = adj.pfAccumulated + adj.pfContributed + adj.pfAccumulatedGain + adj.pfContributedGain;
+      let curSalary = adj.salary;
+      const pfMonthlyReturn = Math.pow(1 + adj.pfReturn / 100, 1 / 12) - 1;
+      for (let y = 0; y < n1; y++) {
+        const monthlyContrib = curSalary * (adj.employeeRate / 100 + adj.employerRate / 100);
+        for (let m = 0; m < 12; m++) pfBalance = pfBalance * (1 + pfMonthlyReturn) + monthlyContrib;
+        curSalary = curSalary * (1 + adj.salaryGrowth / 100);
+      }
+
+      const preMonthlyReturn = Math.pow(1 + adj.preRetireReturn / 100, 1 / 12) - 1;
+      let other = adj.initialSavings;
+      const months1 = n1 * 12;
+      for (let m = 0; m < months1; m++) other = other * (1 + preMonthlyReturn) + adj.monthlySavings;
+
+      const coopFutureValue = adj.coopShareCurrent + (adj.coopSharePerMonth * months1);
+      const totalAvailable = pfBalance + other + coopFutureValue;
+      const diff = totalAvailable - totalNeeded;
+      const percent = totalNeeded > 0 ? (totalAvailable / totalNeeded * 100) : 100;
+      const positive = diff >= 0;
+
+      const resEl = $('adjResultText');
+      resEl.textContent = (positive ? '✅ เพียงพอ! เกินเป้าหมาย ' : '⚠️ ยังขาดอยู่ ') + fmt(Math.abs(diff)) + ' บาท (' + percent.toFixed(0) + '% ของเป้าหมาย)';
+      resEl.style.color = positive ? 'var(--success)' : 'var(--danger)';
+    }
+
+    function resetAdjustSliders() {
+      if (baseRetirementInputs) initAdjustSliders(baseRetirementInputs);
+    }
+
+    // ==================== BACKUP & EXPORT/IMPORT ====================
+    function exportDataBackup() {
+      collectInputs();
+      const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(state, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute('href', dataStr);
+      downloadAnchor.setAttribute('download', `pea_finance_backup_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function importDataBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          state = Object.assign({}, state, parsed);
+          populateInputs();
+          renderAll();
+          triggerAutoSave();
+          alert('📥 นำเข้าข้อมูลสำเร็จเรียบร้อย!');
+        } catch (err) {
+          alert('❌ ไฟล์ไม่ถูกต้อง กรุณาเลือกไฟล์สำรอง .json ที่ถูกต้อง');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function loadSampleData() {
+      if (confirm('ต้องการโหลดข้อมูลตัวอย่างพนักงาน กฟภ. หรือไม่?')) {
+        state = {
+          inc_salary: 45000,
+          inc_business: 0,
+          inc_rent: 0,
+          inc_dividend: 1000,
+          inc_bonus: 7500,
+          inc_other: 0,
+          exp_housing: 8000,
+          exp_car: 0,
+          exp_home: 15000,
+          exp_family: 3000,
+          exp_insurance: 2500,
+          exp_lifestyle: 6000,
+          exp_debt: 0,
+          exp_saving: 8000,
+          exp_tax: 1000,
+          ast_cash: 150000,
+          ast_fixed: 100000,
+          ast_investment: 120000,
+          ast_provident: 750000,
+          ast_realestate: 2500000,
+          ast_personal: 500000,
+          ast_business: 0,
+          ast_other: 0,
+          lia_home: 1200000,
+          lia_car: 0,
+          lia_card: 0,
+          lia_personal: 0,
+          lia_edu: 0,
+          lia_other: 0,
+          pea_currentAge: 38,
+          pea_retireAge: 60,
+          pea_lifeExpectancy: 85,
+          pea_salaryGrowth: 3.5,
+          pea_salary: 45000,
+          pea_desiredExpenseToday: 25000,
+          pea_inflation: 3,
+          pea_postRetireReturn: 3,
+          pea_monthlySavings: 8000,
+          pea_initialSavings: 250000,
+          pea_preRetireReturn: 5.5,
+          pea_coopSharePerMonth: 2000,
+          pea_coopShareCurrent: 120000,
+          pea_employeeRate: 5,
+          pea_employerRate: 11,
+          pea_pfReturn: 5.5,
+          pea_pfAccumulated: 320000,
+          pea_pfContributed: 430000,
+          pea_pfAccumulatedGain: 60000,
+          pea_pfContributedGain: 80000
+        };
+        populateInputs();
+        renderAll();
+        triggerAutoSave();
+        alert('⚡ โหลดข้อมูลตัวอย่างสำเร็จ!');
+      }
+    }
+
+    function confirmResetAll() {
+      if (confirm('คุณแน่ใจหรือไม่ว่าต้องการล้างข้อมูลทั้งหมด? ข้อมูลที่บันทึกไว้จะถูกรีเซ็ตเป็นค่าเริ่มต้น')) {
+        localStorage.removeItem(STORAGE_KEY);
+        location.reload();
+      }
+    }
+  </script>
+</body>
+</html>
