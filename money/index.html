@@ -1154,118 +1154,35 @@
 
     @media print {
       body {
-        padding: 6px 14px;
+        padding: 0 !important;
+        margin: 0 !important;
         background: #fff !important;
-        color: #000 !important;
-        font-size: 8pt;
+        color: #111 !important;
+        font-size: 8pt !important;
+        font-family: 'Sarabun', 'Segoe UI', Tahoma, sans-serif !important;
       }
       .app-header,
       .bottom-nav,
-      .btn,
-      .chips-row,
-      .slider-box,
-      .btn-sync,
-      .theme-toggle-btn,
-      .scenario-grid,
-      .solution-btn,
-      .accordion-header::after,
-      #tab-cashflow,
-      #tab-networth,
-      #tab-settings,
-      #peaRetirementForm,
-      #smartGapCard,
-      #retireCashflowDeficitAlert,
-      .add-debt-btn,
-      .add-asset-btn,
-      .debt-delete-btn,
-      .asset-delete-btn,
-      #dashCashflowDeficitAlert,
+      .app-main,
       .save-status,
-      #dashGapActionWrap,
-      #resGapActionWrap,
-      .header-actions {
+      .theme-toggle-btn,
+      #toastBox,
+      .print-header {
         display: none !important;
       }
-      .tab-panel {
+      .print-only-report {
         display: block !important;
-        margin-bottom: 0;
-      }
-      #tab-dashboard {
-        display: block !important;
-      }
-      #tab-retirement {
-        display: block !important;
-      }
-      .card {
-        box-shadow: none !important;
-        border: 1px solid #ddd !important;
-        page-break-inside: avoid;
-        margin-bottom: 6px !important;
-        padding: 8px 12px !important;
-        background: #fff !important;
-      }
-      .hero-stat-card {
-        background: #5B21B6 !important;
-        color: #fff !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-        padding: 10px 12px !important;
-        margin-bottom: 6px !important;
-      }
-      .print-header {
-        display: block !important;
-        text-align: center;
-        margin-bottom: 8px;
-        border-bottom: 2px solid #5B21B6;
-        padding-bottom: 4px;
-      }
-      .print-header h2 {
-        font-size: 11pt;
-        color: #5B21B6;
-        margin: 0;
-        font-weight: 700;
-      }
-      .print-header p {
-        font-size: 7.5pt;
-        color: #555;
-        margin: 2px 0 0;
-      }
-      .table-wrap {
-        display: block !important;
-        overflow: visible !important;
-        border: 1px solid #ddd !important;
-      }
-      .proj-table th, .proj-table td {
-        padding: 4px 6px !important;
-        font-size: 7.5pt !important;
-      }
-      .score-card {
-        margin-bottom: 6px !important;
-        padding: 6px 10px !important;
-        page-break-inside: avoid;
-      }
-      .countdown-banner {
-        margin-bottom: 6px !important;
-        padding: 6px 10px !important;
-      }
-      .stat-grid-2, .stat-grid-3 {
-        margin-bottom: 6px !important;
-        gap: 6px !important;
-      }
-      .gauge-card {
-        page-break-inside: avoid;
+        padding: 8mm 10mm !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
       }
     }
-    .print-header { display: none; }
+    .print-only-report {
+      display: none;
+    }
   </style>
 </head>
 <body>
-
-  <!-- PRINT REPORT HEADER (Only visible when printing / PDF export) -->
-  <div class="print-header">
-    <h2>⚡ การไฟฟ้าส่วนภูมิภาค (PEA) - รายงานสรุปแผนการเงินและเป้าหมายเกษียณอายุ (Financial Health Dashboard)</h2>
-    <p>ระบบ PEA Financial & Retirement Engine 2.4 | วันที่พิมพ์รายงาน: <span id="printDateText">-</span></p>
-  </div>
 
   <!-- TOP HEADER -->
   <header class="app-header">
@@ -1282,6 +1199,9 @@
       <div class="header-actions">
         <button type="button" class="btn btn-purple" style="padding:5px 10px; font-size:0.75rem; border-radius:8px; display:inline-flex; align-items:center; gap:4px; height:32px;" onclick="manualSaveData()" title="บันทึกข้อมูลลงเบราว์เซอร์">
           <span>💾 เซฟข้อมูล</span>
+        </button>
+        <button type="button" class="btn btn-outline" style="padding:5px 8px; font-size:0.75rem; border-radius:8px; display:inline-flex; align-items:center; gap:4px; height:32px; color:var(--text-main); border-color:var(--border);" onclick="exportRetirementPDF()" title="ดาวน์โหลดรายงาน PDF สรุปแผนเกษียณ 1 หน้า A4">
+          <span>📄 PDF</span>
         </button>
         <button type="button" class="theme-toggle-btn" onclick="toggleDarkMode()" title="สลับโหมดมืด/สว่าง">
           <span id="themeIcon">🌙</span>
@@ -2249,6 +2169,17 @@
       <!-- RESULTS SECTION -->
       <div id="peaResultsSection">
 
+        <!-- PDF Export Action Banner -->
+        <div style="display:flex; justify-content:space-between; align-items:center; background:linear-gradient(135deg, var(--pea-purple-bg), var(--pea-purple-tint)); border:1.5px solid var(--pea-purple-soft); border-radius:12px; padding:10px 14px; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+          <div>
+            <b style="color:var(--pea-purple-light); font-size:0.88rem;">📄 รายงานสรุปแผนเกษียณ (PDF 1 หน้า A4)</b>
+            <div style="font-size:0.75rem; color:var(--text-muted);">สรุปเป้าหมาย, Monte Carlo และ 3 ทางเลือกปิด Gap สำหรับยื่นฝ่าย HR</div>
+          </div>
+          <button type="button" class="btn btn-purple" style="padding:6px 14px; font-size:0.78rem; width:auto; white-space:nowrap;" onclick="exportRetirementPDF()">
+            <span>🖨️ ดาวน์โหลดรายงาน PDF</span>
+          </button>
+        </div>
+
         <!-- Cashflow Deficit Alert in Retirement Tab -->
         <div id="retireCashflowDeficitAlert" style="display:none; background:linear-gradient(135deg, #FEF2F2, #FEE2E2); border:1.5px solid #EF4444; border-radius:12px; padding:12px 14px; margin-bottom:16px; font-size:0.82rem; line-height:1.5;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; flex-wrap:wrap; gap:6px;">
@@ -2361,7 +2292,7 @@
         <div class="card" style="background:linear-gradient(135deg, var(--pea-purple-bg), var(--pea-purple-tint)); border-color:var(--pea-purple-soft);">
           <div class="card-header" style="margin-bottom:6px;">
             <div class="card-title" style="font-size:0.95rem;"><span class="icon">🏷️</span><span>สิทธิประโยชน์ประหยัดภาษี (Tax Optimization)</span></div>
-            <span class="badge badge-purple">สิทธิลดหย่อน</span>
+            <span class="badge badge-purple" id="taxMarginalRateBadge">ฐานภาษี -%</span>
           </div>
           <p style="font-size:0.82rem; color:var(--text-main); line-height:1.5;" id="taxSavingDesc">
             การส่งเงินสะสม กสช. ได้สิทธิลดหย่อนภาษีเงินได้บุคคลธรรมดา โดยยอดสะสม กสช. ปัจจุบันช่วยให้คุณ <b>ประหยัดภาษีได้ประมาณ <span id="taxSavingAmount" class="num-font" style="font-weight:700; color:var(--success);">0</span> บาท/ปี</b> (คิดเป็นเงินคืนภาษีเฉลี่ยเดือนละ <span id="taxSavingMonthly" class="num-font" style="font-weight:700;">0</span> บาท)
@@ -2590,8 +2521,8 @@
             <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="importDataBackup(event)">
           </label>
 
-          <button class="btn btn-outline" onclick="manualPrint()">
-            <span>🖨️ พิมพ์รายงานสรุป / บันทึกเป็น PDF</span>
+          <button class="btn btn-outline" onclick="exportRetirementPDF()">
+            <span>📄 ดาวน์โหลดรายงานสรุปแผนเกษียณ (PDF / Print A4)</span>
           </button>
 
           <button class="btn btn-outline" style="color:var(--danger); border-color:#FECACA;" onclick="confirmResetAll()">
@@ -2624,6 +2555,126 @@
     </div>
 
   </main>
+
+  <!-- ==================== 1-PAGE A4 PRINT / PDF REPORT (PRINT ONLY) ==================== -->
+  <div class="print-only-report" id="printReportDoc">
+    <!-- Header -->
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #5B21B6; padding-bottom:6px; margin-bottom:8px;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div style="width:32px; height:32px; background:#5B21B6; border-radius:6px; display:flex; align-items:center; justify-content:center; color:#fff;">
+          <svg style="width:20px; height:20px; fill:#fff;" viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+        </div>
+        <div>
+          <h2 style="margin:0; font-size:11.5pt; color:#5B21B6; font-weight:700;">การไฟฟ้าส่วนภูมิภาค (PEA) - รายงานสรุปแผนการเงินและเป้าหมายเกษียณอายุ</h2>
+          <p style="margin:1px 0 0; font-size:7.5pt; color:#4B5563;">ระบบ PEA Financial & Retirement Engine 2.4 | วันที่พิมพ์: <span id="pr_printDate">-</span></p>
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <span style="font-size:7pt; background:#F3E8FF; color:#6B21A8; border:1px solid #D8B4FE; padding:2px 6px; border-radius:4px; font-weight:bold;">สำหรับยื่นฝ่ายบริหารทรัพยากรบุคคล (HR)</span>
+      </div>
+    </div>
+
+    <!-- 1. ข้อมูลพื้นฐานและสมมติฐาน -->
+    <div style="border:1px solid #E5E7EB; border-radius:6px; padding:6px 10px; margin-bottom:8px; background:#F9FAFB;">
+      <div style="font-weight:bold; color:#374151; font-size:8.5pt; margin-bottom:4px; border-bottom:1px solid #E5E7EB; padding-bottom:2px;">
+        👤 ข้อมูลพนักงานและสมมติฐานการวางแผนเกษียณ
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:4px 8px; font-size:7.5pt;">
+        <div>อายุปัจจุบัน: <b id="pr_currentAge">-</b> ปี</div>
+        <div>เกษียณอายุ: <b id="pr_retireAge">-</b> ปี (เหลือ <b id="pr_yearsLeft">-</b> ปี)</div>
+        <div>อายุงานปัจจุบัน: <b id="pr_serviceYears">-</b> ปี</div>
+        <div>อายุขัยคาดหมาย: <b id="pr_lifeExp">-</b> ปี</div>
+        <div>เงินเดือนปัจจุบัน: <b id="pr_salary">-</b> ฿/ด.</div>
+        <div>คาดการณ์เงินเดือนโต: <b id="pr_salaryGrowth">-</b>%/ปี</div>
+        <div>อัตราสะสม กสช.: <b id="pr_pfRate">-</b>% (นายจ้างสมทบ <b id="pr_emRate">-</b>%)</div>
+        <div>ผลตอบแทน กสช. คาดหวัง: <b id="pr_pfReturn">-</b>%/ปี</div>
+      </div>
+    </div>
+
+    <!-- 2. ผลการประเมินเป้าหมายเกษียณ & Monte Carlo -->
+    <div style="display:grid; grid-template-columns:1.35fr 1fr; gap:8px; margin-bottom:8px;">
+      <!-- กล่องสรุปเป้าหมายเกษียณ -->
+      <div style="border:1.5px solid #5B21B6; border-radius:6px; padding:8px; background:#FAF5FF;">
+        <div style="font-weight:bold; color:#5B21B6; font-size:8.5pt; margin-bottom:4px; display:flex; justify-content:space-between; align-items:center;">
+          <span>🎯 สรุปเป้าหมายเงินทุน ณ วันเกษียณอายุ</span>
+          <span id="pr_statusBadge" style="font-size:7pt; padding:1px 6px; border-radius:4px; font-weight:bold; background:#10B981; color:#fff;">พร้อม 100%</span>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; font-size:7.5pt; margin-bottom:6px;">
+          <div style="background:#fff; border:1px solid #E9D5FF; border-radius:4px; padding:5px;">
+            <div style="font-size:6.8pt; color:#6B7280;">เป้าหมายเงินทุนที่ต้องมี (Target)</div>
+            <div style="font-size:9.5pt; font-weight:bold; color:#374151;" id="pr_totalNeeded">0 ฿</div>
+            <div style="font-size:6.5pt; color:#6B7280;">ค่าใช้จ่าย <span id="pr_retireExp">0</span> ฿/ด.</div>
+          </div>
+          <div style="background:#fff; border:1px solid #E9D5FF; border-radius:4px; padding:5px;">
+            <div style="font-size:6.8pt; color:#6B7280;">เงินทุนที่คาดว่าจะมีทั้งหมด (Available)</div>
+            <div style="font-size:9.5pt; font-weight:bold; color:#5B21B6;" id="pr_totalAvailable">0 ฿</div>
+            <div style="font-size:6.5pt; font-weight:bold;" id="pr_diffText">เกินเป้าหมาย 0 ฿</div>
+          </div>
+        </div>
+        <!-- Breakdown -->
+        <div style="font-size:7pt; color:#4B5563; background:#fff; border:1px solid #E5E7EB; border-radius:4px; padding:4px 6px;">
+          <b>โครงสร้างเงินทุน ณ เกษียณ:</b> กสช. <b id="pr_pfVal">0</b> ฿ · หุ้นสหกรณ์ <b id="pr_coopVal">0</b> ฿ · เงินออมอื่น <b id="pr_otherVal">0</b> ฿ · เงินชดเชย 400 วัน <b id="pr_sevVal">0</b> ฿
+        </div>
+      </div>
+
+      <!-- กล่อง Monte Carlo -->
+      <div style="border:1px solid #E5E7EB; border-radius:6px; padding:8px; background:#F9FAFB;">
+        <div style="font-weight:bold; color:#374151; font-size:8.5pt; margin-bottom:4px;">
+          🎲 Monte Carlo Stress Test (500 รอบ)
+        </div>
+        <div style="font-size:7.5pt; margin-bottom:3px;">
+          โอกาสสำเร็จตลอดอายุขัย: <b id="pr_mcRate" style="color:#10B981; font-size:9.5pt;">0%</b>
+        </div>
+        <div style="font-size:6.8pt; color:#4B5563; line-height:1.4; margin-bottom:4px;">
+          • ตลาดแย่ (10th): <b id="pr_mcP10">0 ฿</b><br>
+          • ปกติมัธยฐาน (50th): <b id="pr_mcP50">0 ฿</b><br>
+          • ตลาดดีมาก (90th): <b id="pr_mcP90">0 ฿</b>
+        </div>
+        <div style="font-size:6.5pt; color:#6B7280; border-top:1px solid #E5E7EB; padding-top:2px;">
+          ทดสอบความผันผวนของตลาดหุ้นและเงินเฟ้อจริง
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. งบดุลส่วนบุคคล & สภาพคล่อง -->
+    <div style="border:1px solid #E5E7EB; border-radius:6px; padding:6px 10px; margin-bottom:8px; font-size:7.5pt; background:#fff;">
+      <div style="font-weight:bold; color:#374151; font-size:8pt; margin-bottom:3px;">
+        📊 สรุปงบดุลและความมั่งคั่งสุทธิ (Personal Balance Sheet)
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px;">
+        <div>สินทรัพย์รวม: <b id="pr_totalAssets">0 ฿</b></div>
+        <div>หนี้สินรวม: <b id="pr_totalLiab">0 ฿</b></div>
+        <div>ความมั่งคั่งสุทธิ: <b id="pr_netWorth" style="color:#5B21B6;">0 ฿</b></div>
+        <div>กระแสเงินสดสุทธิ: <b id="pr_netCashflow">0 ฿/ด.</b> (DSR: <b id="pr_dsr">0%</b>)</div>
+      </div>
+    </div>
+
+    <!-- 4. ทางเลือกปรับแผนเกษียณ (Smart Recommendations for HR Submission) -->
+    <div style="border:1.5px solid #F59E0B; border-radius:6px; padding:6px 10px; margin-bottom:10px; background:#FFFBEB;">
+      <div style="font-weight:bold; color:#B45309; font-size:8.5pt; margin-bottom:3px;">
+        📋 ทางเลือกการปรับแผนเกษียณ (Smart Recommendations for HR Submission)
+      </div>
+      <div style="font-size:7.2pt; color:#78350F; line-height:1.45;">
+        <div><b>1. การปรับอัตราส่งเงินสะสม กสช.:</b> <span id="pr_sol1Text">อัตราปัจจุบันเหมาะสมแล้ว</span></div>
+        <div><b>2. การออมและลงทุนเสริมส่วนบุคคล:</b> <span id="pr_sol2Text">ออมต่อเนื่องตามแผน</span></div>
+        <div><b>3. นโยบายการลงทุน กสช. ที่เหมาะสม:</b> <span id="pr_sol3Text">แผนสมดุลตามอายุ</span></div>
+      </div>
+    </div>
+
+    <!-- 5. ช่องลงนามพนักงาน & ฝ่ายทรัพยากรบุคคล -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; border-top:1px dashed #9CA3AF; padding-top:10px; font-size:7.5pt; text-align:center;">
+      <div>
+        <div style="margin-bottom:24px;">ลงชื่อ................................................................... ผู้ขอรับคำปรึกษา</div>
+        <div>(...................................................................)</div>
+        <div style="font-size:7pt; color:#6B7280;">พนักงานการไฟฟ้าส่วนภูมิภาค</div>
+      </div>
+      <div>
+        <div style="margin-bottom:24px;">ลงชื่อ................................................................... ผู้บันทึก / ฝ่าย HR</div>
+        <div>(...................................................................)</div>
+        <div style="font-size:7pt; color:#6B7280;">ฝ่ายบริหารทรัพยากรบุคคล (HR)</div>
+      </div>
+    </div>
+  </div>
 
   <!-- BOTTOM NAVIGATION BAR (FIXED) -->
   <nav class="bottom-nav">
@@ -3244,8 +3295,8 @@
     // ==================== CALCULATION & RENDERING ====================
     function renderAll() {
       // Print date update
-      if ($('printDateText')) {
-        $('printDateText').textContent = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+      if ($('pr_printDate')) {
+        $('pr_printDate').textContent = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
       }
 
       // 1. Dynamic Assets Calculation
@@ -3627,6 +3678,16 @@
       let other = inp.initialSavings;
       let coop = inp.coopShareCurrent;
 
+      // Cash-Burn Drag Logic:
+      // If monthly net cashflow is negative (deficit), subtract the deficit from other savings monthly!
+      const totalIncome = (state.inc_salary || 0) + (state.inc_business || 0) + (state.inc_rent || 0) + (state.inc_dividend || 0) + (state.inc_bonus || 0) + (state.inc_other || 0);
+      let totalDebtMonthly = 0;
+      if (state.debts) state.debts.forEach(d => { totalDebtMonthly += (d.monthly || 0); });
+      const totalExpense = (state.exp_housing || 0) + (state.exp_car || 0) + (state.exp_home || 0) + (state.exp_family || 0) + (state.exp_insurance || 0) + (state.exp_lifestyle || 0) + totalDebtMonthly + (state.exp_saving || 0) + (state.exp_tax || 0);
+      const curNetCashflow = totalIncome - totalExpense;
+      const monthlyDeficit = (curNetCashflow < 0) ? Math.abs(curNetCashflow) : 0;
+      const effectiveMonthlySavings = inp.monthlySavings - monthlyDeficit;
+
       const yearlyData = [];
       yearlyData.push({
         age: inp.currentAge,
@@ -3649,7 +3710,7 @@
         const monthlyContrib = curSalary * (inp.employeeRate / 100 + emRate / 100);
         for (let m = 0; m < 12; m++) {
           pfBalance = pfBalance * (1 + pfMonthlyReturn) + monthlyContrib;
-          other = other * (1 + preMonthlyReturn) + inp.monthlySavings;
+          other = Math.max(0, other * (1 + preMonthlyReturn) + effectiveMonthlySavings);
           if (inp.coopDividendOption === 'payout') {
             coop = coop + inp.coopSharePerMonth;
           } else {
@@ -3690,6 +3751,7 @@
       renderAssetAllocationGuide(inp.pfReturn);
       prepareSmartSolutions(inp, res);
       runMonteCarloSimulation(500);
+      updatePrintReportDoc(res, inp);
 
       baseRetirementInputs = inp;
       initAdjustSliders(inp);
@@ -3855,28 +3917,63 @@
       }
     }
 
+    // ==================== PROGRESSIVE TAX CALCULATION ENGINE ====================
+    function calcProgressiveTax(taxableIncome) {
+      if (taxableIncome <= 150000) return 0;
+      let tax = 0;
+      const brackets = [
+        { limit: 300000, rate: 0.05, prev: 150000 },
+        { limit: 500000, rate: 0.10, prev: 300000 },
+        { limit: 750000, rate: 0.15, prev: 500000 },
+        { limit: 1000000, rate: 0.20, prev: 750000 },
+        { limit: 2000000, rate: 0.25, prev: 1000000 },
+        { limit: 5000000, rate: 0.30, prev: 2000000 },
+        { limit: Infinity, rate: 0.35, prev: 5000000 }
+      ];
+      for (const b of brackets) {
+        if (taxableIncome > b.prev) {
+          const taxableAmount = Math.min(taxableIncome, b.limit) - b.prev;
+          tax += taxableAmount * b.rate;
+        }
+      }
+      return tax;
+    }
+
+    function getMarginalTaxRate(taxableIncome) {
+      if (taxableIncome > 5000000) return 35;
+      if (taxableIncome > 2000000) return 30;
+      if (taxableIncome > 1000000) return 25;
+      if (taxableIncome > 750000) return 20;
+      if (taxableIncome > 500000) return 15;
+      if (taxableIncome > 300000) return 10;
+      if (taxableIncome > 150000) return 5;
+      return 0;
+    }
+
     // ==================== TAX SAVINGS ENGINE ====================
     function calculateTaxSavings(salary, employeeRate) {
+      const annualIncome = (salary + (state.inc_bonus || 0) + (state.inc_business || 0) + (state.inc_rent || 0) + (state.inc_dividend || 0) + (state.inc_other || 0)) * 12;
       const annualSalary = salary * 12;
-      const pfContributionAnnual = annualSalary * (employeeRate / 100);
+      const pfContributionAnnual = Math.min(500000, annualSalary * (employeeRate / 100));
       
       const stdDeductions = 100000 + 60000;
-      const netTaxableIncome = Math.max(0, annualSalary - stdDeductions);
+      const insuranceDeduction = Math.min(100000, (state.exp_insurance || 0) * 12);
       
-      let marginalRate = 0.05;
-      if (netTaxableIncome > 5000000) marginalRate = 0.35;
-      else if (netTaxableIncome > 2000000) marginalRate = 0.30;
-      else if (netTaxableIncome > 1000000) marginalRate = 0.25;
-      else if (netTaxableIncome > 750000) marginalRate = 0.20;
-      else if (netTaxableIncome > 500000) marginalRate = 0.15;
-      else if (netTaxableIncome > 300000) marginalRate = 0.10;
-      else if (netTaxableIncome > 150000) marginalRate = 0.05;
+      const taxableNoPf = Math.max(0, annualIncome - stdDeductions - insuranceDeduction);
+      const taxableWithPf = Math.max(0, annualIncome - stdDeductions - insuranceDeduction - pfContributionAnnual);
       
-      const taxSaved = pfContributionAnnual * marginalRate;
+      const taxWithoutPf = calcProgressiveTax(taxableNoPf);
+      const taxWithPf = calcProgressiveTax(taxableWithPf);
+      const taxSaved = Math.max(0, taxWithoutPf - taxWithPf);
       const taxSavedMonthly = taxSaved / 12;
-      
+      const marginalRate = getMarginalTaxRate(taxableWithPf);
+
       if ($('taxSavingAmount')) $('taxSavingAmount').textContent = fmt(taxSaved);
       if ($('taxSavingMonthly')) $('taxSavingMonthly').textContent = fmt(taxSavedMonthly);
+      if ($('taxMarginalRateBadge')) $('taxMarginalRateBadge').textContent = `ฐานภาษี ${marginalRate}%`;
+      if ($('taxSavingDesc')) {
+        $('taxSavingDesc').innerHTML = `การส่งเงินสะสม กสช. (${employeeRate}%) นำไปลดหย่อนภาษีได้ตามจริง ที่ฐานภาษีเงินได้ <b>${marginalRate}%</b> ช่วยให้คุณ <b>ประหยัดภาษีได้ <span class="num-font" style="font-weight:700; color:var(--success);">${fmt(taxSaved)}</span> บาท/ปี</b> (เทียบเท่าเงินคืนภาษีเฉลี่ยเดือนละ <b>${fmt(taxSavedMonthly)}</b> บาท)`;
+      }
     }
 
     // ==================== ASSET ALLOCATION GUIDE ====================
@@ -3938,6 +4035,19 @@
         requiredPfRate = Math.min(15, Math.max(inp.employeeRate + 0.5, Math.round((inp.employeeRate + addRate) * 2) / 2));
       }
 
+      // Calculate incremental tax savings from increasing PF rate
+      const annualIncome = (inp.salary + (state.inc_bonus || 0) + (state.inc_business || 0) + (state.inc_rent || 0) + (state.inc_dividend || 0) + (state.inc_other || 0)) * 12;
+      const annualSalary = inp.salary * 12;
+      const stdDeductions = 100000 + 60000 + Math.min(100000, (state.exp_insurance || 0) * 12);
+      
+      const curPfAnnual = Math.min(500000, annualSalary * (inp.employeeRate / 100));
+      const newPfAnnual = Math.min(500000, annualSalary * (requiredPfRate / 100));
+      
+      const curTax = calcProgressiveTax(Math.max(0, annualIncome - stdDeductions - curPfAnnual));
+      const newTax = calcProgressiveTax(Math.max(0, annualIncome - stdDeductions - newPfAnnual));
+      const incrementalTaxSaved = Math.max(0, curTax - newTax);
+      const marginalRate = getMarginalTaxRate(Math.max(0, annualIncome - stdDeductions - curPfAnnual));
+
       // Sol 2: Additional Monthly Savings
       let requiredMonthlySavings = 0;
       if (months1 > 0) {
@@ -3956,9 +4066,84 @@
         targetReturn
       };
 
-      if ($('solPfText')) $('solPfText').textContent = `ปรับจาก ${inp.employeeRate}% เป็น ${requiredPfRate}% (ช่วยประหยัดภาษีเพิ่มทันที)`;
+      if ($('solPfText')) $('solPfText').innerHTML = `ปรับจาก <b>${inp.employeeRate}%</b> เป็น <b>${requiredPfRate}%</b> (ประหยัดภาษีเพิ่ม <b>+${fmt(incrementalTaxSaved)} ฿/ปี</b> ที่ฐานภาษี ${marginalRate}%)`;
       if ($('solSavingsText')) $('solSavingsText').textContent = `ออมเพิ่มเป็น ${fmt(requiredMonthlySavings)} บาท/ด. (เพิ่ม ${fmt(requiredMonthlySavings - inp.monthlySavings)} ฿)`;
       if ($('solReturnText')) $('solReturnText').textContent = `ขยับผลตอบแทน กสช. เป็น ${targetReturn}% (เลือกแผนผสมหุ้น/ต่างประเทศ)`;
+    }
+
+    function updatePrintReportDoc(res, inp) {
+      if (!$('printReportDoc')) return;
+      
+      if ($('pr_printDate')) $('pr_printDate').textContent = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+      
+      // Basic info
+      if ($('pr_currentAge')) $('pr_currentAge').textContent = inp.currentAge;
+      if ($('pr_retireAge')) $('pr_retireAge').textContent = inp.retireAge;
+      if ($('pr_yearsLeft')) $('pr_yearsLeft').textContent = Math.max(0, inp.retireAge - inp.currentAge);
+      if ($('pr_serviceYears')) $('pr_serviceYears').textContent = inp.serviceYears;
+      if ($('pr_lifeExp')) $('pr_lifeExp').textContent = inp.lifeExpectancy;
+      if ($('pr_salary')) $('pr_salary').textContent = fmt(inp.salary);
+      if ($('pr_salaryGrowth')) $('pr_salaryGrowth').textContent = inp.salaryGrowth;
+      if ($('pr_pfRate')) $('pr_pfRate').textContent = inp.employeeRate;
+      
+      let emRate = inp.employerRate;
+      if (inp.useStepEmployerRate) {
+        if (inp.serviceYears < 10) emRate = 9;
+        else if (inp.serviceYears <= 20) emRate = 10;
+        else emRate = 11;
+      }
+      if ($('pr_emRate')) $('pr_emRate').textContent = emRate;
+      if ($('pr_pfReturn')) $('pr_pfReturn').textContent = inp.pfReturn;
+      
+      // Retirement Targets
+      if ($('pr_totalNeeded')) $('pr_totalNeeded').textContent = fmt(res.totalNeeded) + ' ฿';
+      if ($('pr_totalAvailable')) $('pr_totalAvailable').textContent = fmt(res.totalAvailable) + ' ฿';
+      if ($('pr_retireExp')) $('pr_retireExp').textContent = fmt(res.expenseAtRetirement);
+      
+      const isPositive = res.diff >= 0;
+      if ($('pr_statusBadge')) {
+        $('pr_statusBadge').textContent = isPositive ? `พร้อม ${res.percent.toFixed(0)}% (เกินเป้า)` : `ขาดอีก ${fmt(Math.abs(res.diff))} ฿ (${res.percent.toFixed(0)}%)`;
+        $('pr_statusBadge').style.background = isPositive ? '#10B981' : '#EF4444';
+      }
+      if ($('pr_diffText')) {
+        $('pr_diffText').textContent = isPositive ? `เกินเป้าหมาย +${fmt(res.diff)} ฿` : `ยังขาดอยู่อีก -${fmt(Math.abs(res.diff))} ฿`;
+        $('pr_diffText').style.color = isPositive ? '#059669' : '#DC2626';
+      }
+      
+      // Breakdown
+      if ($('pr_pfVal')) $('pr_pfVal').textContent = fmt(res.pfFutureValue);
+      if ($('pr_coopVal')) $('pr_coopVal').textContent = fmt(res.coopFutureValue);
+      if ($('pr_otherVal')) $('pr_otherVal').textContent = fmt(res.otherFutureValue);
+      if ($('pr_sevVal')) $('pr_sevVal').textContent = fmt(res.severancePay);
+      
+      // Balance Sheet & Cashflow
+      if ($('pr_totalAssets')) $('pr_totalAssets').textContent = $('dashTotalAssets') ? $('dashTotalAssets').textContent : '0 ฿';
+      if ($('pr_totalLiab')) $('pr_totalLiab').textContent = $('dashTotalLiabilities') ? $('dashTotalLiabilities').textContent : '0 ฿';
+      if ($('pr_netWorth')) $('pr_netWorth').textContent = $('dashNetWorth') ? $('dashNetWorth').textContent : '0 ฿';
+      if ($('pr_netCashflow')) $('pr_netCashflow').textContent = $('dashNetCashflow') ? $('dashNetCashflow').textContent : '0 ฿';
+      if ($('pr_dsr')) $('pr_dsr').textContent = $('dsrRateVal') ? $('dsrRateVal').textContent : '0%';
+      
+      // Monte Carlo
+      if ($('pr_mcRate')) $('pr_mcRate').textContent = $('mcSuccessRate') ? $('mcSuccessRate').textContent : '0%';
+      if ($('pr_mcP10')) $('pr_mcP10').textContent = $('mcP10') ? $('mcP10').textContent : '0 ฿';
+      if ($('pr_mcP50')) $('pr_mcP50').textContent = $('mcP50') ? $('mcP50').textContent : '0 ฿';
+      if ($('pr_mcP90')) $('pr_mcP90').textContent = $('mcP90') ? $('mcP90').textContent : '0 ฿';
+      
+      // HR Recommendations
+      if (currentSmartSolutions) {
+        if ($('pr_sol1Text')) $('pr_sol1Text').innerHTML = `ปรับอัตราสะสม กสช. เป็น <b>${currentSmartSolutions.requiredPfRate}%</b> (ช่วยประหยัดภาษีเพิ่ม)`;
+        if ($('pr_sol2Text')) $('pr_sol2Text').innerHTML = `ออมเงินเสริมส่วนบุคคลเป็น <b>${fmt(currentSmartSolutions.requiredMonthlySavings)} บาท/ด.</b>`;
+        if ($('pr_sol3Text')) $('pr_sol3Text').innerHTML = `ปรับแผน กสช. ให้ได้ผลตอบแทน <b>${currentSmartSolutions.targetReturn}%/ปี</b>`;
+      } else {
+        if ($('pr_sol1Text')) $('pr_sol1Text').textContent = `ส่งสะสม กสช. อัตราเดิม ${inp.employeeRate}% (แผนพร้อมเกิน 100% แล้ว)`;
+        if ($('pr_sol2Text')) $('pr_sol2Text').textContent = `ออมเสริมตามปกติ ${fmt(inp.monthlySavings)} บาท/ด.`;
+        if ($('pr_sol3Text')) $('pr_sol3Text').textContent = `รักษาระดับผลตอบแทน กสช. ${inp.pfReturn}%/ปี`;
+      }
+    }
+
+    function exportRetirementPDF() {
+      renderAll();
+      window.print();
     }
 
     function applySolPF() {
