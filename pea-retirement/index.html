@@ -244,30 +244,61 @@
     .segmented-control {
       display: flex;
       background: var(--pea-purple-tint);
-      border-radius: 12px;
-      padding: 4px;
-      margin-bottom: 16px;
-      gap: 4px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 5px;
+      margin-bottom: 18px;
+      gap: 6px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04);
     }
 
     .seg-btn {
       flex: 1;
-      border: none;
+      border: 1.5px solid transparent;
       background: transparent;
-      padding: 9px 4px;
-      font-size: 0.88rem;
+      padding: 10px 8px;
+      font-size: 0.86rem;
       font-weight: 600;
       color: var(--pea-purple-soft);
-      border-radius: 9px;
+      border-radius: 10px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      position: relative;
+    }
+
+    .seg-btn:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.45);
+      color: var(--text-main);
     }
 
     .seg-btn.active {
       background: var(--card-bg);
-      color: var(--text-main);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      color: var(--pea-purple-light);
+      border-color: var(--pea-purple-soft);
+      box-shadow: 0 4px 14px rgba(91, 50, 163, 0.16), 0 1px 3px rgba(0, 0, 0, 0.06);
+      font-weight: 700;
+    }
+
+    .seg-btn .seg-badge {
+      font-size: 0.68rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--pea-purple-bg);
+      color: var(--pea-purple-soft);
+      font-weight: 700;
+      transition: all 0.2s ease;
+      font-family: 'Chakra Petch', sans-serif;
+    }
+
+    .seg-btn.active .seg-badge {
+      background: var(--pea-purple-light);
+      color: #FFFFFF;
     }
 
     /* ---------- CARDS ---------- */
@@ -877,6 +908,61 @@
       border-color: var(--pea-purple-light);
     }
 
+    /* Dynamic Asset Sub-items */
+    .asset-item-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      transition: all 0.2s ease;
+    }
+    .asset-item-card:hover {
+      border-color: var(--pea-purple-soft);
+    }
+    .asset-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 8px;
+    }
+    .asset-delete-btn {
+      background: none;
+      border: none;
+      color: var(--danger);
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      opacity: 0.7;
+    }
+    .asset-delete-btn:hover {
+      opacity: 1;
+      background: #FEE2E2;
+    }
+    .add-asset-btn {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1.5px dashed var(--pea-purple-soft);
+      background: var(--card-sub);
+      color: var(--pea-purple-light);
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .add-asset-btn:hover {
+      background: var(--pea-purple-bg);
+      border-color: var(--pea-purple-light);
+    }
+
     /* ---------- SLIDERS (ลองปรับแผน) ---------- */
     .slider-box {
       background: var(--pea-purple-bg);
@@ -1265,9 +1351,18 @@
     <div class="tab-panel" id="tab-cashflow">
       
       <div class="segmented-control">
-        <button class="seg-btn active" onclick="switchCFSub('income', this)">📥 รายรับ</button>
-        <button class="seg-btn" onclick="switchCFSub('expense', this)">📤 รายจ่าย</button>
-        <button class="seg-btn" onclick="switchCFSub('summary', this)">📊 สรุปผล</button>
+        <button class="seg-btn active" onclick="switchCFSub('income', this)">
+          <span>📥 รายรับ</span>
+          <span class="seg-badge" id="segBadgeIncome">0 ฿</span>
+        </button>
+        <button class="seg-btn" onclick="switchCFSub('expense', this)">
+          <span>📤 รายจ่าย</span>
+          <span class="seg-badge" id="segBadgeExpense">0 ฿</span>
+        </button>
+        <button class="seg-btn" onclick="switchCFSub('summary', this)">
+          <span>📊 สรุปผล</span>
+          <span class="seg-badge" id="segBadgeCashflow">0 ฿</span>
+        </button>
       </div>
 
       <!-- CF SUB 1: รายรับ (INCOME) -->
@@ -1477,9 +1572,18 @@
     <div class="tab-panel" id="tab-networth">
 
       <div class="segmented-control">
-        <button class="seg-btn active" onclick="switchNWSub('assets', this)">💎 สินทรัพย์</button>
-        <button class="seg-btn" onclick="switchNWSub('liabilities', this)">📉 หนี้สิน</button>
-        <button class="seg-btn" onclick="switchNWSub('summary', this)">🏛️ งบดุลสุทธิ</button>
+        <button class="seg-btn active" onclick="switchNWSub('assets', this)">
+          <span>💎 สินทรัพย์</span>
+          <span class="seg-badge" id="segBadgeAssets">0 ฿</span>
+        </button>
+        <button class="seg-btn" onclick="switchNWSub('liabilities', this)">
+          <span>📉 หนี้สิน</span>
+          <span class="seg-badge" id="segBadgeLiabilities">0 ฿</span>
+        </button>
+        <button class="seg-btn" onclick="switchNWSub('summary', this)">
+          <span>🏛️ งบดุลสุทธิ</span>
+          <span class="seg-badge" id="segBadgeNetWorth">0 ฿</span>
+        </button>
       </div>
 
       <!-- NW SUB 1: สินทรัพย์ (ASSETS) -->
@@ -1493,36 +1597,55 @@
           </div>
           <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:12px;">สินทรัพย์สภาพคล่องสูงสำหรับใช้ดำรงชีพหลังเกษียณ (นำไปคำนวณแผนเกษียณ)</p>
 
-          <div class="input-group">
-            <label class="input-label"><span>เงินสด / บัญชีออมทรัพย์</span><span class="input-hint">สภาพคล่อง</span></label>
-            <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="ast_cash" value="100000" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
+          <!-- Category 1.1: เงินสด / เงินฝากออมทรัพย์ -->
+          <div style="margin-bottom:14px; border-bottom:1px dashed var(--border); padding-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <b style="font-size:0.86rem; color:var(--text-main);">💵 เงินสด & บัญชีเงินฝากออมทรัพย์</b>
+              <span class="badge badge-blue" id="subtotalBadge_ast_cash">0 ฿</span>
             </div>
+            <div id="assetList_cash"></div>
+            <button type="button" class="add-asset-btn" onclick="addNewAsset('cash')">+ เพิ่มบัญชีเงินฝาก / เงินสด</button>
           </div>
 
-          <div class="input-group">
-            <label class="input-label"><span>เงินฝากประจำ</span></label>
-            <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="ast_fixed" value="0" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
+          <!-- Category 1.2: เงินฝากประจำ / สลากออมทรัพย์ -->
+          <div style="margin-bottom:14px; border-bottom:1px dashed var(--border); padding-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <b style="font-size:0.86rem; color:var(--text-main);">🏦 เงินฝากประจำ & สลากออมทรัพย์</b>
+              <span class="badge badge-blue" id="subtotalBadge_ast_fixed">0 ฿</span>
             </div>
+            <div id="assetList_fixed"></div>
+            <button type="button" class="add-asset-btn" onclick="addNewAsset('fixed')">+ เพิ่มเงินฝากประจำ / สลากออมสิน</button>
           </div>
 
-          <div class="input-group">
-            <label class="input-label"><span>กองทุนสำรองเลี้ยงชีพ (กสช.) / RMF / SSF</span></label>
-            <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="ast_provident" value="515000" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
+          <!-- Category 1.3: หุ้นสะสมสหกรณ์ออมทรัพย์ กฟภ. (Dedicated Field) -->
+          <div style="margin-bottom:14px; border-bottom:1px dashed var(--border); padding-bottom:10px; background:var(--pea-purple-bg); border-radius:10px; padding:10px 12px; border:1px solid var(--border-focus);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <b style="font-size:0.88rem; color:var(--pea-purple-soft);">⚡ หุ้นสะสมสหกรณ์ออมทรัพย์ กฟภ. (PEA Cooperative)</b>
+              <span class="badge badge-gold" id="subtotalBadge_ast_pea_coop">0 ฿</span>
             </div>
+            <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px;">หุ้นสหกรณ์ กฟภ. จะถูกซิงค์เข้าแผนเกษียณเพื่อคิดปันผลทบต้นให้อัตโนมัติ</p>
+            <div id="assetList_pea_coop"></div>
+            <button type="button" class="add-asset-btn" style="background:#fff;" onclick="addNewAsset('pea_coop')">+ เพิ่มรายการหุ้นสหกรณ์ กฟภ.</button>
           </div>
 
-          <div class="input-group">
-            <label class="input-label"><span>กองทุนรวม / พอร์ตหุ้น / ตราสารหนี้</span></label>
-            <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="ast_investment" value="50000" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
+          <!-- Category 1.4: กองทุนสำรองเลี้ยงชีพ (กสช.) / RMF / SSF -->
+          <div style="margin-bottom:14px; border-bottom:1px dashed var(--border); padding-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <b style="font-size:0.86rem; color:var(--text-main);">🛡️ กองทุนสำรองเลี้ยงชีพ (กสช.) / RMF / SSF</b>
+              <span class="badge badge-purple" id="subtotalBadge_ast_provident">0 ฿</span>
             </div>
+            <div id="assetList_provident"></div>
+            <button type="button" class="add-asset-btn" onclick="addNewAsset('provident')">+ เพิ่ม กสช. / กองทุนลดหย่อนภาษี</button>
+          </div>
+
+          <!-- Category 1.5: กองทุนรวม / พอร์ตหุ้น / ตราสารหนี้ -->
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <b style="font-size:0.86rem; color:var(--text-main);">📈 พอร์ตหุ้น / กองทุนรวม / ตราสารหนี้</b>
+              <span class="badge badge-purple" id="subtotalBadge_ast_investment">0 ฿</span>
+            </div>
+            <div id="assetList_investment"></div>
+            <button type="button" class="add-asset-btn" onclick="addNewAsset('investment')">+ เพิ่มพอร์ตหุ้น / กองทุนรวม</button>
           </div>
         </div>
 
@@ -1534,39 +1657,47 @@
           </div>
           <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:12px;">สินทรัพย์ที่ใช้ประโยชน์ในชีวิตประจำวัน ไม่นำมาทยอยจ่ายเป็นค่าใช้จ่ายเกษียณ</p>
 
-          <div class="input-group">
-            <label class="input-label"><span>อสังหาริมทรัพย์ที่อยู่อาศัย (บ้าน / คอนโด / ที่ดิน)</span></label>
-            <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="ast_realestate" value="0" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
+          <!-- Category 2.1: อสังหาริมทรัพย์ -->
+          <div style="margin-bottom:14px; border-bottom:1px dashed var(--border); padding-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <b style="font-size:0.86rem; color:var(--text-main);">🏠 อสังหาริมทรัพย์ที่อยู่อาศัย (บ้าน / คอนโด / ที่ดิน)</b>
+              <span class="badge badge-gold" id="subtotalBadge_ast_realestate">0 ฿</span>
             </div>
+            <div id="assetList_realestate"></div>
+            <button type="button" class="add-asset-btn" onclick="addNewAsset('realestate')">+ เพิ่มบ้าน / คอนโด / ที่ดิน</button>
           </div>
 
-          <div class="input-group">
-            <label class="input-label"><span>ทรัพย์สินส่วนตัว (รถยนต์ / ทองคำ / ของสะสม)</span></label>
-            <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="ast_personal" value="0" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
+          <!-- Category 2.2: ทรัพย์สินส่วนตัว -->
+          <div style="margin-bottom:14px; border-bottom:1px dashed var(--border); padding-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <b style="font-size:0.86rem; color:var(--text-main);">🚗 ทรัพย์สินส่วนบุคคล (รถยนต์ / ทองคำ / ของสะสม)</b>
+              <span class="badge badge-gold" id="subtotalBadge_ast_personal">0 ฿</span>
             </div>
+            <div id="assetList_personal"></div>
+            <button type="button" class="add-asset-btn" onclick="addNewAsset('personal')">+ เพิ่มรถยนต์ / ทองคำ / ของมีค่า</button>
           </div>
 
-          <div class="input-group">
-            <label class="input-label"><span>มูลค่าธุรกิจส่วนตัว</span></label>
-            <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="ast_business" value="0" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
+          <!-- Category 2.3: มูลค่าธุรกิจส่วนตัว -->
+          <div style="margin-bottom:14px; border-bottom:1px dashed var(--border); padding-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <b style="font-size:0.86rem; color:var(--text-main);">🏢 มูลค่าธุรกิจส่วนตัว & ทรัพย์สินทางปัญญา</b>
+              <span class="badge badge-gold" id="subtotalBadge_ast_business">0 ฿</span>
             </div>
+            <div id="assetList_business"></div>
+            <button type="button" class="add-asset-btn" onclick="addNewAsset('business')">+ เพิ่มธุรกิจส่วนตัว</button>
           </div>
 
-          <div class="input-group">
-            <label class="input-label"><span>สินทรัพย์อื่นๆ</span></label>
-            <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="ast_other" value="0" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
+          <!-- Category 2.4: สินทรัพย์อื่นๆ -->
+          <div style="margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <b style="font-size:0.86rem; color:var(--text-main);">📑 สินทรัพย์อื่นๆ</b>
+              <span class="badge badge-gold" id="subtotalBadge_ast_other">0 ฿</span>
             </div>
+            <div id="assetList_other"></div>
+            <button type="button" class="add-asset-btn" onclick="addNewAsset('other')">+ เพิ่มสินทรัพย์อื่นๆ</button>
           </div>
 
-          <button class="btn btn-purple" onclick="switchNWSub('liabilities', document.querySelectorAll('#tab-networth .seg-btn')[1])">ถัดไป: กรอกหนี้สิน →</button>
+          <button class="btn btn-purple" style="margin-top:14px;" onclick="switchNWSub('liabilities', document.querySelectorAll('#tab-networth .seg-btn')[1])">ถัดไป: กรอกหนี้สิน →</button>
         </div>
       </div>
 
@@ -2444,7 +2575,18 @@
       exp_debt: 0,
       exp_saving: 3000,
       exp_tax: 0,
-      // Net Worth Assets
+      // Net Worth Assets (Dynamic list + legacy fallback)
+      assets: [
+        { id: 'a_cash', category: 'cash', isLiquid: true, name: 'เงินสด & บัญชีเงินฝากออมทรัพย์', amount: 100000 },
+        { id: 'a_fixed', category: 'fixed', isLiquid: true, name: 'เงินฝากประจำ / สลากออมทรัพย์', amount: 0 },
+        { id: 'a_coop', category: 'pea_coop', isLiquid: true, name: 'หุ้นสะสมสหกรณ์ออมทรัพย์ กฟภ.', amount: 50000 },
+        { id: 'a_pf', category: 'provident', isLiquid: true, name: 'กองทุนสำรองเลี้ยงชีพ (กสช.) กฟภ.', amount: 515000 },
+        { id: 'a_inv', category: 'investment', isLiquid: true, name: 'พอร์ตหุ้นไทย / กองทุนรวม', amount: 50000 },
+        { id: 'a_re', category: 'realestate', isLiquid: false, name: 'บ้านเดี่ยว / คอนโดที่อยู่อาศัย', amount: 0 },
+        { id: 'a_car', category: 'personal', isLiquid: false, name: 'รถยนต์ / ทรัพย์สินส่วนตัว', amount: 0 },
+        { id: 'a_biz', category: 'business', isLiquid: false, name: 'มูลค่าธุรกิจส่วนตัว', amount: 0 },
+        { id: 'a_oth', category: 'other', isLiquid: false, name: 'สินทรัพย์อื่นๆ', amount: 0 }
+      ],
       ast_cash: 100000,
       ast_fixed: 0,
       ast_investment: 50000,
@@ -2484,6 +2626,7 @@
       pea_coopSharePerMonth: 1000,
       pea_coopShareCurrent: 50000,
       pea_coopReturn: 4.5,
+      pea_coopDividendOption: 'reinvest',
       pea_useStepEmployerRate: true,
       pea_enableSeverance: true,
       pea_employeeRate: 3,
@@ -2504,6 +2647,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       initTheme();
       loadSavedData();
+      renderAssetLists();
       renderDebtLists();
       renderDebtStrategy();
       renderAll();
@@ -2636,6 +2780,88 @@
         if (badge) { badge.textContent = 'เติบโตเชิงรุก'; badge.className = 'badge badge-green'; }
       }
       onRetirementInput();
+    }
+
+    // ==================== DYNAMIC ASSET MANAGEMENT METHODS ====================
+    function addNewAsset(category) {
+      const defaultNames = {
+        'cash': 'บัญชีเงินฝากออมทรัพย์',
+        'fixed': 'บัญชีเงินฝากประจำ / สลาก',
+        'pea_coop': 'หุ้นสะสมสหกรณ์ กฟภ. (เพิ่มเติม)',
+        'provident': 'กองทุน กสช. / RMF / SSF',
+        'investment': 'พอร์ตหุ้น / กองทุนรวม',
+        'realestate': 'ที่อยู่อาศัย / ที่ดิน',
+        'personal': 'รถยนต์ / ทองคำ / ของมีค่า',
+        'business': 'ธุรกิจส่วนตัว / สิทธิบัตร',
+        'other': 'สินทรัพย์อื่นๆ'
+      };
+      const liquidCats = ['cash', 'fixed', 'pea_coop', 'provident', 'investment'];
+      const newAsset = {
+        id: 'ast_' + Date.now(),
+        category: category,
+        isLiquid: liquidCats.includes(category),
+        name: defaultNames[category] || 'รายการสินทรัพย์ใหม่',
+        amount: 0
+      };
+      if (!state.assets) state.assets = [];
+      state.assets.push(newAsset);
+      renderAssetLists();
+      onDataChanged();
+    }
+
+    function removeAsset(id) {
+      if (!state.assets) return;
+      state.assets = state.assets.filter(a => a.id !== id);
+      renderAssetLists();
+      onDataChanged();
+    }
+
+    function updateAssetField(id, field, val) {
+      if (!state.assets) return;
+      const asset = state.assets.find(a => a.id === id);
+      if (asset) {
+        if (field === 'name') asset.name = val;
+        else asset[field] = parseFloat(val) || 0;
+        
+        // If updating pea_coop, sync with pea_coopShareCurrent in retirement inputs
+        if (asset.category === 'pea_coop') {
+          const totalCoop = state.assets.filter(a => a.category === 'pea_coop').reduce((sum, a) => sum + (a.amount || 0), 0);
+          state.pea_coopShareCurrent = totalCoop;
+          if ($('pea_coopShareCurrent')) $('pea_coopShareCurrent').value = totalCoop;
+        }
+
+        onDataChanged();
+      }
+    }
+
+    function renderAssetLists() {
+      const categories = ['cash', 'fixed', 'pea_coop', 'provident', 'investment', 'realestate', 'personal', 'business', 'other'];
+      if (!state.assets) state.assets = [];
+
+      categories.forEach(cat => {
+        const container = $('assetList_' + cat);
+        if (!container) return;
+        const items = state.assets.filter(a => a.category === cat);
+        if (items.length === 0) {
+          container.innerHTML = `<div style="text-align:center; padding:8px; font-size:0.75rem; color:var(--text-muted); border:1px dashed var(--border); border-radius:8px; margin-bottom:8px;">ยังไม่มีรายการในกลุ่มนี้ (กดปุ่มด้านล่างเพื่อเพิ่ม)</div>`;
+        } else {
+          container.innerHTML = items.map(a => `
+            <div class="asset-item-card" id="${a.id}">
+              <div class="asset-header-row">
+                <input type="text" class="form-input" style="font-weight:600; font-size:0.85rem; padding:4px 8px; flex:1;" value="${a.name || ''}" placeholder="ชื่อรายการสินทรัพย์" oninput="updateAssetField('${a.id}', 'name', this.value)">
+                <button type="button" class="asset-delete-btn" onclick="removeAsset('${a.id}')" title="ลบรายการนี้">🗑️</button>
+              </div>
+              <div>
+                <span style="font-size:0.68rem; color:var(--text-muted); display:block; margin-bottom:2px;">มูลค่าปัจจุบัน (บาท)</span>
+                <div class="input-wrap">
+                  <input type="number" inputmode="decimal" class="form-input num-font" style="font-size:0.85rem; padding:4px 8px;" value="${a.amount || 0}" oninput="updateAssetField('${a.id}', 'amount', this.value)">
+                  <span class="input-unit" style="font-size:0.7rem;">฿</span>
+                </div>
+              </div>
+            </div>
+          `).join('');
+        }
+      });
     }
 
     // ==================== DYNAMIC DEBT MANAGEMENT METHODS ====================
@@ -2779,7 +3005,7 @@
     // Collect all inputs to state
     function collectInputs() {
       Object.keys(state).forEach(key => {
-        if (key === 'debts') return;
+        if (key === 'debts' || key === 'assets') return;
         const el = $(key);
         if (el) {
           if (el.type === 'checkbox') {
@@ -2794,7 +3020,7 @@
     // Populate inputs from state
     function populateInputs() {
       Object.keys(state).forEach(key => {
-        if (key === 'debts') return;
+        if (key === 'debts' || key === 'assets') return;
         const el = $(key);
         if (el) {
           if (el.type === 'checkbox') {
@@ -2807,6 +3033,7 @@
       if (state.pea_withdrawalStrategy) {
         setWithdrawalStrategy(state.pea_withdrawalStrategy);
       }
+      renderAssetLists();
       renderDebtLists();
       renderDebtStrategy();
     }
@@ -2846,6 +3073,20 @@
         console.error('Failed to load saved data', e);
       }
 
+      // Auto-migrate legacy assets if assets array is empty
+      if (!state.assets || state.assets.length === 0) {
+        state.assets = [];
+        if (state.ast_cash > 0) state.assets.push({ id: 'a_cash', category: 'cash', isLiquid: true, name: 'เงินสด & บัญชีเงินฝากออมทรัพย์', amount: state.ast_cash });
+        if (state.ast_fixed > 0) state.assets.push({ id: 'a_fixed', category: 'fixed', isLiquid: true, name: 'เงินฝากประจำ / สลากออมทรัพย์', amount: state.ast_fixed });
+        if ((state.pea_coopShareCurrent || 0) > 0) state.assets.push({ id: 'a_coop', category: 'pea_coop', isLiquid: true, name: 'หุ้นสะสมสหกรณ์ออมทรัพย์ กฟภ.', amount: state.pea_coopShareCurrent });
+        if (state.ast_provident > 0) state.assets.push({ id: 'a_pf', category: 'provident', isLiquid: true, name: 'กองทุนสำรองเลี้ยงชีพ (กสช.) กฟภ.', amount: state.ast_provident });
+        if (state.ast_investment > 0) state.assets.push({ id: 'a_inv', category: 'investment', isLiquid: true, name: 'พอร์ตหุ้นไทย / กองทุนรวม', amount: state.ast_investment });
+        if (state.ast_realestate > 0) state.assets.push({ id: 'a_re', category: 'realestate', isLiquid: false, name: 'บ้านเดี่ยว / คอนโดที่อยู่อาศัย', amount: state.ast_realestate });
+        if (state.ast_personal > 0) state.assets.push({ id: 'a_pers', category: 'personal', isLiquid: false, name: 'รถยนต์ / ทรัพย์สินส่วนตัว', amount: state.ast_personal });
+        if (state.ast_business > 0) state.assets.push({ id: 'a_biz', category: 'business', isLiquid: false, name: 'มูลค่าธุรกิจส่วนตัว', amount: state.ast_business });
+        if (state.ast_other > 0) state.assets.push({ id: 'a_oth', category: 'other', isLiquid: false, name: 'สินทรัพย์อื่นๆ', amount: state.ast_other });
+      }
+
       // Auto-migrate legacy debts if debts array is empty
       if (!state.debts || state.debts.length === 0) {
         state.debts = [];
@@ -2873,7 +3114,7 @@
       const effectiveMonthlySavings = Math.max(0, netSavings + state.exp_saving);
       $('pea_monthlySavings').value = effectiveMonthlySavings;
       
-      const totalCash = state.ast_cash + state.ast_fixed;
+      const totalCash = (state.ast_cash || 0) + (state.ast_fixed || 0);
       $('pea_initialSavings').value = totalCash;
       
       const currentExpenses = state.exp_home + state.exp_insurance + state.exp_lifestyle;
@@ -2888,8 +3129,12 @@
         $('pea_pfContributedGain').value = Math.round(state.ast_provident * 0.05);
       }
 
+      if (state.pea_coopShareCurrent > 0) {
+        $('pea_coopShareCurrent').value = state.pea_coopShareCurrent;
+      }
+
       onRetirementInput();
-      alert('⚡ เชื่อมโยงข้อมูลเงินเดือน เงินออม (ปรับตามกระแสเงินสดจริง) และค่าใช้จ่ายเข้าสู่แผนเกษียณเรียบร้อยแล้ว!');
+      alert('⚡ เชื่อมโยงข้อมูลเงินเดือน หุ้นสหกรณ์ กสช. และเงินออมเข้าสู่แผนเกษียณเรียบร้อยแล้ว!');
     }
 
     // ==================== CALCULATION & RENDERING ====================
@@ -2899,7 +3144,51 @@
         $('printDateText').textContent = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
       }
 
-      // 1. Dynamic Debts & Liabilities Calculation
+      // 1. Dynamic Assets Calculation
+      if (!state.assets) state.assets = [];
+      const astSums = {
+        cash: 0,
+        fixed: 0,
+        pea_coop: 0,
+        provident: 0,
+        investment: 0,
+        realestate: 0,
+        personal: 0,
+        business: 0,
+        other: 0
+      };
+
+      state.assets.forEach(a => {
+        const amt = a.amount || 0;
+        if (astSums[a.category] !== undefined) {
+          astSums[a.category] += amt;
+        } else {
+          astSums.other += amt;
+        }
+      });
+
+      // Update state mirror properties for full backward compatibility & sync
+      state.ast_cash = astSums.cash;
+      state.ast_fixed = astSums.fixed;
+      state.pea_coopShareCurrent = astSums.pea_coop;
+      state.ast_provident = astSums.provident;
+      state.ast_investment = astSums.investment;
+      state.ast_realestate = astSums.realestate;
+      state.ast_personal = astSums.personal;
+      state.ast_business = astSums.business;
+      state.ast_other = astSums.other;
+
+      // Update individual category subtotal badges
+      Object.keys(astSums).forEach(cat => {
+        const badge = $('subtotalBadge_ast_' + cat);
+        if (badge) badge.textContent = fmt(astSums[cat]) + ' ฿';
+      });
+
+      const liquidRetirementAssets = astSums.cash + astSums.fixed + astSums.pea_coop + astSums.provident + astSums.investment;
+      const personalAssets = astSums.realestate + astSums.personal + astSums.business + astSums.other;
+      const totalAssets = liquidRetirementAssets + personalAssets;
+
+      // 2. Dynamic Debts & Liabilities Calculation
       if (!state.debts) state.debts = [];
       let totalDebtPrincipal = 0;
       let totalDebtMonthly = 0;
@@ -2933,14 +3222,13 @@
       if ($('cfDebtAutoSummary')) $('cfDebtAutoSummary').textContent = fmt(totalDebtMonthly) + ' ฿/ด.';
       if ($('nwTotalLiabBadge')) $('nwTotalLiabBadge').textContent = fmt(totalDebtPrincipal);
 
-      // 2. Cash Flow Calculation & Logic Correction
+      // 3. Cash Flow Calculation & Logic Correction
       const totalIncome = state.inc_salary + state.inc_business + state.inc_rent + state.inc_dividend + state.inc_bonus + state.inc_other;
       const totalExpense = state.exp_housing + state.exp_car + state.exp_home + state.exp_family + state.exp_insurance + state.exp_lifestyle + totalDebtMonthly + state.exp_saving + state.exp_tax;
       const netSavings = totalIncome - totalExpense;
       const totalSavingsWithExp = netSavings + state.exp_saving;
       
       // True Net Savings Rate Logic:
-      // If Net Savings is negative, user is in deficit (spending from cash/debt), so net savings rate is 0%
       let savingsRate = 0;
       if (netSavings < 0) {
         savingsRate = 0;
@@ -2975,6 +3263,14 @@
       $('sumDebtRatio').textContent = fmt2(dsr) + '%' + (dsr > 45 ? ' (⚠️ เกิน 45% เสี่ยงสูง)' : (dsr > 30 ? ' (🟡 เฝ้าระวัง)' : ' (🟢 ปลอดภัย)'));
       $('sumDebtRatio').style.color = dsr > 45 ? 'var(--danger)' : (dsr > 30 ? '#D97706' : 'var(--text-main)');
 
+      // Update Segmented Control Sub-tab Badges
+      if ($('segBadgeIncome')) $('segBadgeIncome').textContent = fmt(totalIncome) + ' ฿';
+      if ($('segBadgeExpense')) $('segBadgeExpense').textContent = fmt(totalExpense) + ' ฿';
+      if ($('segBadgeCashflow')) $('segBadgeCashflow').textContent = (netSavings >= 0 ? '+' : '') + fmt(netSavings) + ' ฿';
+      if ($('segBadgeAssets')) $('segBadgeAssets').textContent = fmt(totalAssets) + ' ฿';
+      if ($('segBadgeLiabilities')) $('segBadgeLiabilities').textContent = fmt(totalDebtPrincipal) + ' ฿';
+      if ($('segBadgeNetWorth')) $('segBadgeNetWorth').textContent = fmt(totalAssets - totalDebtPrincipal) + ' ฿';
+
       // Update DSR Card UI
       if ($('dsrBadge')) {
         $('dsrBadge').textContent = `DSR ${fmt2(dsr)}%`;
@@ -2992,10 +3288,7 @@
       }
       if ($('dsrVerdictText')) $('dsrVerdictText').innerHTML = dsrVerdict;
 
-      // 3. Net Worth Calculation (Separating Liquid Retirement Assets vs Personal Assets)
-      const liquidRetirementAssets = state.ast_cash + state.ast_fixed + state.ast_provident + state.ast_investment + (state.pea_coopShareCurrent || 0);
-      const personalAssets = state.ast_realestate + state.ast_personal + state.ast_business + state.ast_other;
-      const totalAssets = liquidRetirementAssets + personalAssets;
+      // 4. Net Worth Totals & Emergency Fund
       const totalLiabilities = totalDebtPrincipal;
       const netWorth = totalAssets - totalLiabilities;
       
@@ -3022,7 +3315,7 @@
       }
       $('nwEmergencyVerdict').textContent = emVerdict;
 
-      // 4. Update Dashboard & Asset Breakdown
+      // 5. Update Dashboard & Asset Breakdown
       $('dashNetWorth').textContent = fmt(netWorth) + ' บาท';
       $('dashTotalAssets').textContent = fmt(totalAssets) + ' ฿';
       $('dashTotalLiabilities').textContent = fmt(totalLiabilities) + ' ฿';
@@ -3039,7 +3332,7 @@
       const monthsLeft = yearsLeft * 12;
       $('dashCountdownText').textContent = `${yearsLeft} ปี (${monthsLeft} งวดเงินเดือน)`;
 
-      // 5. Calculate Retirement & Financial Score
+      // 6. Calculate Retirement & Financial Score
       calculateRetirement();
       calculateFinancialScore(savingsRate, dsr, emergencyMonths, totalAssets, totalLiabilities);
     }
@@ -3778,6 +4071,17 @@
           exp_debt: 0,
           exp_saving: 8000,
           exp_tax: 1000,
+          assets: [
+            { id: 'a_samp_cash1', category: 'cash', isLiquid: true, name: 'บัญชีเงินเดือน กรุงไทย', amount: 120000 },
+            { id: 'a_samp_cash2', category: 'cash', isLiquid: true, name: 'บัญชีออมทรัพย์ฉุกเฉิน SCB', amount: 30000 },
+            { id: 'a_samp_fixed', category: 'fixed', isLiquid: true, name: 'สลากออมสินพิเศษ 2 ปี', amount: 100000 },
+            { id: 'a_samp_coop', category: 'pea_coop', isLiquid: true, name: 'หุ้นสะสมสหกรณ์ออมทรัพย์ กฟภ.', amount: 120000 },
+            { id: 'a_samp_pf', category: 'provident', isLiquid: true, name: 'กองทุน กสช. กฟภ. (แผนสมดุล)', amount: 890000 },
+            { id: 'a_samp_inv', category: 'investment', isLiquid: true, name: 'กองทุนรวมดัชนี S&P 500 / หุ้นไทย', amount: 120000 },
+            { id: 'a_samp_re', category: 'realestate', isLiquid: false, name: 'บ้านเดี่ยวพร้อมที่ดิน', amount: 2500000 },
+            { id: 'a_samp_car', category: 'personal', isLiquid: false, name: 'รถยนต์ส่วนบุคคล Honda CR-V', amount: 500000 },
+            { id: 'a_samp_oth', category: 'other', isLiquid: false, name: 'ทองคำแท่ง / ของสะสม', amount: 0 }
+          ],
           ast_cash: 150000,
           ast_fixed: 100000,
           ast_investment: 120000,
@@ -3815,6 +4119,7 @@
           pea_coopSharePerMonth: 2000,
           pea_coopShareCurrent: 120000,
           pea_coopReturn: 4.8,
+          pea_coopDividendOption: 'reinvest',
           pea_useStepEmployerRate: true,
           pea_enableSeverance: true,
           pea_employeeRate: 5,
