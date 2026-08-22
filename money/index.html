@@ -2989,10 +2989,14 @@
           </ol>
 
           <p><b>สำหรับ Android (Chrome):</b></p>
-          <ol style="padding-left:20px;">
+          <ol style="padding-left:20px; margin-bottom:12px;">
             <li>แตะปุ่มเมนู <b>3 จุด (⋮)</b> ที่มุมบนขวา</li>
             <li>เลือก <b>"ติดตั้งแอป (Install App)"</b> หรือ <b>"เพิ่มลงในหน้าจอหลัก (Add to Home screen)"</b></li>
           </ol>
+
+          <button type="button" class="btn btn-purple" style="width:100%; margin-top:8px;" onclick="openPwaGuideModal()">
+            <span>📲 ดูวิธีติดตั้งแอป & เพิ่มลงหน้าจอมือถือ</span>
+          </button>
         </div>
       </div>
 
@@ -3038,6 +3042,69 @@
           </button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- ==================== QR IMAGE PREVIEW & MOBILE SAVE MODAL ==================== -->
+  <div id="qrPreviewModal" class="qr-modal-overlay" style="display:none;" onclick="if(event.target===this) closeQRPreviewModal()">
+    <div class="qr-modal-content" style="max-width:390px; text-align:center; padding:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <div style="font-weight:700; font-size:0.95rem; color:var(--text-main);">🖼️ การ์ดรูปภาพ QR Code พร้อมใช้งาน</div>
+        <button type="button" style="background:none; border:none; font-size:1.3rem; cursor:pointer; color:var(--text-muted); padding:0 4px;" onclick="closeQRPreviewModal()">✕</button>
+      </div>
+      
+      <div style="background:#0F172A; border-radius:14px; padding:6px; margin-bottom:10px; max-height:55vh; overflow-y:auto;">
+        <img id="qrPosterPreviewImg" src="" alt="PEA QR Code Card" style="width:100%; border-radius:8px; display:block; box-shadow:0 4px 14px rgba(0,0,0,0.35);" />
+      </div>
+
+      <div style="background:var(--pea-purple-bg); border:1px solid var(--pea-purple-soft); border-radius:10px; padding:8px 10px; font-size:0.78rem; color:var(--text-main); line-height:1.45; margin-bottom:12px; text-align:left;">
+        💡 <b>วิธีบันทึกภาพลงมือถือ (iOS & Android):</b><br>
+        หากเครื่องไม่ดาวน์โหลดอัตโนมัติ ให้ <b>"แตะค้างที่รูปภาพด้านบน"</b> แล้วเลือก <b>"บันทึกรูปภาพ (Save Image)"</b> หรือกดปุ่มแชร์ด้านล่างเพื่อส่งเข้าห้องแชต LINE
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button type="button" class="btn btn-purple" onclick="sharePosterDirectly()">
+          <span>📤 บันทึกรูปลงเครื่อง / แชร์เข้า LINE</span>
+        </button>
+        <button type="button" class="btn btn-outline" onclick="closeQRPreviewModal()">
+          <span>ปิดหน้าต่าง</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PWA MOBILE INSTALL GUIDE MODAL ==================== -->
+  <div id="pwaGuideModal" class="qr-modal-overlay" style="display:none;" onclick="if(event.target===this) closePwaGuideModal()">
+    <div class="qr-modal-content" style="max-width:400px; padding:18px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <div style="font-weight:700; font-size:0.95rem; color:var(--text-main); display:flex; align-items:center; gap:6px;">
+          <span>📲</span><span>วิธีติดตั้งแอปบนหน้าจอมือถือ</span>
+        </div>
+        <button type="button" style="background:none; border:none; font-size:1.3rem; cursor:pointer; color:var(--text-muted);" onclick="closePwaGuideModal()">✕</button>
+      </div>
+
+      <div style="font-size:0.82rem; color:var(--text-main); line-height:1.5;">
+        <div style="background:#FAF5FF; border:1px solid #D8B4FE; border-radius:10px; padding:10px; margin-bottom:10px;">
+          <b style="color:#581C87;">🍏 สำหรับ iPhone / iPad (Safari):</b>
+          <ol style="margin:4px 0 0 16px; padding:0;">
+            <li>แตะปุ่มแชร์ <b>Share (ไอคอนสี่เหลี่ยมลูกศรชี้ขึ้น 📤)</b> ที่แถบด้านล่างของ Safari</li>
+            <li>เลื่อนลงมาแล้วเลือก <b>"เพิ่มไปยังหน้าจอโฮม (Add to Home Screen ➕)"</b></li>
+            <li>แตะ <b>"เพิ่ม (Add)"</b> ที่มุมบนขวา</li>
+          </ol>
+        </div>
+
+        <div style="background:#F0FDF4; border:1px solid #86EFAC; border-radius:10px; padding:10px; margin-bottom:12px;">
+          <b style="color:#166534;">🤖 สำหรับ Android (Chrome):</b>
+          <ol style="margin:4px 0 0 16px; padding:0;">
+            <li>แตะปุ่มเมนู <b>3 จุด (⋮)</b> ที่มุมบนขวาของ Chrome</li>
+            <li>เลือก <b>"ติดตั้งแอป (Install App)"</b> หรือ <b>"เพิ่มลงในหน้าจอหลัก"</b></li>
+          </ol>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-purple" style="width:100%;" onclick="closePwaGuideModal()">
+        <span>เข้าใจแล้ว</span>
+      </button>
     </div>
   </div>
 
@@ -3466,24 +3533,94 @@
 
         // Footer Texts
         ctx.fillStyle = '#FCD34D';
-        ctx.font = 'bold 20px sans-serif';
-        ctx.fillText('⚡ วางแผนเกษียณสุขใจ มั่นคง ปลอดภัย ด้วยเครื่องมือเฉพาะชาว กฟภ.', 400, 880);
+        ctx.font = 'bold 20px "Prompt", "Sarabun", sans-serif';
+        ctx.fillText('⚡ วางแผนเกษียณสุขใจ มั่นคง ปลอดภัย ด้วยเครื่องมือเฉพาะชาว กฟภ.', 400, 885);
 
         ctx.fillStyle = '#A78BFA';
-        ctx.font = '16px sans-serif';
-        ctx.fillText('ใช้งานได้ทั้งบน iOS (iPhone/iPad) และ Android โดยไม่ต้องลงแอปเพิ่ม', 400, 920);
+        ctx.font = '16px "Prompt", "Sarabun", sans-serif';
+        ctx.fillText('ใช้งานได้ทั้งบน iOS (iPhone/iPad) และ Android โดยไม่ต้องลงแอปเพิ่ม', 400, 925);
 
         const dataUrl = c.toDataURL('image/png');
-        const link = document.createElement('a');
-        link.download = 'PEA_Financial_Planner_QRCode.png';
-        link.href = dataUrl;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        showToast('📥 ดาวน์โหลดรูปภาพ QR Code เรียบร้อยแล้ว!');
+
+        // Set to Preview Modal Image
+        const previewImg = $('qrPosterPreviewImg');
+        if (previewImg) previewImg.src = dataUrl;
+
+        // Try HTML5 download link and mobile Blob share
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        
+        c.toBlob(blob => {
+          if (blob) {
+            currentPosterBlob = blob;
+            try {
+              currentPosterFile = new File([blob], 'PEA_Financial_Planner_QRCode.png', { type: 'image/png' });
+            } catch (e) {}
+          }
+
+          if (isMobile) {
+            // Open Mobile Preview Popup so user can Long-Press to Save or Native Share
+            openQRPreviewModal();
+            showToast('🖼️ แสดงรูปภาพแล้ว แตะค้างเพื่อบันทึก หรือกดแชร์เข้า LINE');
+          } else {
+            // Desktop: Auto Download
+            const link = document.createElement('a');
+            link.download = 'PEA_Financial_Planner_QRCode.png';
+            link.href = dataUrl;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('📥 ดาวน์โหลดรูปภาพ QR Code เรียบร้อยแล้ว!');
+          }
+        }, 'image/png');
+
       } catch (err) {
         showToast('⚠️ ไม่สามารถบันทึกภาพอัตโนมัติได้ กรุณาแคปหน้าจอ');
       }
+    }
+
+    let currentPosterBlob = null;
+    let currentPosterFile = null;
+
+    function openQRPreviewModal() {
+      const modal = $('qrPreviewModal');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeQRPreviewModal() {
+      const modal = $('qrPreviewModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function openPwaGuideModal() {
+      const modal = $('pwaGuideModal');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closePwaGuideModal() {
+      const modal = $('pwaGuideModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function sharePosterDirectly() {
+      if (currentPosterFile && navigator.canShare && navigator.canShare({ files: [currentPosterFile] })) {
+        navigator.share({
+          files: [currentPosterFile],
+          title: 'PEA Financial Planner QR Code',
+          text: 'สแกนเพื่อเปิดแอปวางแผนการเงินและเกษียณ กฟภ.'
+        }).catch(err => {
+          if (err && err.name !== 'AbortError') {
+            showToast('💡 แตะค้างที่รูปภาพด้านบน แล้วเลือกบันทึกภาพ');
+          }
+        });
+      } else {
+        shareAppUrl();
+      }
+    }
+
+    function exportRetirementPDF() {
+      collectInputs();
+      renderAll();
+      window.print();
     }
 
     // Dark Mode Toggle
