@@ -1315,6 +1315,17 @@
         </div>
       </div>
 
+      <!-- Warning Banner: Negative Cashflow in Dashboard -->
+      <div id="dashCashflowDeficitAlert" style="display:none; background:#FEF2F2; border:1.5px solid #F87171; border-radius:10px; padding:10px 14px; margin-bottom:12px; font-size:0.84rem; color:#991B1B;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <div>
+            <b>⚠️ คำเตือน: กระแสเงินสดรายเดือนปัจจุบันติดลบ <span id="dashDeficitAmount" class="num-font" style="font-weight:700;">0</span> บาท/เดือน</b>
+            <div style="font-size:0.75rem; color:#B91C1C; margin-top:2px;">รายจ่ายมากกว่ารายรับ เงินออมสะสมจะถูกดึงมาชดเชยขาดดุลรายเดือน</div>
+          </div>
+          <button type="button" class="btn btn-outline" style="padding:5px 12px; font-size:0.78rem; background:#fff; color:#DC2626; border-color:#FCA5A5; cursor:pointer;" onclick="jumpToCashflow()">✏️ แก้ไขงบรายรับ-รายจ่ายทันที →</button>
+        </div>
+      </div>
+
       <!-- Retirement Readiness Card -->
       <div class="card">
         <div class="card-header">
@@ -1878,6 +1889,17 @@
     <!-- ==================== TAB 4: คำนวณเกษียณ กฟภ. (PEA RETIREMENT) ==================== -->
     <div class="tab-panel" id="tab-retirement">
 
+      <!-- Warning Banner: Negative Cashflow in Retirement Tab -->
+      <div id="retireCashflowDeficitAlert" style="display:none; background:#FEF2F2; border:1.5px solid #F87171; border-radius:10px; padding:10px 14px; margin-bottom:12px; font-size:0.84rem; color:#991B1B;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <div>
+            <b>⚠️ คำเตือน: กระแสเงินสดรายเดือนปัจจุบันติดลบ <span id="retireDeficitAmount" class="num-font" style="font-weight:700;">0</span> บาท/เดือน</b>
+            <div style="font-size:0.75rem; color:#B91C1C; margin-top:2px;">เงินออมสะสมถูกนำมาชดเชยขาดดุลรายเดือน (Cash-Burn Drag) ทำให้ยอดเงินออมลดลง</div>
+          </div>
+          <button type="button" class="btn btn-outline" style="padding:5px 12px; font-size:0.78rem; background:#fff; color:#DC2626; border-color:#FCA5A5; cursor:pointer;" onclick="jumpToCashflow()">✏️ แก้ไขงบรายรับ-รายจ่ายทันที →</button>
+        </div>
+      </div>
+
       <button class="btn btn-sync" onclick="syncFromFinancialStatement()">
         <span>⚡ ดึงข้อมูลจากงบการเงินส่วนบุคคลอัตโนมัติ (1-Click Sync)</span>
       </button>
@@ -1989,10 +2011,16 @@
               <div class="input-group">
                 <label class="input-label"><span>ผลตอบแทนหลังเกษียณ</span></label>
                 <div class="input-wrap">
-                  <input type="number" step="0.1" class="form-input" id="pea_postRetireReturn" value="3" min="0" max="15" required oninput="onRetirementInput()">
+                  <input type="number" step="0.1" class="form-input" id="pea_postRetireReturn" value="4.0" min="0" max="15" required oninput="onRetirementInput()">
                   <span class="input-unit">%/ปี</span>
                 </div>
               </div>
+            </div>
+            <div class="chips-row" style="margin-top:-6px; margin-bottom:10px;">
+              <span style="font-size:0.75rem; color:var(--text-muted); align-self:center;">แนะนำ:</span>
+              <span class="chip" onclick="setVal('pea_postRetireReturn', 3.0)">3.0% (เงินฝาก/ตราสารหนี้)</span>
+              <span class="chip" onclick="setVal('pea_postRetireReturn', 4.0)">4.0% (พันธบัตร/หุ้นกู้)</span>
+              <span class="chip" onclick="setVal('pea_postRetireReturn', 4.5)">4.5% (หุ้นสหกรณ์)</span>
             </div>
 
             <div style="background:var(--pea-purple-bg); border-radius:10px; padding:10px 14px; font-size:0.82rem; display:flex; justify-content:space-between; align-items:center;">
@@ -2444,6 +2472,7 @@
               <div id="mcProgressBar" style="height:100%; width:0%; background:#10B981; transition:width 0.6s ease;"></div>
             </div>
             <div style="font-size:0.8rem; line-height:1.5;" id="mcVerdict">-</div>
+            <p id="mcDynamicNote" style="font-size:0.73rem; color:var(--text-muted); margin-top:8px; margin-bottom:0; line-height:1.4; border-top:1px dashed var(--border); padding-top:6px;"></p>
           </div>
 
           <span class="mini-label" style="margin-bottom:6px; display:block;">ช่วงมูลค่าเงินก้อนที่เป็นไปได้ ณ วันเกษียณ (Percentiles):</span>
@@ -2488,6 +2517,9 @@
                 <!-- Dynamically populated -->
               </tbody>
             </table>
+            <div id="tableDeficitFootnote" style="display:none; font-size:0.75rem; color:#B91C1C; background:#FEF2F2; padding:6px 10px; border-radius:6px; margin-top:8px;">
+              ⚠️ <b>Cash-Burn Drag:</b> กระแสเงินสดรายเดือนติดลบ ระบบได้คำนวณหักเงินขาดดุลออกจาก "เงินออมอื่น" ทุกปีตามความเป็นจริง
+            </div>
           </div>
         </div>
 
@@ -2774,7 +2806,7 @@
       pea_healthBufferMonthly: 0,
       pea_withdrawalStrategy: 'depletion',
       pea_inflation: 3,
-      pea_postRetireReturn: 3,
+      pea_postRetireReturn: 4.0,
       pea_monthlySavings: 3000,
       pea_initialSavings: 100000,
       pea_preRetireReturn: 5,
@@ -3679,14 +3711,23 @@
       let coop = inp.coopShareCurrent;
 
       // Cash-Burn Drag Logic:
-      // If monthly net cashflow is negative (deficit), subtract the deficit from other savings monthly!
+      // If monthly net cashflow is negative (deficit), the household has no surplus to save,
+      // and instead must liquidate cash reserves ("เงินออมอื่น") by the deficit amount every month!
       const totalIncome = (state.inc_salary || 0) + (state.inc_business || 0) + (state.inc_rent || 0) + (state.inc_dividend || 0) + (state.inc_bonus || 0) + (state.inc_other || 0);
       let totalDebtMonthly = 0;
       if (state.debts) state.debts.forEach(d => { totalDebtMonthly += (d.monthly || 0); });
       const totalExpense = (state.exp_housing || 0) + (state.exp_car || 0) + (state.exp_home || 0) + (state.exp_family || 0) + (state.exp_insurance || 0) + (state.exp_lifestyle || 0) + totalDebtMonthly + (state.exp_saving || 0) + (state.exp_tax || 0);
       const curNetCashflow = totalIncome - totalExpense;
-      const monthlyDeficit = (curNetCashflow < 0) ? Math.abs(curNetCashflow) : 0;
-      const effectiveMonthlySavings = inp.monthlySavings - monthlyDeficit;
+      const isDeficit = (curNetCashflow < 0);
+      const monthlyDeficit = isDeficit ? Math.abs(curNetCashflow) : 0;
+      const effectiveMonthlySavings = isDeficit ? (-monthlyDeficit) : inp.monthlySavings;
+
+      if ($('tableDeficitFootnote')) {
+        $('tableDeficitFootnote').style.display = isDeficit ? 'block' : 'none';
+        if (isDeficit) {
+          $('tableDeficitFootnote').innerHTML = `⚠️ <b>Cash-Burn Drag:</b> กระแสเงินสดรายเดือนติดลบ <b>-${fmt(monthlyDeficit)} บาท/ด.</b> (-${fmt(monthlyDeficit * 12)} บาท/ปี) ระบบได้คำนวณหักเงินขาดดุลออกจาก "เงินออมอื่น" ทุกปีตามความเป็นจริง (ยอดสะสมจึงลดลงจนหมด)`;
+        }
+      }
 
       const yearlyData = [];
       yearlyData.push({
@@ -3750,7 +3791,7 @@
       calculateTaxSavings(inp.salary, inp.employeeRate);
       renderAssetAllocationGuide(inp.pfReturn);
       prepareSmartSolutions(inp, res);
-      runMonteCarloSimulation(500);
+      runMonteCarloSimulation(500, res);
       updatePrintReportDoc(res, inp);
 
       baseRetirementInputs = inp;
@@ -3826,7 +3867,7 @@
     }
 
     // ==================== MONTE CARLO SIMULATION ENGINE ====================
-    function runMonteCarloSimulation(nRuns = 500) {
+    function runMonteCarloSimulation(nRuns = 500, currentRes = null) {
       if (!baseRetirementInputs) return;
       const inp = baseRetirementInputs;
       const n1 = Math.max(inp.retireAge - inp.currentAge, 0);
@@ -3835,10 +3876,22 @@
       const totalBaseMonthly = inp.desiredExpenseToday + (inp.healthBufferMonthly || 0);
       const expenseAtRetirement = totalBaseMonthly * Math.pow(1 + inp.inflation / 100, n1);
       const meanReturn = inp.pfReturn / 100;
-      const stdDev = 0.08;
+      const stdDev = 0.045; // Balanced PF portfolio volatility
+      const postMean = inp.postRetireReturn / 100;
+      const postStdDev = 0.018; // Post-retirement conservative portfolio volatility
 
       let successCount = 0;
       const finalBalances = [];
+
+      // Check cash deficit for cash-burn drag in Monte Carlo
+      const totalIncome = (state.inc_salary || 0) + (state.inc_business || 0) + (state.inc_rent || 0) + (state.inc_dividend || 0) + (state.inc_bonus || 0) + (state.inc_other || 0);
+      let totalDebtMonthly = 0;
+      if (state.debts) state.debts.forEach(d => { totalDebtMonthly += (d.monthly || 0); });
+      const totalExpense = (state.exp_housing || 0) + (state.exp_car || 0) + (state.exp_home || 0) + (state.exp_family || 0) + (state.exp_insurance || 0) + (state.exp_lifestyle || 0) + totalDebtMonthly + (state.exp_saving || 0) + (state.exp_tax || 0);
+      const curNetCashflow = totalIncome - totalExpense;
+      const isDeficit = (curNetCashflow < 0);
+      const monthlyDeficit = isDeficit ? Math.abs(curNetCashflow) : 0;
+      const effectiveMonthlySavings = isDeficit ? (-monthlyDeficit) : inp.monthlySavings;
 
       for (let run = 0; run < nRuns; run++) {
         let pf = inp.pfAccumulated + inp.pfContributed + inp.pfAccumulatedGain + inp.pfContributedGain;
@@ -3847,7 +3900,7 @@
         let sal = inp.salary;
 
         for (let y = 0; y < n1; y++) {
-          const randReturn = meanReturn + ((Math.random() - 0.5) * 2 * stdDev * 1.7);
+          const randReturn = meanReturn + ((Math.random() - 0.5) * 2 * stdDev * 1.5);
           const mPf = Math.pow(Math.max(0.01, 1 + randReturn), 1 / 12) - 1;
           const mPre = Math.pow(1 + inp.preRetireReturn / 100, 1 / 12) - 1;
           const mCoop = Math.pow(1 + inp.coopReturn / 100, 1 / 12) - 1;
@@ -3863,7 +3916,7 @@
 
           for (let m = 0; m < 12; m++) {
             pf = pf * (1 + mPf) + contrib;
-            other = other * (1 + mPre) + inp.monthlySavings;
+            other = Math.max(0, other * (1 + mPre) + effectiveMonthlySavings);
             if (inp.coopDividendOption === 'payout') {
               coop = coop + inp.coopSharePerMonth;
             } else {
@@ -3883,9 +3936,11 @@
 
         for (let m = 0; m < months2; m++) {
           if (m % 12 === 0 && m > 0) {
-            curExp = curExp * (1 + inp.inflation / 100);
+            const randInf = (inp.inflation / 100) + ((Math.random() - 0.5) * 0.012);
+            curExp = curExp * (1 + randInf);
           }
-          const mPost = Math.pow(1 + inp.postRetireReturn / 100, 1 / 12) - 1;
+          const randPostReturn = postMean + ((Math.random() - 0.5) * 2 * postStdDev);
+          const mPost = Math.pow(Math.max(0, 1 + randPostReturn), 1 / 12) - 1;
           nestEgg = nestEgg * (1 + mPost) - curExp;
           if (nestEgg < 0) {
             survived = false;
@@ -3912,9 +3967,14 @@
       if ($('mcP90')) $('mcP90').textContent = fmt(p90) + ' ฿';
       if ($('mcVerdict')) {
         $('mcVerdict').innerHTML = successRate >= 80
-          ? `🟢 <b>แผนมีความมั่นคงสูงมาก:</b> โอกาสที่เงินจะพอใช้ตลอดอายุขัยอยู่ที่ <b>${successRate}%</b> แม้เผชิญความผันผวนของตลาด`
-          : `🟡 <b>มีความเสี่ยง:</b> โอกาสความสำเร็จอยู่ที่ <b>${successRate}%</b> (มีโอกาส ${100 - successRate}% ที่เงินอาจหมดก่อน) แนะนำกดปิด Gap อัตโนมัติ`;
+          ? `🟢 <b>แผนมีความมั่นคงสูงมาก:</b> โอกาสที่เงินจะพอใช้ตลอดอายุขัยอยู่ที่ <b>${successRate}%</b> แม้เผชิญความผันผวนของตลาดตลอด ${n2} ปีหลังเกษียณ`
+          : `🟡 <b>มีความเสี่ยง:</b> โอกาสความสำเร็จอยู่ที่ <b>${successRate}%</b> (มีโอกาส ${100 - successRate}% ที่เงินอาจหมดก่อน) เนื่องจากความผันผวนของตลาดและเงินเฟ้อ แนะนำปรับแผนปิด Gap ให้มั่นคง 100%`;
       }
+      if ($('mcDynamicNote')) {
+        const pctStr = currentRes ? currentRes.percent.toFixed(0) : '97';
+        $('mcDynamicNote').textContent = `* Success Rate (${successRate}%) คิดจากความผันผวนของตลาดตลอด ${n2} ปีหลังเกษียณ (อายุ ${inp.retireAge}-${inp.lifeExpectancy} ปี) แม้เงินก้อนตั้งต้นจะเกือบพอ (${pctStr}%) แต่ความผันผวนของตลาดอาจทำให้เงินหมดก่อนอายุ 85 ปี`;
+      }
+    }
     }
 
     // ==================== PROGRESSIVE TAX CALCULATION ENGINE ====================
@@ -4207,7 +4267,7 @@
           <td class="num-font">${fmt(row.other)}</td>
           <td class="num-font">${fmt(row.coop)}</td>
           <td class="num-font" style="${isRetire ? 'color:var(--pea-purple-light); font-weight:700;' : 'color:var(--text-muted);'}">
-            ${isRetire ? fmt(sevVal) : '-'}
+            ${isRetire ? fmt(sevVal) : '0'}
           </td>
           <td class="num-font" style="font-weight:700; ${isRetire ? 'color:var(--pea-purple-light);' : ''}">
             ${fmt(grandTotal)}
@@ -4415,7 +4475,7 @@
           pea_healthBufferMonthly: 2000,
           pea_withdrawalStrategy: 'depletion',
           pea_inflation: 3,
-          pea_postRetireReturn: 3,
+          pea_postRetireReturn: 4.0,
           pea_monthlySavings: 8000,
           pea_initialSavings: 250000,
           pea_preRetireReturn: 5.5,
@@ -4438,6 +4498,11 @@
         triggerAutoSave();
         alert('⚡ โหลดข้อมูลตัวอย่างสำเร็จ!');
       }
+    }
+
+    function jumpToCashflow() {
+      switchTab('cashflow');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function showToast(msg) {
