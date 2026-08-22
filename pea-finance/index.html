@@ -741,6 +741,74 @@
       flex: 1;
     }
 
+    /* ---------- FINANCIAL LITERACY TOOLTIPS ---------- */
+    .tooltip-tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--pea-purple-tint);
+      color: var(--pea-purple-light);
+      font-size: 0.68rem;
+      font-weight: 700;
+      cursor: help;
+      margin-left: 4px;
+      position: relative;
+      border: 1px solid var(--border);
+    }
+    .tooltip-tag:hover::after, .tooltip-tag:active::after {
+      content: attr(data-tip);
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1E1B2E;
+      color: #FFFFFF;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      line-height: 1.4;
+      white-space: normal;
+      width: 220px;
+      z-index: 10000;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+      pointer-events: none;
+    }
+    .tooltip-tag:hover::before, .tooltip-tag:active::before {
+      content: '';
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: #1E1B2E;
+      z-index: 10000;
+    }
+
+    /* ---------- CELEBRATION / GAMIFICATION STATE ---------- */
+    .celebration-box {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(5, 150, 105, 0.05));
+      border: 1.5px solid #10B981;
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.95); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .celebration-icon {
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+
     /* ---------- GAUGE & VISUALIZATIONS ---------- */
     .gauge-card {
       text-align: center;
@@ -1262,12 +1330,16 @@
   <header class="app-header">
     <div class="header-content">
       <div class="brand">
-        <div class="brand-icon">
-          <svg viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+        <div class="brand-icon" style="background:linear-gradient(135deg, #7C3AED, #4C1D95); border:1.5px solid #F59E0B; box-shadow:0 0 10px rgba(245,158,11,0.35);">
+          <!-- PEA Lightning & Shield Emblem -->
+          <svg viewBox="0 0 24 24" fill="#FBBF24"><path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6l-9-4zm-1 15h-2v-4H7l5-8v5h2l-5 7z"/></svg>
         </div>
         <div class="brand-info">
-          <h1>PEA Financial Planner</h1>
-          <p>งบการเงินส่วนบุคคล & แผนเกษียณ กฟภ.</p>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <h1 style="font-size:1.02rem; font-weight:800; letter-spacing:-0.02em;">PEA Financial Planner</h1>
+            <span class="badge badge-gold" style="font-size:0.65rem; padding:1px 6px; border-radius:6px;">กฟภ. PROUD</span>
+          </div>
+          <p style="font-size:0.75rem; color:var(--text-muted);">ระบบวางแผนการเงิน & เกษียณพนักงาน กฟภ.</p>
         </div>
       </div>
       <div class="header-actions">
@@ -1429,6 +1501,15 @@
           <p id="dashVerdictDesc">กรอกข้อมูลเงินเดือนและเงินออมของคุณเพื่อเริ่มประเมินความพร้อม</p>
           <div id="dashGapActionWrap" style="margin-top:10px; display:none;">
             <button type="button" class="solution-btn" style="background:#D97706; padding:8px 14px; font-size:0.82rem;" onclick="goToSmartGap()">⚡ ดูทางเลือกปิด Gap <span id="dashGapAmount">-</span> บาท →</button>
+          </div>
+        </div>
+
+        <!-- Dashboard Celebration Box -->
+        <div id="dashCelebrationBox" class="celebration-box" style="display:none; margin-top:12px;">
+          <div class="celebration-icon">🎉</div>
+          <div>
+            <b style="color:#065F46; font-size:0.88rem;">ยินดีด้วยครับ! แผนเกษียณของคุณมีความพร้อม 100% แล้ว</b>
+            <div style="font-size:0.75rem; color:#047857; margin-top:2px;">เงินทุนสะสม ณ วันเกษียณเพียงพอต่อค่าใช้จ่ายตลอดอายุขัยอย่างมั่นคง</div>
           </div>
         </div>
       </div>
@@ -1612,7 +1693,7 @@
           </div>
 
           <div class="input-group">
-            <label class="input-label"><span>ค่าผ่อนบ้าน / ค่าเช่าห้อง</span></label>
+            <label class="input-label"><span>🏠 ค่าผ่อนบ้าน / ค่าเช่าห้อง</span></label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="exp_housing" value="0" oninput="onDataChanged()">
               <span class="input-unit">บาท</span>
@@ -1620,7 +1701,7 @@
           </div>
 
           <div class="input-group">
-            <label class="input-label"><span>ค่าผ่อนรถยนต์ / มอเตอร์ไซค์</span></label>
+            <label class="input-label"><span>🚗 ค่าผ่อนรถยนต์ / มอเตอร์ไซค์</span></label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="exp_car" value="0" oninput="onDataChanged()">
               <span class="input-unit">บาท</span>
@@ -1628,7 +1709,7 @@
           </div>
 
           <div class="input-group">
-            <label class="input-label"><span>ค่าใช้จ่ายในบ้าน (อาหาร / ค่าน้ำ-ไฟ / ของใช้)</span></label>
+            <label class="input-label"><span>🛒 ค่าใช้จ่ายในบ้าน (อาหาร / ค่าน้ำ-ไฟ / ของใช้)</span></label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="exp_home" value="12000" oninput="onDataChanged()">
               <span class="input-unit">บาท</span>
@@ -1636,7 +1717,7 @@
           </div>
 
           <div class="input-group">
-            <label class="input-label"><span>ค่าเลี้ยงดูบุตร / ครอบครัว / การศึกษา</span></label>
+            <label class="input-label"><span>👨‍👩‍👧‍👦 ค่าเลี้ยงดูบุตร / ครอบครัว / การศึกษา</span></label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="exp_family" value="0" oninput="onDataChanged()">
               <span class="input-unit">บาท</span>
@@ -1644,7 +1725,7 @@
           </div>
 
           <div class="input-group">
-            <label class="input-label"><span>เบี้ยประกันภัย (สุขภาพ/ชีวิต/รถ เฉลี่ยต่อเดือน)</span></label>
+            <label class="input-label"><span>🏥 เบี้ยประกันภัย (สุขภาพ/ชีวิต/รถ เฉลี่ยต่อเดือน)</span></label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="exp_insurance" value="1500" oninput="onDataChanged()">
               <span class="input-unit">บาท</span>
@@ -1652,7 +1733,7 @@
           </div>
 
           <div class="input-group">
-            <label class="input-label"><span>ค่าใช้จ่ายส่วนตัว / ท่องเที่ยว / ไลฟ์สไตล์</span></label>
+            <label class="input-label"><span>☕ ค่าใช้จ่ายส่วนตัว / ท่องเที่ยว / ไลฟ์สไตล์</span></label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="exp_lifestyle" value="5000" oninput="onDataChanged()">
               <span class="input-unit">บาท</span>
@@ -1660,7 +1741,7 @@
           </div>
 
           <div class="input-group">
-            <label class="input-label"><span>ชำระหนี้บัตรเครดิต / สินเชื่อส่วนบุคคล</span></label>
+            <label class="input-label"><span>💳 ชำระหนี้บัตรเครดิต / สินเชื่อส่วนบุคคล</span></label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="exp_debt" value="0" oninput="onDataChanged()">
               <span class="input-unit">บาท</span>
@@ -1668,7 +1749,7 @@
           </div>
 
           <div class="input-group">
-            <label class="input-label"><span>เงินออม / เงินลงทุนรายเดือน</span><span class="input-hint">ออมเพิ่ม</span></label>
+            <label class="input-label"><span>💰 เงินออม / เงินลงทุนรายเดือน</span><span class="input-hint">ออมเพิ่ม</span></label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="exp_saving" value="3000" oninput="onDataChanged()">
               <span class="input-unit">บาท</span>
@@ -1676,7 +1757,7 @@
           </div>
 
           <div class="input-group">
-            <label class="input-label"><span>ภาษี และ อื่นๆ</span></label>
+            <label class="input-label"><span>🧾 ภาษี และ อื่นๆ</span></label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="exp_tax" value="0" oninput="onDataChanged()">
               <span class="input-unit">บาท</span>
@@ -1938,7 +2019,10 @@
         <!-- Grand Total Liabilities & DSR Card -->
         <div class="card" style="background:linear-gradient(135deg, var(--pea-purple-bg), var(--pea-purple-tint)); border-color:var(--pea-purple-soft);">
           <div class="card-header" style="margin-bottom:8px;">
-            <div class="card-title" style="font-size:0.95rem;"><span class="icon">📊</span><span>สรุปภาระหนี้สิน & สัดส่วน DSR</span></div>
+            <div class="card-title" style="font-size:0.95rem;">
+              <span class="icon">📊</span>
+              <span>สรุปภาระหนี้สิน & สัดส่วน DSR <span class="tooltip-tag" data-tip="Debt Service Ratio (DSR) สัดส่วนภาระหนี้ต่อรายรับรวม ไม่ควรเกิน 30-40% เพื่อความปลอดภัยทางการเงิน">ℹ</span></span>
+            </div>
             <span class="badge badge-red" id="dsrBadge">DSR 0%</span>
           </div>
 
@@ -1962,7 +2046,10 @@
         <!-- Debt Payoff Strategy Optimizer Card -->
         <div class="card" id="debtStrategyCard">
           <div class="card-header" style="margin-bottom:6px;">
-            <div class="card-title" style="font-size:0.95rem;"><span class="icon">🎯</span><span>แผนกลยุทธ์ปลดหนี้ (Debt Strategy)</span></div>
+            <div class="card-title" style="font-size:0.95rem;">
+              <span class="icon">🎯</span>
+              <span>แผนกลยุทธ์ปลดหนี้ (Debt Strategy) <span class="tooltip-tag" data-tip="Debt Avalanche โปะดอกเบี้ยสูงสุดก่อนเพื่อประหยัดเงิน / Snowball โปะยอดเล็กสุดก่อนเพื่อสร้างกำลังใจ">ℹ</span></span>
+            </div>
           </div>
           <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:10px;">เลือกลำดับการเร่งโปะหนี้เพื่อลดภาระดอกเบี้ยและปิดหนี้ได้เร็วที่สุด:</p>
 
@@ -2077,14 +2164,14 @@
           <div class="accordion-body">
             <div class="stat-grid-2">
               <div class="input-group">
-                <label class="input-label"><span>อายุปัจจุบัน</span></label>
+                <label class="input-label"><span>🎂 อายุปัจจุบัน</span></label>
                 <div class="input-wrap">
                   <input type="number" class="form-input" id="pea_currentAge" value="35" min="18" max="75" required oninput="onRetirementInput()">
                   <span class="input-unit">ปี</span>
                 </div>
               </div>
               <div class="input-group">
-                <label class="input-label"><span>อายุเกษียณ</span></label>
+                <label class="input-label"><span>🎯 อายุเกษียณ</span></label>
                 <div class="input-wrap">
                   <input type="number" class="form-input" id="pea_retireAge" value="60" min="40" max="75" required oninput="onRetirementInput()">
                   <span class="input-unit">ปี</span>
@@ -2094,14 +2181,18 @@
 
             <div class="stat-grid-2">
               <div class="input-group">
-                <label class="input-label"><span>อายุงาน กฟภ. ปัจจุบัน</span></label>
+                <label class="input-label">
+                  <span>⚡ อายุงาน กฟภ. ปัจจุบัน <span class="tooltip-tag" data-tip="อายุงานสะสมที่ กฟภ. ใช้นับสเต็ปสมทบ กสช. (9%/10%/11%) และสิทธิชดเชยเกษียณ 400 วัน">ℹ</span></span>
+                </label>
                 <div class="input-wrap">
                   <input type="number" class="form-input" id="pea_serviceYears" value="10" min="0" max="50" required oninput="onRetirementInput()">
                   <span class="input-unit">ปี</span>
                 </div>
               </div>
               <div class="input-group">
-                <label class="input-label"><span>อายุขัยประมาณ</span></label>
+                <label class="input-label">
+                  <span>⏳ อายุขัยประมาณ <span class="tooltip-tag" data-tip="ค่าเฉลี่ยอายุขัยคนไทยหลังเกษียณ แนะนำวางแผนไว้ที่ 80 - 90 ปี">ℹ</span></span>
+                </label>
                 <div class="input-wrap">
                   <input type="number" class="form-input" id="pea_lifeExpectancy" value="85" min="50" max="110" required oninput="onRetirementInput()">
                   <span class="input-unit">ปี</span>
@@ -2111,14 +2202,18 @@
 
             <div class="stat-grid-2">
               <div class="input-group">
-                <label class="input-label"><span>เงินเดือนปัจจุบัน</span></label>
+                <label class="input-label">
+                  <span>💼 เงินเดือนปัจจุบัน <span class="tooltip-tag" data-tip="เงินเดือนประจำไม่รวมค่าเวร/ค่าเสี่ยงภัย เป็นฐานคิด กสช. และเงินชดเชย 400 วัน">ℹ</span></span>
+                </label>
                 <div class="input-wrap">
                   <input type="number" class="form-input" id="pea_salary" value="35000" min="0" required oninput="onRetirementInput()">
                   <span class="input-unit">บาท</span>
                 </div>
               </div>
               <div class="input-group">
-                <label class="input-label"><span>อัตราขึ้นเงินเดือน</span></label>
+                <label class="input-label">
+                  <span>📈 อัตราขึ้นเงินเดือน <span class="tooltip-tag" data-tip="ค่าเฉลี่ยการเลื่อนขั้นเงินเดือน กฟภ. ทั่วไปอยู่ที่ 3% - 5% ต่อปี">ℹ</span></span>
+                </label>
                 <div class="input-wrap">
                   <input type="number" step="0.1" class="form-input" id="pea_salaryGrowth" value="3" min="0" max="15" required oninput="onRetirementInput()">
                   <span class="input-unit">%/ปี</span>
@@ -2140,7 +2235,9 @@
           </div>
           <div class="accordion-body">
             <div class="input-group">
-              <label class="input-label"><span>กลยุทธ์การถอนเงินช่วงเกษียณ</span></label>
+              <label class="input-label">
+                <span>🎯 กลยุทธ์การถอนเงินช่วงเกษียณ <span class="tooltip-tag" data-tip="Depletion คือทยอยใช้เงินต้นจนหมดเมื่อสิ้นอายุขัย / Preservation คือกินเฉพาะดอกผลเก็บเงินต้นไว้">ℹ</span></span>
+              </label>
               <div class="segmented-control" style="margin-bottom:6px;">
                 <button type="button" class="seg-btn active" id="btnStratDepletion" onclick="setWithdrawalStrategy('depletion', this)">ใช้หมดเมื่อสิ้นอายุขัย (Depletion)</button>
                 <button type="button" class="seg-btn" id="btnStratPreservation" onclick="setWithdrawalStrategy('preservation', this)">กินเฉพาะดอกผล (Preservation)</button>
@@ -2150,14 +2247,16 @@
 
             <div class="stat-grid-2">
               <div class="input-group">
-                <label class="input-label"><span>ค่าใช้จ่ายพื้นฐานหลังเกษียณ</span></label>
+                <label class="input-label"><span>🛒 ค่าใช้จ่ายพื้นฐานหลังเกษียณ</span></label>
                 <div class="input-wrap">
                   <input type="number" class="form-input" id="pea_desiredExpenseToday" value="20000" min="0" required oninput="onRetirementInput()">
                   <span class="input-unit">บาท/ด.</span>
                 </div>
               </div>
               <div class="input-group">
-                <label class="input-label"><span>สำรองค่ารักษาพยาบาล/สุขภาพ</span></label>
+                <label class="input-label">
+                  <span>🏥 สำรองค่ารักษาพยาบาล/สุขภาพ <span class="tooltip-tag" data-tip="เงินสำรองเพิ่มเติมสำหรับดูแลสุขภาพและค่ารักษาพยาบาลหลังเกษียณ">ℹ</span></span>
+                </label>
                 <div class="input-wrap">
                   <input type="number" class="form-input" id="pea_healthBufferMonthly" value="0" min="0" oninput="onRetirementInput()">
                   <span class="input-unit">บาท/ด.</span>
@@ -2167,14 +2266,18 @@
 
             <div class="stat-grid-2">
               <div class="input-group">
-                <label class="input-label"><span>อัตราเงินเฟ้อเฉลี่ย</span></label>
+                <label class="input-label">
+                  <span>📉 อัตราเงินเฟ้อเฉลี่ย <span class="tooltip-tag" data-tip="ค่าเงินเฟ้อเฉลี่ยระยะยาวของไทย (มาตรฐาน 2.5% - 3.0%/ปี)">ℹ</span></span>
+                </label>
                 <div class="input-wrap">
                   <input type="number" step="0.1" class="form-input" id="pea_inflation" value="3" min="0" max="15" required oninput="onRetirementInput()">
                   <span class="input-unit">%/ปี</span>
                 </div>
               </div>
               <div class="input-group">
-                <label class="input-label"><span>ผลตอบแทนหลังเกษียณ</span></label>
+                <label class="input-label">
+                  <span>📊 ผลตอบแทนหลังเกษียณ <span class="tooltip-tag" data-tip="ผลตอบแทนพอร์ตหลังเกษียณ เช่น พันธบัตร หุ้นกู้ หรือหุ้นสหกรณ์ กฟภ.">ℹ</span></span>
+                </label>
                 <div class="input-wrap">
                   <input type="number" step="0.1" class="form-input" id="pea_postRetireReturn" value="4.0" min="0" max="15" required oninput="onRetirementInput()">
                   <span class="input-unit">%/ปี</span>
@@ -2208,7 +2311,7 @@
           </div>
           <div class="accordion-body">
             <div class="input-group">
-              <label class="input-label"><span>เงินออมอื่นๆ ต่อเดือน (นอกเหนือกสช.+หุ้นสหกรณ์)</span></label>
+              <label class="input-label"><span>💰 เงินออมอื่นๆ ต่อเดือน (นอกเหนือกสช.+หุ้นสหกรณ์)</span></label>
               <div class="input-wrap">
                 <input type="number" class="form-input" id="pea_monthlySavings" value="3000" min="0" required oninput="onRetirementInput()">
                 <span class="input-unit">บาท/ด.</span>
@@ -2217,14 +2320,14 @@
 
             <div class="stat-grid-2">
               <div class="input-group">
-                <label class="input-label"><span>เงินออมตั้งต้นที่มีอยู่</span></label>
+                <label class="input-label"><span>🏦 เงินออมตั้งต้นที่มีอยู่</span></label>
                 <div class="input-wrap">
                   <input type="number" class="form-input" id="pea_initialSavings" value="100000" min="0" required oninput="onRetirementInput()">
                   <span class="input-unit">บาท</span>
                 </div>
               </div>
               <div class="input-group">
-                <label class="input-label"><span>ผลตอบแทนเงินออม</span></label>
+                <label class="input-label"><span>📈 ผลตอบแทนเงินออม</span></label>
                 <div class="input-wrap">
                   <input type="number" step="0.1" class="form-input" id="pea_preRetireReturn" value="5" min="0" max="20" required oninput="onRetirementInput()">
                   <span class="input-unit">%/ปี</span>
@@ -2234,21 +2337,21 @@
 
             <div class="stat-grid-3">
               <div class="input-group">
-                <label class="input-label"><span>สะสมหุ้น/เดือน</span></label>
+                <label class="input-label"><span>🪙 สะสมหุ้น/เดือน</span></label>
                 <div class="input-wrap">
                   <input type="number" class="form-input" id="pea_coopSharePerMonth" value="1000" min="0" required oninput="onRetirementInput()">
                   <span class="input-unit">บาท/ด.</span>
                 </div>
               </div>
               <div class="input-group">
-                <label class="input-label"><span>มูลค่าหุ้นปัจจุบัน</span></label>
+                <label class="input-label"><span>🪙 มูลค่าหุ้นปัจจุบัน</span></label>
                 <div class="input-wrap">
                   <input type="number" class="form-input" id="pea_coopShareCurrent" value="50000" min="0" required oninput="onRetirementInput()">
                   <span class="input-unit">บาท</span>
                 </div>
               </div>
               <div class="input-group">
-                <label class="input-label"><span>ปันผลทบต้น</span></label>
+                <label class="input-label"><span>🎁 ปันผลทบต้น</span></label>
                 <div class="input-wrap">
                   <input type="number" step="0.1" class="form-input" id="pea_coopReturn" value="4.5" min="0" max="20" required oninput="onRetirementInput()">
                   <span class="input-unit">%/ปี</span>
@@ -2264,7 +2367,9 @@
               <span class="chip" onclick="setVal('pea_coopReturn', 6.0)">6.0%</span>
             </div>
             <div class="input-group" style="margin-top:10px;">
-              <label class="input-label"><span>รูปแบบการจัดการเงินปันผลสหกรณ์ กฟภ.</span></label>
+              <label class="input-label">
+                <span>🔄 รูปแบบการจัดการเงินปันผลสหกรณ์ กฟภ. <span class="tooltip-tag" data-tip="Reinvest คือนำปันผลซื้อหุ้นทบต้นสร้างพอร์ตเติบโต / Payout คือรับเงินสดเข้ากระแสเงินสด">ℹ</span></span>
+              </label>
               <select class="form-input" id="pea_coopDividendOption" onchange="onRetirementInput()">
                 <option value="reinvest" selected>🔄 นำเงินปันผล Reinvest ซื้อหุ้นสหกรณ์ทบต้น (เพิ่มมูลค่าพอร์ต)</option>
                 <option value="payout">💵 รับเป็นเงินสดรายปีเข้ากระแสเงินสด (ไม่นำมาทบต้นในหุ้น)</option>
@@ -2289,7 +2394,7 @@
             <div style="background:var(--card-sub); border-radius:12px; padding:12px 14px; margin-bottom:14px; border:1px solid var(--border);">
               <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.86rem; font-weight:600; margin-bottom:4px;">
                 <input type="checkbox" id="pea_useStepEmployerRate" checked onchange="onRetirementInput()" style="width:18px; height:18px; accent-color:var(--pea-purple-light);">
-                <span>คำนวณอัตราสมทบ กฟภ. ตามอายุงานอัตโนมัติ</span>
+                <span>⚡ คำนวณอัตราสมทบ กฟภ. ตามอายุงานอัตโนมัติ <span class="tooltip-tag" data-tip="อายุงาน 1-9 ปี (9%), 10-20 ปี (10%), >20 ปี (11%) ตามระเบียบ กสช. กฟภ.">ℹ</span></span>
               </label>
               <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.4; padding-left:26px;">
                 • อายุงาน 1-9 ปี ได้ <b>9%</b> | 10-20 ปี ได้ <b>10%</b> | >20 ปี ได้ <b>11%</b> ตลอดจนเกษียณ
@@ -2299,7 +2404,7 @@
 
               <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.86rem; font-weight:600; margin-bottom:4px;">
                 <input type="checkbox" id="pea_enableSeverance" checked onchange="onRetirementInput()" style="width:18px; height:18px; accent-color:var(--pea-purple-light);">
-                <span>คำนวณเงินชดเชยเกษียณ กฟภ. (400 วัน / 13.33 เท่าของเงินเดือน)</span>
+                <span>🛡️ คำนวณเงินชดเชยเกษียณ กฟภ. (400 วัน / 13.33 เท่า) <span class="tooltip-tag" data-tip="สิทธิประโยชน์ตาม พรบ.แรงงานรัฐวิสาหกิจ อายุงาน 20 ปีขึ้นไป ได้รับ 400 วันของเงินเดือนสุดท้าย">ℹ</span></span>
               </label>
               <div style="font-size:0.75rem; color:var(--text-muted); padding-left:26px;">
                 สิทธิประโยชน์ตามกฎหมายแรงงานรัฐวิสาหกิจ (อายุงาน $\ge 20$ ปี ได้รับสูงสุด 400 วันของเงินเดือนสุดท้าย)
@@ -2308,21 +2413,21 @@
 
             <div class="stat-grid-3">
               <div class="input-group">
-                <label class="input-label"><span>สะสม (เรา)</span></label>
+                <label class="input-label"><span>🌳 สะสม (เรา)</span></label>
                 <div class="input-wrap">
                   <input type="number" step="0.5" class="form-input" id="pea_employeeRate" value="3" min="2" max="15" required oninput="onRetirementInput()">
                   <span class="input-unit">%</span>
                 </div>
               </div>
               <div class="input-group">
-                <label class="input-label"><span>สมทบ (กฟภ.)</span></label>
+                <label class="input-label"><span>🏢 สมทบ (กฟภ.)</span></label>
                 <div class="input-wrap">
                   <input type="number" step="0.5" class="form-input" id="pea_employerRate" value="10" min="2" max="15" required oninput="onRetirementInput()">
                   <span class="input-unit">%</span>
                 </div>
               </div>
               <div class="input-group">
-                <label class="input-label"><span>ผลตอบแทน</span></label>
+                <label class="input-label"><span>📊 ผลตอบแทน กสช.</span></label>
                 <div class="input-wrap">
                   <input type="number" step="0.1" class="form-input" id="pea_pfReturn" value="5" min="0" max="20" required oninput="onRetirementInput()">
                   <span class="input-unit">%</span>
@@ -2332,14 +2437,14 @@
 
             <div class="stat-grid-2">
               <div class="input-group">
-                <label class="input-label"><span>เงินสะสม ล่าสุด</span></label>
+                <label class="input-label"><span>💵 เงินสะสม ล่าสุด</span></label>
                 <div class="input-wrap">
                   <input type="number" class="form-input" id="pea_pfAccumulated" value="200000" min="0" required oninput="onRetirementInput()">
                   <span class="input-unit">บาท</span>
                 </div>
               </div>
               <div class="input-group">
-                <label class="input-label"><span>เงินสมทบ ล่าสุด</span></label>
+                <label class="input-label"><span>💼 เงินสมทบ ล่าสุด</span></label>
                 <div class="input-wrap">
                   <input type="number" class="form-input" id="pea_pfContributed" value="250000" min="0" required oninput="onRetirementInput()">
                   <span class="input-unit">บาท</span>
@@ -2349,14 +2454,14 @@
 
             <div class="stat-grid-2">
               <div class="input-group">
-                <label class="input-label"><span>ผลประโยชน์สะสม</span></label>
+                <label class="input-label"><span>📈 ผลประโยชน์สะสม</span></label>
                 <div class="input-wrap">
                   <input type="number" class="form-input" id="pea_pfAccumulatedGain" value="30000" min="0" required oninput="onRetirementInput()">
                   <span class="input-unit">บาท</span>
                 </div>
               </div>
               <div class="input-group">
-                <label class="input-label"><span>ผลประโยชน์สมทบ</span></label>
+                <label class="input-label"><span>📈 ผลประโยชน์สมทบ</span></label>
                 <div class="input-wrap">
                   <input type="number" class="form-input" id="pea_pfContributedGain" value="35000" min="0" required oninput="onRetirementInput()">
                   <span class="input-unit">บาท</span>
@@ -2401,7 +2506,10 @@
         <!-- Sensitivity Analysis Scenario Bar -->
         <div class="card" style="margin-bottom:16px;">
           <div class="card-header" style="margin-bottom:8px;">
-            <div class="card-title" style="font-size:0.95rem;"><span class="icon">🔬</span><span>วิเคราะห์ความเสี่ยง (Sensitivity Analysis)</span></div>
+            <div class="card-title" style="font-size:0.95rem;">
+              <span class="icon">🔬</span>
+              <span>วิเคราะห์ความเสี่ยง (Sensitivity Analysis) <span class="tooltip-tag" data-tip="ทดสอบความทนทานของแผนเกษียณต่อสภาวะเศรษฐกิจ เช่น เงินเฟ้อสูง หรือตลาดเติบโตเชิงรุก">ℹ</span></span>
+            </div>
             <span class="badge badge-purple" id="activeScenarioBadge">แผนปกติ</span>
           </div>
           <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:10px;">กดสลับเพื่อทดสอบสถานการณ์จำลองความเสี่ยงต่างๆ:</p>
@@ -2443,6 +2551,15 @@
             <p id="resVerdictDesc">-</p>
             <div id="resGapActionWrap" style="margin-top:10px; display:none;">
               <button type="button" class="solution-btn" style="background:#D97706; padding:8px 14px; font-size:0.82rem;" onclick="scrollToSmartGap()">⚡ ดู 3 ทางเลือกปิดส่วนขาด →</button>
+            </div>
+          </div>
+
+          <!-- Results Celebration Box -->
+          <div id="resCelebrationBox" class="celebration-box" style="display:none; margin-top:12px; text-align:left;">
+            <div class="celebration-icon">🎉</div>
+            <div>
+              <b style="color:#065F46; font-size:0.92rem;">ยินดีด้วยครับ! แผนเกษียณของคุณมีความพร้อม 100% แล้ว</b>
+              <div style="font-size:0.78rem; color:#047857; margin-top:2px;">คุณมีเงินทุนสะสม กสช. + หุ้นสหกรณ์ + เงินออม + เงินชดเชย 400 วัน ครอบคลุมเป้าหมายค่าใช้จ่ายวัยเกษียณอย่างมั่นคง</div>
             </div>
           </div>
         </div>
@@ -2672,7 +2789,10 @@
         <!-- Monte Carlo Market Simulation Card -->
         <div class="card">
           <div class="card-header" style="margin-bottom:6px;">
-            <div class="card-title" style="font-size:0.95rem;"><span class="icon">🎲</span><span>การจำลองความเสี่ยงตลาด (Monte Carlo 500 รอบ)</span></div>
+            <div class="card-title" style="font-size:0.95rem;">
+              <span class="icon">🎲</span>
+              <span>การจำลองความเสี่ยงตลาด (Monte Carlo 500 รอบ) <span class="tooltip-tag" data-tip="แบบจำลองสุ่มผลตอบแทนพอร์ต 500 สถานการณ์ตลอด 25 ปี เพื่อหาโอกาสรอดจริงของแผนเกษียณ">ℹ</span></span>
+            </div>
             <button type="button" class="badge badge-purple" style="border:none; cursor:pointer;" onclick="runMonteCarloSimulation(500)">🔄 รันจำลองใหม่</button>
           </div>
           <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:10px;">
@@ -4124,6 +4244,14 @@
       }
       if ($('resGapActionWrap')) {
         $('resGapActionWrap').style.display = positive ? 'none' : 'block';
+      }
+
+      // Toggle Celebration Boxes in Dashboard and Results
+      if ($('dashCelebrationBox')) {
+        $('dashCelebrationBox').style.display = positive ? 'flex' : 'none';
+      }
+      if ($('resCelebrationBox')) {
+        $('resCelebrationBox').style.display = positive ? 'flex' : 'none';
       }
 
       // 3 Stat cards
