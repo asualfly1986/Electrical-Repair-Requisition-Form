@@ -718,7 +718,80 @@
     .seg-pf { background: var(--pea-purple-light); }
     .seg-other { background: var(--pea-gold); }
     .seg-coop { background: #0D9488; }
+    .seg-severance { background: #0284C7; }
     .seg-needed { background: #6B7280; }
+
+    /* Scenario Buttons */
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .scenario-btn {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 6px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .scenario-btn.active {
+      border-color: var(--pea-purple-light);
+      background: var(--pea-purple-bg);
+      box-shadow: 0 4px 12px rgba(91, 50, 163, 0.15);
+    }
+    .scenario-btn .sc-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .scenario-btn .sc-desc {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      display: block;
+    }
+
+    /* Smart Gap Solutions Card */
+    .smart-gap-card {
+      background: linear-gradient(135deg, #FFFBEB, #FEF3C7);
+      border: 1.5px solid #F59E0B;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    [data-theme="dark"] .smart-gap-card {
+      background: linear-gradient(135deg, #2D2010, #3B2A15);
+      border-color: #D97706;
+    }
+    .solution-item {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.84rem;
+      border: 1px solid var(--border);
+    }
+    .solution-btn {
+      background: var(--pea-purple-light);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .solution-btn:active {
+      transform: scale(0.96);
+    }
 
     .comp-legend {
       display: flex;
@@ -1465,7 +1538,7 @@
         <!-- หมวด 1: ข้อมูลเบื้องต้น -->
         <div class="accordion open">
           <div class="accordion-header" onclick="toggleAccordion(this)">
-            <span>📌 หมวด 1: ข้อมูลเบื้องต้น</span>
+            <span>📌 หมวด 1: ข้อมูลเบื้องต้น & อายุงาน กฟภ.</span>
             <span class="arrow">▼</span>
           </div>
           <div class="accordion-body">
@@ -1488,10 +1561,27 @@
 
             <div class="stat-grid-2">
               <div class="input-group">
+                <label class="input-label"><span>อายุงาน กฟภ. ปัจจุบัน</span></label>
+                <div class="input-wrap">
+                  <input type="number" class="form-input" id="pea_serviceYears" value="10" min="0" max="50" required oninput="onRetirementInput()">
+                  <span class="input-unit">ปี</span>
+                </div>
+              </div>
+              <div class="input-group">
                 <label class="input-label"><span>อายุขัยประมาณ</span></label>
                 <div class="input-wrap">
                   <input type="number" class="form-input" id="pea_lifeExpectancy" value="85" min="50" max="110" required oninput="onRetirementInput()">
                   <span class="input-unit">ปี</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-grid-2">
+              <div class="input-group">
+                <label class="input-label"><span>เงินเดือนปัจจุบัน</span></label>
+                <div class="input-wrap">
+                  <input type="number" class="form-input" id="pea_salary" value="35000" min="0" required oninput="onRetirementInput()">
+                  <span class="input-unit">บาท</span>
                 </div>
               </div>
               <div class="input-group">
@@ -1502,29 +1592,39 @@
                 </div>
               </div>
             </div>
-
-            <div class="input-group">
-              <label class="input-label"><span>เงินเดือนปัจจุบัน</span></label>
-              <div class="input-wrap">
-                <input type="number" class="form-input" id="pea_salary" value="35000" min="0" required oninput="onRetirementInput()">
-                <span class="input-unit">บาท</span>
-              </div>
-            </div>
           </div>
         </div>
 
         <!-- หมวด 2: เงินที่ต้องใช้ตอนเกษียณ -->
         <div class="accordion open">
           <div class="accordion-header" onclick="toggleAccordion(this)">
-            <span>🎯 หมวด 2: เงินที่ต้องใช้ตอนเกษียณ</span>
+            <span>🎯 หมวด 2: เงินที่ต้องใช้ & กลยุทธ์การถอนเงิน</span>
             <span class="arrow">▼</span>
           </div>
           <div class="accordion-body">
             <div class="input-group">
-              <label class="input-label"><span>เงินที่ต้องการใช้หลังเกษียณ (มูลค่าปัจจุบัน)</span></label>
-              <div class="input-wrap">
-                <input type="number" class="form-input" id="pea_desiredExpenseToday" value="20000" min="0" required oninput="onRetirementInput()">
-                <span class="input-unit">บาท/ด.</span>
+              <label class="input-label"><span>กลยุทธ์การถอนเงินช่วงเกษียณ</span></label>
+              <div class="segmented-control" style="margin-bottom:6px;">
+                <button type="button" class="seg-btn active" id="btnStratDepletion" onclick="setWithdrawalStrategy('depletion', this)">ใช้หมดเมื่อสิ้นอายุขัย (Depletion)</button>
+                <button type="button" class="seg-btn" id="btnStratPreservation" onclick="setWithdrawalStrategy('preservation', this)">กินเฉพาะดอกผล (Preservation)</button>
+              </div>
+              <span class="input-hint" id="stratDescText">💡 ทยอยใช้เงินต้นและผลตอบแทนจนหมดพอดีเมื่อถึงอายุขัย (มาตรฐาน)</span>
+            </div>
+
+            <div class="stat-grid-2">
+              <div class="input-group">
+                <label class="input-label"><span>ค่าใช้จ่ายพื้นฐานหลังเกษียณ</span></label>
+                <div class="input-wrap">
+                  <input type="number" class="form-input" id="pea_desiredExpenseToday" value="20000" min="0" required oninput="onRetirementInput()">
+                  <span class="input-unit">บาท/ด.</span>
+                </div>
+              </div>
+              <div class="input-group">
+                <label class="input-label"><span>สำรองค่ารักษาพยาบาล/สุขภาพ</span></label>
+                <div class="input-wrap">
+                  <input type="number" class="form-input" id="pea_healthBufferMonthly" value="0" min="0" oninput="onRetirementInput()">
+                  <span class="input-unit">บาท/ด.</span>
+                </div>
               </div>
             </div>
 
@@ -1621,13 +1721,34 @@
           </div>
         </div>
 
-        <!-- หมวด 4: กองทุนสำรองเลี้ยงชีพ (กสช.) -->
+        <!-- หมวด 4: กองทุนสำรองเลี้ยงชีพ (กสช.) & สิทธิประโยชน์ กฟภ. -->
         <div class="accordion">
           <div class="accordion-header" onclick="toggleAccordion(this)">
-            <span>⚡ หมวด 4: กองทุนสำรองเลี้ยงชีพ (กสช.)</span>
+            <span>⚡ หมวด 4: กองทุนสำรองเลี้ยงชีพ & สิทธิประโยชน์ กฟภ.</span>
             <span class="arrow">▼</span>
           </div>
           <div class="accordion-body">
+            <!-- Step match & Severance Options -->
+            <div style="background:var(--card-sub); border-radius:12px; padding:12px 14px; margin-bottom:14px; border:1px solid var(--border);">
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.86rem; font-weight:600; margin-bottom:4px;">
+                <input type="checkbox" id="pea_useStepEmployerRate" checked onchange="onRetirementInput()" style="width:18px; height:18px; accent-color:var(--pea-purple-light);">
+                <span>คำนวณอัตราสมทบ กฟภ. ตามอายุงานอัตโนมัติ</span>
+              </label>
+              <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.4; padding-left:26px;">
+                • อายุงาน 1-9 ปี ได้ <b>9%</b> | 10-20 ปี ได้ <b>10%</b> | >20 ปี ได้ <b>11%</b> ตลอดจนเกษียณ
+              </div>
+
+              <hr style="border:none; border-top:1px solid var(--border); margin:10px 0;">
+
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.86rem; font-weight:600; margin-bottom:4px;">
+                <input type="checkbox" id="pea_enableSeverance" checked onchange="onRetirementInput()" style="width:18px; height:18px; accent-color:var(--pea-purple-light);">
+                <span>คำนวณเงินชดเชยเกษียณ กฟภ. (400 วัน / 13.33 เท่าของเงินเดือน)</span>
+              </label>
+              <div style="font-size:0.75rem; color:var(--text-muted); padding-left:26px;">
+                สิทธิประโยชน์ตามกฎหมายแรงงานรัฐวิสาหกิจ (อายุงาน $\ge 20$ ปี ได้รับสูงสุด 400 วันของเงินเดือนสุดท้าย)
+              </div>
+            </div>
+
             <div class="stat-grid-3">
               <div class="input-group">
                 <label class="input-label"><span>สะสม (เรา)</span></label>
@@ -1639,7 +1760,7 @@
               <div class="input-group">
                 <label class="input-label"><span>สมทบ (กฟภ.)</span></label>
                 <div class="input-wrap">
-                  <input type="number" step="0.5" class="form-input" id="pea_employerRate" value="9" min="2" max="15" required oninput="onRetirementInput()">
+                  <input type="number" step="0.5" class="form-input" id="pea_employerRate" value="10" min="2" max="15" required oninput="onRetirementInput()">
                   <span class="input-unit">%</span>
                 </div>
               </div>
@@ -1693,6 +1814,29 @@
 
       <!-- RESULTS SECTION -->
       <div id="peaResultsSection">
+
+        <!-- Sensitivity Analysis Scenario Bar -->
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-header" style="margin-bottom:8px;">
+            <div class="card-title" style="font-size:0.95rem;"><span class="icon">🔬</span><span>วิเคราะห์ความเสี่ยง (Sensitivity Analysis)</span></div>
+            <span class="badge badge-purple" id="activeScenarioBadge">แผนปกติ</span>
+          </div>
+          <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:10px;">กดสลับเพื่อทดสอบสถานการณ์จำลองความเสี่ยงต่างๆ:</p>
+          <div class="scenario-grid">
+            <div class="scenario-btn active" id="sc_base" onclick="applyScenario('base')">
+              <span class="sc-title">🟢 แผนปกติ</span>
+              <span class="sc-desc">เงินเฟ้อ 3% | กสช. 5%</span>
+            </div>
+            <div class="scenario-btn" id="sc_stress" onclick="applyScenario('stress')">
+              <span class="sc-title">🔴 เงินเฟ้อสูง</span>
+              <span class="sc-desc">เงินเฟ้อ 4% | กสช. 3.5%</span>
+            </div>
+            <div class="scenario-btn" id="sc_growth" onclick="applyScenario('growth')">
+              <span class="sc-title">🔵 เติบโตเชิงรุก</span>
+              <span class="sc-desc">เงินเฟ้อ 2.5% | กสช. 7%</span>
+            </div>
+          </div>
+        </div>
         
         <!-- Gauge Card -->
         <div class="gauge-card">
@@ -1721,15 +1865,70 @@
         <div class="stat-grid-3">
           <div class="mini-stat">
             <span class="mini-label">เงินที่ต้องมี</span>
-            <div class="mini-value num-font" id="resStatNeeded" style="font-size:1rem;">-</div>
+            <div class="mini-value num-font" id="resStatNeeded" style="font-size:0.95rem;">-</div>
           </div>
           <div class="mini-stat highlight">
             <span class="mini-label">เงินที่จะมี</span>
-            <div class="mini-value num-font" id="resStatAvailable" style="font-size:1rem;">-</div>
+            <div class="mini-value num-font" id="resStatAvailable" style="font-size:0.95rem;">-</div>
           </div>
           <div class="mini-stat" id="resDiffCard">
             <span class="mini-label">ส่วนต่าง (เกิน/ขาด)</span>
-            <div class="mini-value num-font" id="resStatDiff" style="font-size:1rem;">-</div>
+            <div class="mini-value num-font" id="resStatDiff" style="font-size:0.95rem;">-</div>
+          </div>
+        </div>
+
+        <!-- Smart Gap Solution Card (Shown if diff < 0) -->
+        <div class="smart-gap-card" id="smartGapCard" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:8px;">
+            <b style="color:#B45309; font-size:0.92rem;">⚡ แนะนำทางเลือกปิดส่วนขาด (Smart Gap Solutions)</b>
+            <button type="button" class="solution-btn" style="background:#D97706;" onclick="autoFixGap()">⚡ ปิด Gap อัตโนมัติ (1-Click)</button>
+          </div>
+          <p style="font-size:0.78rem; color:var(--text-main); margin-bottom:8px;">เลือกปรับทางใดทางหนึ่งเพื่อปิดช่องว่างเงินเกษียณให้พร้อม 100%:</p>
+          
+          <div class="solution-item">
+            <div>
+              <b>ทางเลือก 1: ปรับเพิ่มสะสม กสช.</b><br>
+              <span style="font-size:0.75rem; color:var(--text-muted);" id="solPfText">-</span>
+            </div>
+            <button type="button" class="solution-btn" onclick="applySolPF()">เลือกทางนี้</button>
+          </div>
+
+          <div class="solution-item">
+            <div>
+              <b>ทางเลือก 2: ออมเงินเสริมต่อเดือน</b><br>
+              <span style="font-size:0.75rem; color:var(--text-muted);" id="solSavingsText">-</span>
+            </div>
+            <button type="button" class="solution-btn" onclick="applySolSavings()">เลือกทางนี้</button>
+          </div>
+
+          <div class="solution-item">
+            <div>
+              <b>ทางเลือก 3: ปรับแผนลงทุน กสช. ให้เติบโต</b><br>
+              <span style="font-size:0.75rem; color:var(--text-muted);" id="solReturnText">-</span>
+            </div>
+            <button type="button" class="solution-btn" onclick="applySolReturn()">เลือกทางนี้</button>
+          </div>
+        </div>
+
+        <!-- Tax Optimization Card -->
+        <div class="card" style="background:linear-gradient(135deg, var(--pea-purple-bg), var(--pea-purple-tint)); border-color:var(--pea-purple-soft);">
+          <div class="card-header" style="margin-bottom:6px;">
+            <div class="card-title" style="font-size:0.95rem;"><span class="icon">🏷️</span><span>สิทธิประโยชน์ประหยัดภาษี (Tax Optimization)</span></div>
+            <span class="badge badge-purple">สิทธิลดหย่อน</span>
+          </div>
+          <p style="font-size:0.82rem; color:var(--text-main); line-height:1.5;" id="taxSavingDesc">
+            การส่งเงินสะสม กสช. ได้สิทธิลดหย่อนภาษีเงินได้บุคคลธรรมดา โดยยอดสะสม กสช. ปัจจุบันช่วยให้คุณ <b>ประหยัดภาษีได้ประมาณ <span id="taxSavingAmount" class="num-font" style="font-weight:700; color:var(--success);">0</span> บาท/ปี</b> (คิดเป็นเงินคืนภาษีเฉลี่ยเดือนละ <span id="taxSavingMonthly" class="num-font" style="font-weight:700;">0</span> บาท)
+          </p>
+        </div>
+
+        <!-- PEA Asset Allocation Guide Card -->
+        <div class="card">
+          <div class="card-header" style="margin-bottom:8px;">
+            <div class="card-title" style="font-size:0.95rem;"><span class="icon">🧭</span><span>คำแนะนำการเลือกแผนลงทุน กสช. กฟภ.</span></div>
+            <span class="badge badge-gold" id="guidePlanBadge">แผนสมดุล</span>
+          </div>
+          <div style="background:var(--card-sub); border-radius:10px; padding:12px; font-size:0.82rem; line-height:1.5;" id="guidePlanContent">
+            <!-- Dynamically populated based on target return -->
           </div>
         </div>
 
@@ -1749,6 +1948,7 @@
                 <div class="comp-seg seg-pf" id="barPF" style="width:0%" title="กสช."></div>
                 <div class="comp-seg seg-other" id="barOther" style="width:0%" title="เงินออมอื่น"></div>
                 <div class="comp-seg seg-coop" id="barCoop" style="width:0%" title="หุ้นสหกรณ์"></div>
+                <div class="comp-seg seg-severance" id="barSeverance" style="width:0%" title="เงินชดเชย กฟภ."></div>
               </div>
             </div>
 
@@ -1766,6 +1966,7 @@
               <div class="legend-item"><span class="legend-dot" style="background:var(--pea-purple-light);"></span><span>กสช. กฟภ.</span></div>
               <div class="legend-item"><span class="legend-dot" style="background:var(--pea-gold);"></span><span>เงินออมอื่นๆ</span></div>
               <div class="legend-item"><span class="legend-dot" style="background:#0D9488;"></span><span>หุ้นสหกรณ์ฯ</span></div>
+              <div class="legend-item"><span class="legend-dot" style="background:#0284C7;"></span><span>เงินชดเชย กฟภ.</span></div>
               <div class="legend-item"><span class="legend-dot" style="background:#6B7280;"></span><span>เงินที่ต้องใช้</span></div>
             </div>
           </div>
@@ -1986,10 +2187,13 @@
       // Retirement inputs
       pea_currentAge: 35,
       pea_retireAge: 60,
+      pea_serviceYears: 10,
       pea_lifeExpectancy: 85,
       pea_salaryGrowth: 3,
       pea_salary: 35000,
       pea_desiredExpenseToday: 20000,
+      pea_healthBufferMonthly: 0,
+      pea_withdrawalStrategy: 'depletion',
       pea_inflation: 3,
       pea_postRetireReturn: 3,
       pea_monthlySavings: 3000,
@@ -1998,8 +2202,10 @@
       pea_coopSharePerMonth: 1000,
       pea_coopShareCurrent: 50000,
       pea_coopReturn: 4.5,
+      pea_useStepEmployerRate: true,
+      pea_enableSeverance: true,
       pea_employeeRate: 3,
-      pea_employerRate: 9,
+      pea_employerRate: 10,
       pea_pfReturn: 5,
       pea_pfAccumulated: 200000,
       pea_pfContributed: 250000,
@@ -2009,6 +2215,8 @@
 
     let baseRetirementInputs = null;
     let autoSaveTimer = null;
+    let currentScenario = 'base';
+    let currentSmartSolutions = null;
 
     // Initialize App
     window.addEventListener('DOMContentLoaded', () => {
@@ -2096,8 +2304,54 @@
 
     // Helper for quick chip buttons
     function setVal(id, val) {
-      $(id).value = val;
+      const el = $(id);
+      if (el) el.value = val;
       onDataChanged();
+    }
+
+    // Withdrawal Strategy Selector
+    function setWithdrawalStrategy(strat, el) {
+      state.pea_withdrawalStrategy = strat;
+      if ($('btnStratDepletion')) $('btnStratDepletion').classList.toggle('active', strat === 'depletion');
+      if ($('btnStratPreservation')) $('btnStratPreservation').classList.toggle('active', strat === 'preservation');
+      const hint = $('stratDescText');
+      if (hint) {
+        hint.textContent = strat === 'depletion'
+          ? '💡 ทยอยใช้เงินต้นและผลตอบแทนจนหมดพอดีเมื่อถึงอายุขัย (มาตรฐาน)'
+          : '💡 กินเฉพาะดอกผล/ผลตอบแทน โดยเก็บรักษาเงินต้นไว้ครบ 100% ส่งต่อเป็นมรดก';
+      }
+      onRetirementInput();
+    }
+
+    // Sensitivity Scenarios Selector
+    function applyScenario(sc) {
+      currentScenario = sc;
+      ['base', 'stress', 'growth'].forEach(s => {
+        const btn = $('sc_' + s);
+        if (btn) btn.classList.toggle('active', s === sc);
+      });
+      
+      const badge = $('activeScenarioBadge');
+      if (sc === 'base') {
+        $('pea_inflation').value = 3.0;
+        $('pea_pfReturn').value = 5.0;
+        $('pea_preRetireReturn').value = 5.0;
+        $('pea_coopReturn').value = 4.5;
+        if (badge) { badge.textContent = 'แผนปกติ'; badge.className = 'badge badge-purple'; }
+      } else if (sc === 'stress') {
+        $('pea_inflation').value = 4.0;
+        $('pea_pfReturn').value = 3.5;
+        $('pea_preRetireReturn').value = 3.0;
+        $('pea_coopReturn').value = 3.5;
+        if (badge) { badge.textContent = 'เงินเฟ้อสูง'; badge.className = 'badge badge-red'; }
+      } else if (sc === 'growth') {
+        $('pea_inflation').value = 2.5;
+        $('pea_pfReturn').value = 7.0;
+        $('pea_preRetireReturn').value = 6.5;
+        $('pea_coopReturn').value = 5.5;
+        if (badge) { badge.textContent = 'เติบโตเชิงรุก'; badge.className = 'badge badge-green'; }
+      }
+      onRetirementInput();
     }
 
     // Collect all inputs to state
@@ -2105,7 +2359,11 @@
       Object.keys(state).forEach(key => {
         const el = $(key);
         if (el) {
-          state[key] = parseFloat(el.value) || 0;
+          if (el.type === 'checkbox') {
+            state[key] = el.checked;
+          } else {
+            state[key] = parseFloat(el.value) || 0;
+          }
         }
       });
     }
@@ -2114,8 +2372,17 @@
     function populateInputs() {
       Object.keys(state).forEach(key => {
         const el = $(key);
-        if (el) el.value = state[key];
+        if (el) {
+          if (el.type === 'checkbox') {
+            el.checked = !!state[key];
+          } else {
+            el.value = state[key];
+          }
+        }
       });
+      if (state.pea_withdrawalStrategy) {
+        setWithdrawalStrategy(state.pea_withdrawalStrategy);
+      }
     }
 
     // Event Handler on any data change
@@ -2303,10 +2570,13 @@
       const inp = {
         currentAge: num('pea_currentAge'),
         retireAge: num('pea_retireAge'),
+        serviceYears: num('pea_serviceYears') || 10,
         lifeExpectancy: num('pea_lifeExpectancy'),
         salary: num('pea_salary'),
         salaryGrowth: num('pea_salaryGrowth'),
         desiredExpenseToday: num('pea_desiredExpenseToday'),
+        healthBufferMonthly: num('pea_healthBufferMonthly') || 0,
+        strategy: state.pea_withdrawalStrategy || 'depletion',
         inflation: num('pea_inflation'),
         postRetireReturn: num('pea_postRetireReturn'),
         monthlySavings: num('pea_monthlySavings'),
@@ -2315,6 +2585,8 @@
         coopSharePerMonth: num('pea_coopSharePerMonth'),
         coopShareCurrent: num('pea_coopShareCurrent'),
         coopReturn: num('pea_coopReturn'),
+        useStepEmployerRate: $('pea_useStepEmployerRate') ? $('pea_useStepEmployerRate').checked : true,
+        enableSeverance: $('pea_enableSeverance') ? $('pea_enableSeverance').checked : true,
         employeeRate: num('pea_employeeRate'),
         employerRate: num('pea_employerRate'),
         pfReturn: num('pea_pfReturn'),
@@ -2327,9 +2599,10 @@
       const n1 = Math.max(inp.retireAge - inp.currentAge, 0);
       const n2 = Math.max(inp.lifeExpectancy - inp.retireAge, 0);
 
-      // Future desired expense
-      const expenseAtRetirement = inp.desiredExpenseToday * Math.pow(1 + inp.inflation / 100, n1);
-      $('pea_futureExpenseLive').textContent = fmt(expenseAtRetirement) + ' บาท/ด.';
+      // Future desired expense (Living + Healthcare buffer)
+      const totalBaseMonthly = inp.desiredExpenseToday + inp.healthBufferMonthly;
+      const expenseAtRetirement = totalBaseMonthly * Math.pow(1 + inp.inflation / 100, n1);
+      $('pea_futureExpenseLive').textContent = fmt(expenseAtRetirement) + ' บาท/ด.' + (inp.healthBufferMonthly > 0 ? ` (รวมสุขภาพ ${fmt(inp.healthBufferMonthly * Math.pow(1 + inp.inflation/100, n1))} ฿)` : '');
 
       // Real rate of return post-retirement
       const realReturn = (1 + inp.postRetireReturn / 100) / (1 + inp.inflation / 100) - 1;
@@ -2339,13 +2612,20 @@
       let totalNeeded = 0;
       if (months2 <= 0) {
         totalNeeded = 0;
-      } else if (Math.abs(realMonthlyRate) < 1e-9) {
-        totalNeeded = expenseAtRetirement * months2;
+      } else if (inp.strategy === 'preservation') {
+        // Capital Preservation: Live off real returns without touching principal
+        const effectiveReal = Math.max(realReturn, 0.005);
+        totalNeeded = (expenseAtRetirement * 12) / effectiveReal;
       } else {
-        totalNeeded = expenseAtRetirement * (1 - Math.pow(1 + realMonthlyRate, -months2)) / realMonthlyRate * (1 + realMonthlyRate);
+        // Capital Depletion: Annuity due until life expectancy
+        if (Math.abs(realMonthlyRate) < 1e-9) {
+          totalNeeded = expenseAtRetirement * months2;
+        } else {
+          totalNeeded = expenseAtRetirement * (1 - Math.pow(1 + realMonthlyRate, -months2)) / realMonthlyRate * (1 + realMonthlyRate);
+        }
       }
 
-      // Provident Fund (กสช.) & Savings & Coop Shares with Compounding
+      // Provident Fund (กสช.) with Step Match, Savings & Coop Shares Compounding
       let pfBalance = inp.pfAccumulated + inp.pfContributed + inp.pfAccumulatedGain + inp.pfContributedGain;
       let curSalary = inp.salary;
       const pfMonthlyReturn = Math.pow(1 + inp.pfReturn / 100, 1 / 12) - 1;
@@ -2365,7 +2645,15 @@
       });
 
       for (let y = 0; y < n1; y++) {
-        const monthlyContrib = curSalary * (inp.employeeRate / 100 + inp.employerRate / 100);
+        const curService = inp.serviceYears + y;
+        let emRate = inp.employerRate;
+        if (inp.useStepEmployerRate) {
+          if (curService < 10) emRate = 9;
+          else if (curService <= 20) emRate = 10;
+          else emRate = 11;
+        }
+
+        const monthlyContrib = curSalary * (inp.employeeRate / 100 + emRate / 100);
         for (let m = 0; m < 12; m++) {
           pfBalance = pfBalance * (1 + pfMonthlyReturn) + monthlyContrib;
           other = other * (1 + preMonthlyReturn) + inp.monthlySavings;
@@ -2386,15 +2674,20 @@
       const pfFutureValue = pfBalance;
       const otherFutureValue = other;
       const coopFutureValue = coop;
+      const severancePay = inp.enableSeverance ? (curSalary * (400 / 30)) : 0;
 
-      const totalAvailable = pfFutureValue + otherFutureValue + coopFutureValue;
+      const totalAvailable = pfFutureValue + otherFutureValue + coopFutureValue + severancePay;
       const diff = totalAvailable - totalNeeded;
       const percent = totalNeeded > 0 ? (totalAvailable / totalNeeded * 100) : 100;
 
-      const res = { n1, n2, expenseAtRetirement, totalNeeded, pfFutureValue, otherFutureValue, coopFutureValue, totalAvailable, diff, percent, yearlyData };
+      const res = { n1, n2, expenseAtRetirement, totalNeeded, pfFutureValue, otherFutureValue, coopFutureValue, severancePay, totalAvailable, diff, percent, yearlyData, curSalary };
 
       renderRetirementResults(res);
       renderYearlyTable(res.yearlyData, inp.retireAge);
+      calculateTaxSavings(inp.salary, inp.employeeRate);
+      renderAssetAllocationGuide(inp.pfReturn);
+      prepareSmartSolutions(inp, res);
+
       baseRetirementInputs = inp;
       initAdjustSliders(inp);
     }
@@ -2428,7 +2721,7 @@
       const title = positive ? '🎉 แผนเกษียณของคุณพร้อมและเพียงพอ!' : '⚠️ แผนเกษียณยังขาดอยู่ ต้องปรับแผน';
       const desc = positive
         ? `คาดว่าจะมีเงิน <b>เกิน</b> เป้าหมายอยู่ <b>${fmt(res.diff)} บาท</b> ณ วันเกษียณ แผนการเงินมั่นคงมาก`
-        : `คาดว่าจะมีเงิน <b>ขาด</b> เป้าหมายอยู่ <b>${fmt(Math.abs(res.diff))} บาท</b> ลองเลื่อนปรับอัตราเงินสะสมหรือเงินออมในแถบด้านล่าง`;
+        : `คาดว่าจะมีเงิน <b>ขาด</b> เป้าหมายอยู่ <b>${fmt(Math.abs(res.diff))} บาท</b> ลองกดดูทางเลือกในกล่อง <b>Smart Gap Solutions</b> ด้านล่าง`;
 
       $('resVerdictCard').className = 'verdict-box ' + (positive ? 'positive' : 'negative');
       $('resVerdictTitle').textContent = title;
@@ -2449,10 +2742,160 @@
       $('barPF').style.width = (res.pfFutureValue / maxVal * 100) + '%';
       $('barOther').style.width = (res.otherFutureValue / maxVal * 100) + '%';
       $('barCoop').style.width = (res.coopFutureValue / maxVal * 100) + '%';
+      $('barSeverance').style.width = (res.severancePay / maxVal * 100) + '%';
       $('barNeeded').style.width = (res.totalNeeded / maxVal * 100) + '%';
 
-      $('barAvailVal').textContent = fmt(res.totalAvailable) + ' บาท (กสช. ' + fmt(res.pfFutureValue) + ')';
+      let availBreakdown = `กสช. ${fmt(res.pfFutureValue)}`;
+      if (res.severancePay > 0) availBreakdown += ` + ชดเชย ${fmt(res.severancePay)}`;
+      $('barAvailVal').textContent = `${fmt(res.totalAvailable)} บาท (${availBreakdown})`;
       $('barNeedVal').textContent = fmt(res.totalNeeded) + ' บาท';
+    }
+
+    // ==================== TAX SAVINGS ENGINE ====================
+    function calculateTaxSavings(salary, employeeRate) {
+      const annualSalary = salary * 12;
+      const pfContributionAnnual = annualSalary * (employeeRate / 100);
+      
+      const stdDeductions = 100000 + 60000;
+      const netTaxableIncome = Math.max(0, annualSalary - stdDeductions);
+      
+      let marginalRate = 0.05;
+      if (netTaxableIncome > 5000000) marginalRate = 0.35;
+      else if (netTaxableIncome > 2000000) marginalRate = 0.30;
+      else if (netTaxableIncome > 1000000) marginalRate = 0.25;
+      else if (netTaxableIncome > 750000) marginalRate = 0.20;
+      else if (netTaxableIncome > 500000) marginalRate = 0.15;
+      else if (netTaxableIncome > 300000) marginalRate = 0.10;
+      else if (netTaxableIncome > 150000) marginalRate = 0.05;
+      
+      const taxSaved = pfContributionAnnual * marginalRate;
+      const taxSavedMonthly = taxSaved / 12;
+      
+      if ($('taxSavingAmount')) $('taxSavingAmount').textContent = fmt(taxSaved);
+      if ($('taxSavingMonthly')) $('taxSavingMonthly').textContent = fmt(taxSavedMonthly);
+    }
+
+    // ==================== ASSET ALLOCATION GUIDE ====================
+    function renderAssetAllocationGuide(pfReturn) {
+      const badge = $('guidePlanBadge');
+      const content = $('guidePlanContent');
+      if (!badge || !content) return;
+      
+      if (pfReturn <= 3.5) {
+        badge.textContent = '🛡️ แผนตราสารหนี้/ตลาดเงิน';
+        badge.className = 'badge badge-blue';
+        content.innerHTML = `
+          <b>นโยบายแนะนำ: แผนตลาดเงิน หรือ ตราสารหนี้ระยะสั้น (ความเสี่ยงต่ำ)</b><br>
+          • <b>สัดส่วน:</b> เงินฝากและตราสารหนี้ภาครัฐ 100% (ความผันผวนต่ำมาก)<br>
+          • <b>ความเหมาะสม:</b> ผู้ใกล้เกษียณอายุ (อายุ 55 ปีขึ้นไป) เน้นรักษาเงินต้น ปลอดภัยสูงสุด
+        `;
+      } else if (pfReturn <= 5.5) {
+        badge.textContent = '⚖️ แผนสมดุล / Life Path';
+        badge.className = 'badge badge-gold';
+        content.innerHTML = `
+          <b>นโยบายแนะนำ: แผนผสมสมดุล หรือ แผนสมดุลตามอายุ Life Path (ความเสี่ยงปานกลาง)</b><br>
+          • <b>สัดส่วน:</b> ตราสารหนี้ 65-75% + หุ้นไทยและหุ้นต่างประเทศ 25-35%<br>
+          • <b>ความเหมาะสม:</b> พนักงานช่วงอายุ 35 - 50 ปี เพื่อสร้างผลตอบแทนชนะเงินเฟ้ออย่างมั่นคง
+        `;
+      } else {
+        badge.textContent = '🚀 แผนเติบโตเชิงรุก (ผสมหุ้นสูง)';
+        badge.className = 'badge badge-green';
+        content.innerHTML = `
+          <b>นโยบายแนะนำ: แผนตราสารทุนเชิงรุก (ความเสี่ยงสูง เน้นเติบโตระยะยาว)</b><br>
+          • <b>สัดส่วน:</b> หุ้นไทย + หุ้นต่างประเทศ (Global Equity / US / Asia) 50-80% + ตราสารหนี้ 20-50%<br>
+          • <b>ความเหมาะสม:</b> พนักงานอายุต่ำกว่า 40 ปี หรือผู้มีระยะเวลาลงทุนเกิน 10-15 ปีขึ้นไป
+        `;
+      }
+    }
+
+    // ==================== SMART GAP SOLUTIONS ====================
+    function prepareSmartSolutions(inp, res) {
+      const card = $('smartGapCard');
+      if (!card) return;
+
+      if (res.diff >= 0) {
+        card.style.display = 'none';
+        currentSmartSolutions = null;
+        return;
+      }
+
+      card.style.display = 'block';
+      const gap = Math.abs(res.diff);
+      const months1 = res.n1 * 12;
+
+      // Sol 1: Additional PF Employee rate
+      let requiredPfRate = inp.employeeRate;
+      if (months1 > 0) {
+        const pfMonthlyReturn = Math.pow(1 + inp.pfReturn / 100, 1 / 12) - 1;
+        const futureValueFactor = pfMonthlyReturn > 0 ? ((Math.pow(1 + pfMonthlyReturn, months1) - 1) / pfMonthlyReturn) : months1;
+        const requiredMonthlyContrib = gap / futureValueFactor;
+        const avgSalary = (inp.salary + res.curSalary) / 2;
+        const addRate = (requiredMonthlyContrib / avgSalary) * 100;
+        requiredPfRate = Math.min(15, Math.max(inp.employeeRate + 0.5, Math.round((inp.employeeRate + addRate) * 2) / 2));
+      }
+
+      // Sol 2: Additional Monthly Savings
+      let requiredMonthlySavings = 0;
+      if (months1 > 0) {
+        const preMonthlyReturn = Math.pow(1 + inp.preRetireReturn / 100, 1 / 12) - 1;
+        const fvFactor = preMonthlyReturn > 0 ? ((Math.pow(1 + preMonthlyReturn, months1) - 1) / preMonthlyReturn) : months1;
+        const additionalSavings = Math.ceil(gap / fvFactor / 100) * 100;
+        requiredMonthlySavings = inp.monthlySavings + additionalSavings;
+      }
+
+      // Sol 3: Higher Return
+      const targetReturn = Math.min(12, Math.round((inp.pfReturn + (gap / (res.totalNeeded || 1) * 3)) * 10) / 10);
+
+      currentSmartSolutions = {
+        requiredPfRate,
+        requiredMonthlySavings,
+        targetReturn
+      };
+
+      if ($('solPfText')) $('solPfText').textContent = `ปรับจาก ${inp.employeeRate}% เป็น ${requiredPfRate}% (ช่วยประหยัดภาษีเพิ่มทันที)`;
+      if ($('solSavingsText')) $('solSavingsText').textContent = `ออมเพิ่มเป็น ${fmt(requiredMonthlySavings)} บาท/ด. (เพิ่ม ${fmt(requiredMonthlySavings - inp.monthlySavings)} ฿)`;
+      if ($('solReturnText')) $('solReturnText').textContent = `ขยับผลตอบแทน กสช. เป็น ${targetReturn}% (เลือกแผนผสมหุ้น/ต่างประเทศ)`;
+    }
+
+    function applySolPF() {
+      if (!currentSmartSolutions) return;
+      $('pea_employeeRate').value = currentSmartSolutions.requiredPfRate;
+      onRetirementInput();
+      alert(`⚡ ปรับอัตราสะสม กสช. เป็น ${currentSmartSolutions.requiredPfRate}% เรียบร้อยแล้ว!`);
+    }
+
+    function applySolSavings() {
+      if (!currentSmartSolutions) return;
+      $('pea_monthlySavings').value = currentSmartSolutions.requiredMonthlySavings;
+      onRetirementInput();
+      alert(`⚡ ปรับเงินออมเสริมต่อเดือนเป็น ${fmt(currentSmartSolutions.requiredMonthlySavings)} บาท เรียบร้อยแล้ว!`);
+    }
+
+    function applySolReturn() {
+      if (!currentSmartSolutions) return;
+      $('pea_pfReturn').value = currentSmartSolutions.targetReturn;
+      onRetirementInput();
+      alert(`⚡ ปรับผลตอบแทนคาดหวัง กสช. เป็น ${currentSmartSolutions.targetReturn}% เรียบร้อยแล้ว!`);
+    }
+
+    function autoFixGap() {
+      if (!currentSmartSolutions) return;
+      // Auto balance between PF (up to 12%) and extra savings
+      const targetPf = Math.min(12, currentSmartSolutions.requiredPfRate);
+      $('pea_employeeRate').value = targetPf;
+      
+      collectInputs();
+      calculateRetirement();
+      
+      // If still gap, top up monthly savings
+      if (currentSmartSolutions) {
+        $('pea_monthlySavings').value = currentSmartSolutions.requiredMonthlySavings;
+        collectInputs();
+        calculateRetirement();
+      }
+      
+      triggerAutoSave();
+      alert('🎉 ระบบได้คำนวณและปรับอัตรา กสช. และเงินออมเพื่อปิด Gap สู่เป้าหมาย 100% เรียบร้อยแล้ว!');
     }
 
     function renderYearlyTable(data, retireAge) {
@@ -2517,15 +2960,25 @@
 
       const n1 = Math.max(adj.retireAge - adj.currentAge, 0);
       const n2 = Math.max(adj.lifeExpectancy - adj.retireAge, 0);
-      const expenseAtRetirement = adj.desiredExpenseToday * Math.pow(1 + adj.inflation / 100, n1);
+      const totalBaseMonthly = adj.desiredExpenseToday + (adj.healthBufferMonthly || 0);
+      const expenseAtRetirement = totalBaseMonthly * Math.pow(1 + adj.inflation / 100, n1);
       const realReturn = (1 + adj.postRetireReturn / 100) / (1 + adj.inflation / 100) - 1;
       const realMonthlyRate = Math.pow(1 + realReturn, 1 / 12) - 1;
       const months2 = n2 * 12;
 
       let totalNeeded = 0;
-      if (months2 <= 0) totalNeeded = 0;
-      else if (Math.abs(realMonthlyRate) < 1e-9) totalNeeded = expenseAtRetirement * months2;
-      else totalNeeded = expenseAtRetirement * (1 - Math.pow(1 + realMonthlyRate, -months2)) / realMonthlyRate * (1 + realMonthlyRate);
+      if (months2 <= 0) {
+        totalNeeded = 0;
+      } else if (adj.strategy === 'preservation') {
+        const effectiveReal = Math.max(realReturn, 0.005);
+        totalNeeded = (expenseAtRetirement * 12) / effectiveReal;
+      } else {
+        if (Math.abs(realMonthlyRate) < 1e-9) {
+          totalNeeded = expenseAtRetirement * months2;
+        } else {
+          totalNeeded = expenseAtRetirement * (1 - Math.pow(1 + realMonthlyRate, -months2)) / realMonthlyRate * (1 + realMonthlyRate);
+        }
+      }
 
       let pfBalance = adj.pfAccumulated + adj.pfContributed + adj.pfAccumulatedGain + adj.pfContributedGain;
       let curSalary = adj.salary;
@@ -2536,7 +2989,15 @@
       let coop = adj.coopShareCurrent;
 
       for (let y = 0; y < n1; y++) {
-        const monthlyContrib = curSalary * (adj.employeeRate / 100 + adj.employerRate / 100);
+        const curService = adj.serviceYears + y;
+        let emRate = adj.employerRate;
+        if (adj.useStepEmployerRate) {
+          if (curService < 10) emRate = 9;
+          else if (curService <= 20) emRate = 10;
+          else emRate = 11;
+        }
+
+        const monthlyContrib = curSalary * (adj.employeeRate / 100 + emRate / 100);
         for (let m = 0; m < 12; m++) {
           pfBalance = pfBalance * (1 + pfMonthlyReturn) + monthlyContrib;
           other = other * (1 + preMonthlyReturn) + adj.monthlySavings;
@@ -2546,7 +3007,8 @@
       }
 
       const coopFutureValue = coop;
-      const totalAvailable = pfBalance + other + coopFutureValue;
+      const severancePay = adj.enableSeverance ? (curSalary * (400 / 30)) : 0;
+      const totalAvailable = pfBalance + other + coopFutureValue + severancePay;
       const diff = totalAvailable - totalNeeded;
       const percent = totalNeeded > 0 ? (totalAvailable / totalNeeded * 100) : 100;
       const positive = diff >= 0;
@@ -2625,10 +3087,13 @@
           lia_other: 0,
           pea_currentAge: 38,
           pea_retireAge: 60,
+          pea_serviceYears: 14,
           pea_lifeExpectancy: 85,
           pea_salaryGrowth: 3.5,
           pea_salary: 45000,
           pea_desiredExpenseToday: 25000,
+          pea_healthBufferMonthly: 2000,
+          pea_withdrawalStrategy: 'depletion',
           pea_inflation: 3,
           pea_postRetireReturn: 3,
           pea_monthlySavings: 8000,
@@ -2637,8 +3102,10 @@
           pea_coopSharePerMonth: 2000,
           pea_coopShareCurrent: 120000,
           pea_coopReturn: 4.8,
+          pea_useStepEmployerRate: true,
+          pea_enableSeverance: true,
           pea_employeeRate: 5,
-          pea_employerRate: 11,
+          pea_employerRate: 10,
           pea_pfReturn: 5.5,
           pea_pfAccumulated: 320000,
           pea_pfContributed: 430000,
