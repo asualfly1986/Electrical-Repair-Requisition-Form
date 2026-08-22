@@ -1153,18 +1153,108 @@
     }
 
     @media print {
-      body { padding: 10px 20px; background: #fff; color: #000; font-size: 9pt; }
-      .app-header, .bottom-nav, .btn, .chips-row, .slider-box, .btn-sync, .theme-toggle-btn, .scenario-grid, .solution-btn, .accordion-header::after, #tab-cashflow, #tab-networth, #tab-settings { display: none !important; }
-      .tab-panel { display: block !important; margin-bottom: 0; }
-      .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; margin-bottom: 8px; padding: 10px 14px; }
-      .hero-stat-card { background: #5B21B6 !important; color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 12px 14px; margin-bottom: 8px; }
-      .print-header { display: block !important; text-align: center; margin-bottom: 10px; border-bottom: 2px solid #5B21B6; padding-bottom: 6px; }
-      .print-header h2 { font-size: 13pt; color: #5B21B6; margin: 0; font-weight: 700; }
-      .print-header p { font-size: 8pt; color: #555; margin: 2px 0 0; }
-      .table-wrap { display: block !important; }
-      .score-card { margin-bottom: 8px; padding: 8px 12px; }
-      .countdown-banner { margin-bottom: 8px; padding: 8px 12px; }
-      .stat-grid-2, .stat-grid-3 { margin-bottom: 8px; }
+      body {
+        padding: 6px 14px;
+        background: #fff !important;
+        color: #000 !important;
+        font-size: 8pt;
+      }
+      .app-header,
+      .bottom-nav,
+      .btn,
+      .chips-row,
+      .slider-box,
+      .btn-sync,
+      .theme-toggle-btn,
+      .scenario-grid,
+      .solution-btn,
+      .accordion-header::after,
+      #tab-cashflow,
+      #tab-networth,
+      #tab-settings,
+      #peaRetirementForm,
+      #smartGapCard,
+      #retireCashflowDeficitAlert,
+      .add-debt-btn,
+      .add-asset-btn,
+      .debt-delete-btn,
+      .asset-delete-btn,
+      #dashCashflowDeficitAlert,
+      .save-status,
+      #dashGapActionWrap,
+      #resGapActionWrap,
+      .header-actions {
+        display: none !important;
+      }
+      .tab-panel {
+        display: block !important;
+        margin-bottom: 0;
+      }
+      #tab-dashboard {
+        display: block !important;
+      }
+      #tab-retirement {
+        display: block !important;
+      }
+      .card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        page-break-inside: avoid;
+        margin-bottom: 6px !important;
+        padding: 8px 12px !important;
+        background: #fff !important;
+      }
+      .hero-stat-card {
+        background: #5B21B6 !important;
+        color: #fff !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        padding: 10px 12px !important;
+        margin-bottom: 6px !important;
+      }
+      .print-header {
+        display: block !important;
+        text-align: center;
+        margin-bottom: 8px;
+        border-bottom: 2px solid #5B21B6;
+        padding-bottom: 4px;
+      }
+      .print-header h2 {
+        font-size: 11pt;
+        color: #5B21B6;
+        margin: 0;
+        font-weight: 700;
+      }
+      .print-header p {
+        font-size: 7.5pt;
+        color: #555;
+        margin: 2px 0 0;
+      }
+      .table-wrap {
+        display: block !important;
+        overflow: visible !important;
+        border: 1px solid #ddd !important;
+      }
+      .proj-table th, .proj-table td {
+        padding: 4px 6px !important;
+        font-size: 7.5pt !important;
+      }
+      .score-card {
+        margin-bottom: 6px !important;
+        padding: 6px 10px !important;
+        page-break-inside: avoid;
+      }
+      .countdown-banner {
+        margin-bottom: 6px !important;
+        padding: 6px 10px !important;
+      }
+      .stat-grid-2, .stat-grid-3 {
+        margin-bottom: 6px !important;
+        gap: 6px !important;
+      }
+      .gauge-card {
+        page-break-inside: avoid;
+      }
     }
     .print-header { display: none; }
   </style>
@@ -1174,7 +1264,7 @@
   <!-- PRINT REPORT HEADER (Only visible when printing / PDF export) -->
   <div class="print-header">
     <h2>⚡ การไฟฟ้าส่วนภูมิภาค (PEA) - รายงานสรุปแผนการเงินและเป้าหมายเกษียณอายุ (Financial Health Dashboard)</h2>
-    <p>ระบบ PEA Financial & Retirement Engine 2.3 | วันที่พิมพ์รายงาน: <span id="printDateText">-</span></p>
+    <p>ระบบ PEA Financial & Retirement Engine 2.4 | วันที่พิมพ์รายงาน: <span id="printDateText">-</span></p>
   </div>
 
   <!-- TOP HEADER -->
@@ -1190,6 +1280,9 @@
         </div>
       </div>
       <div class="header-actions">
+        <button type="button" class="btn btn-purple" style="padding:5px 10px; font-size:0.75rem; border-radius:8px; display:inline-flex; align-items:center; gap:4px; height:32px;" onclick="manualSaveData()" title="บันทึกข้อมูลลงเบราว์เซอร์">
+          <span>💾 เซฟข้อมูล</span>
+        </button>
         <button type="button" class="theme-toggle-btn" onclick="toggleDarkMode()" title="สลับโหมดมืด/สว่าง">
           <span id="themeIcon">🌙</span>
         </button>
@@ -1209,12 +1302,17 @@
       
       <!-- Cashflow Deficit Alert (Shown if Net Cashflow < 0) -->
       <div id="dashCashflowDeficitAlert" style="display:none; background:linear-gradient(135deg, #FEF2F2, #FEE2E2); border:1.5px solid #EF4444; border-radius:12px; padding:12px 14px; margin-bottom:14px; font-size:0.82rem; line-height:1.5;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; flex-wrap:wrap; gap:6px;">
           <b style="color:#B91C1C; font-size:0.9rem;">⚠️ เตือนกระแสเงินสดติดลบ (<span id="dashDeficitAmount" class="num-font">0</span> ฿/ด.)</b>
-          <span class="badge badge-red">รายจ่ายเกินรายรับ</span>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span class="badge badge-red">รายจ่ายเกินรายรับ</span>
+            <button type="button" style="background:none; border:none; color:#991B1B; font-size:0.8rem; cursor:pointer; font-weight:bold;" onclick="$('dashCashflowDeficitAlert').style.display='none'" title="ซ่อนชั่วคราว">✕</button>
+          </div>
         </div>
-        <p style="color:#7F1D1D; margin:0 0 6px;">คุณกำลังมีรายจ่ายมากกว่ารายรับรวม หากไม่ปรับลดรายจ่าย เงินออมสะสมจะถูกดึงมาชดเชยจนหมด และไม่สามารถออมเงินตามแผนเกษียณได้จริง</p>
-        <button type="button" class="btn btn-outline" style="padding:6px 12px; font-size:0.76rem; border-color:#EF4444; color:#B91C1C; background:#fff; width:auto;" onclick="switchTab('cashflow')">ไปตรวจสอบงบรายจ่าย →</button>
+        <p style="color:#7F1D1D; margin:0 0 8px;">คุณกำลังมีรายจ่ายมากกว่ารายรับรวม หากไม่ปรับลดรายจ่าย เงินออมสะสมจะถูกดึงมาชดเชยจนหมด และไม่สามารถออมเงินตามแผนเกษียณได้จริง</p>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="button" class="btn btn-purple" style="padding:6px 12px; font-size:0.78rem; width:auto;" onclick="switchTab('cashflow')">✏️ ไปแก้ไขงบกระแสเงินสดทันที →</button>
+        </div>
       </div>
 
       <!-- Net Worth Hero Card -->
@@ -2153,11 +2251,12 @@
 
         <!-- Cashflow Deficit Alert in Retirement Tab -->
         <div id="retireCashflowDeficitAlert" style="display:none; background:linear-gradient(135deg, #FEF2F2, #FEE2E2); border:1.5px solid #EF4444; border-radius:12px; padding:12px 14px; margin-bottom:16px; font-size:0.82rem; line-height:1.5;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; flex-wrap:wrap; gap:6px;">
             <b style="color:#B91C1C; font-size:0.9rem;">⚠️ คำเตือน: กระแสเงินสดรายเดือนปัจจุบันติดลบ (<span id="retireDeficitAmount" class="num-font">0</span> ฿/ด.)</b>
             <span class="badge badge-red">เงินออมจริงลดลง</span>
           </div>
-          <p style="color:#7F1D1D; margin:0;">แผนเกษียณข้างล่างคำนวณบนสมมติฐานว่าคุณสามารถสะสมเงินออมได้ต่อเนื่อง แต่เนื่องจากปัจจุบันมีรายจ่ายเกินรายรับ หากไม่ปรับลดรายจ่าย เงินออมจริงจะถูกดึงมาใช้ก่อนถึงวันเกษียณ</p>
+          <p style="color:#7F1D1D; margin:0 0 8px;">แผนเกษียณข้างล่างคำนวณบนสมมติฐานว่าคุณสามารถสะสมเงินออมได้ต่อเนื่อง แต่เนื่องจากปัจจุบันมีรายจ่ายเกินรายรับ หากไม่ปรับลดรายจ่าย เงินออมจริงจะถูกดึงมาใช้ก่อนถึงวันเกษียณ</p>
+          <button type="button" class="btn btn-purple" style="padding:6px 12px; font-size:0.78rem; width:auto;" onclick="switchTab('cashflow')">✏️ ไปที่งบกระแสเงินสดเพื่อปรับปรุงเงินออม →</button>
         </div>
 
         <!-- Sensitivity Analysis Scenario Bar -->
@@ -2439,7 +2538,7 @@
             <div class="card-title"><span class="icon">📈</span><span>ตารางจำลองเงินทุนเติบโตปีต่อปี</span></div>
             <button class="badge badge-purple" onclick="toggleProjTable()" id="btnToggleProj">ดูตารางละเอียด ▼</button>
           </div>
-          <p style="font-size:0.8rem; color:var(--text-muted);">จำลองการเติบโตของ กสช. เงินออม และยอดเงินคงเหลือตลอดช่วงชีวิต</p>
+          <p style="font-size:0.8rem; color:var(--text-muted);">จำลองการเติบโตของ กสช. เงินออม หุ้นสหกรณ์ และเงินชดเชยเกษียณ กฟภ. (400 วัน)</p>
           
           <div class="table-wrap" id="projTableWrap" style="display:none;">
             <table class="proj-table">
@@ -2450,7 +2549,8 @@
                   <th>ยอด กสช.</th>
                   <th>เงินออมอื่น</th>
                   <th>หุ้นสหกรณ์</th>
-                  <th>รวมเงินทุน</th>
+                  <th>เงินชดเชย กฟภ.</th>
+                  <th>รวมเงินทุนทั้งหมด</th>
                 </tr>
               </thead>
               <tbody id="projTableBody">
@@ -2473,11 +2573,15 @@
         </div>
 
         <div style="display:flex; flex-direction:column; gap:10px;">
+          <button class="btn btn-purple" onclick="manualSaveData()">
+            <span>💾 บันทึกข้อมูลลงในเบราว์เซอร์ทันที (Save to Browser)</span>
+          </button>
+
           <button class="btn btn-outline" onclick="loadSampleData()">
             <span>⚡ โหลดตัวอย่างข้อมูลพนักงาน กฟภ.</span>
           </button>
           
-          <button class="btn btn-purple" onclick="exportDataBackup()">
+          <button class="btn btn-outline" onclick="exportDataBackup()">
             <span>📤 ส่งออกไฟล์สำรองข้อมูล (Export JSON)</span>
           </button>
 
@@ -2486,7 +2590,7 @@
             <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="importDataBackup(event)">
           </label>
 
-          <button class="btn btn-outline" onclick="window.print()">
+          <button class="btn btn-outline" onclick="manualPrint()">
             <span>🖨️ พิมพ์รายงานสรุป / บันทึกเป็น PDF</span>
           </button>
 
@@ -2552,7 +2656,7 @@
     const STORAGE_KEY = 'pea_finance_app_data_v2';
     const THEME_KEY = 'pea_finance_theme';
     const $ = id => document.getElementById(id);
-    const num = id => parseFloat($(id).value) || 0;
+    const num = id => { const el = $(id); return el ? (parseFloat(el.value) || 0) : 0; };
     const fmt = n => isFinite(n) ? Math.round(n).toLocaleString('th-TH') : '0';
     const fmt2 = n => isFinite(n) ? n.toLocaleString('th-TH', {minimumFractionDigits: 1, maximumFractionDigits: 1}) : '0.0';
 
@@ -3220,7 +3324,6 @@
       if ($('totalDebtPrincipalText')) $('totalDebtPrincipalText').textContent = fmt(totalDebtPrincipal) + ' ฿';
       if ($('totalDebtMonthlyText')) $('totalDebtMonthlyText').textContent = fmt(totalDebtMonthly) + ' ฿/ด.';
       if ($('cfDebtAutoSummary')) $('cfDebtAutoSummary').textContent = fmt(totalDebtMonthly) + ' ฿/ด.';
-      if ($('nwTotalLiabBadge')) $('nwTotalLiabBadge').textContent = fmt(totalDebtPrincipal);
 
       // 3. Cash Flow Calculation & Logic Correction
       const totalIncome = state.inc_salary + state.inc_business + state.inc_rent + state.inc_dividend + state.inc_bonus + state.inc_other;
@@ -3254,14 +3357,18 @@
       const dsr = totalIncome > 0 ? (totalDebtMonthly / totalIncome * 100) : 0;
 
       // Update Cash Flow UI
-      $('cfTotalIncomeBadge').textContent = fmt(totalIncome);
-      $('cfTotalExpenseBadge').textContent = fmt(totalExpense);
-      $('sumIncome').textContent = fmt(totalIncome) + ' ฿';
-      $('sumExpense').textContent = fmt(totalExpense) + ' ฿';
-      $('sumNetSavings').textContent = (netSavings >= 0 ? '+' : '') + fmt(netSavings) + ' บาท';
-      $('sumNetSavings').style.color = netSavings >= 0 ? 'var(--text-main)' : 'var(--danger)';
-      $('sumDebtRatio').textContent = fmt2(dsr) + '%' + (dsr > 45 ? ' (⚠️ เกิน 45% เสี่ยงสูง)' : (dsr > 30 ? ' (🟡 เฝ้าระวัง)' : ' (🟢 ปลอดภัย)'));
-      $('sumDebtRatio').style.color = dsr > 45 ? 'var(--danger)' : (dsr > 30 ? '#D97706' : 'var(--text-main)');
+      if ($('cfTotalIncomeBadge')) $('cfTotalIncomeBadge').textContent = fmt(totalIncome);
+      if ($('cfTotalExpenseBadge')) $('cfTotalExpenseBadge').textContent = fmt(totalExpense);
+      if ($('sumIncome')) $('sumIncome').textContent = fmt(totalIncome) + ' ฿';
+      if ($('sumExpense')) $('sumExpense').textContent = fmt(totalExpense) + ' ฿';
+      if ($('sumNetSavings')) {
+        $('sumNetSavings').textContent = (netSavings >= 0 ? '+' : '') + fmt(netSavings) + ' บาท';
+        $('sumNetSavings').style.color = netSavings >= 0 ? 'var(--text-main)' : 'var(--danger)';
+      }
+      if ($('sumDebtRatio')) {
+        $('sumDebtRatio').textContent = fmt2(dsr) + '%' + (dsr > 45 ? ' (⚠️ เกิน 45% เสี่ยงสูง)' : (dsr > 30 ? ' (🟡 เฝ้าระวัง)' : ' (🟢 ปลอดภัย)'));
+        $('sumDebtRatio').style.color = dsr > 45 ? 'var(--danger)' : (dsr > 30 ? '#D97706' : 'var(--text-main)');
+      }
 
       // Update Segmented Control Sub-tab Badges
       if ($('segBadgeIncome')) $('segBadgeIncome').textContent = fmt(totalIncome) + ' ฿';
@@ -3299,11 +3406,10 @@
       if ($('subtotalLiquidAssetsBadge')) $('subtotalLiquidAssetsBadge').textContent = fmt(liquidRetirementAssets) + ' ฿';
       if ($('subtotalPersonalAssetsBadge')) $('subtotalPersonalAssetsBadge').textContent = fmt(personalAssets) + ' ฿';
 
-      $('nwTotalAssetsBadge').textContent = fmt(totalAssets);
-      $('nwSumAssets').textContent = fmt(totalAssets) + ' ฿';
-      $('nwSumLiab').textContent = fmt(totalLiabilities) + ' ฿';
-      $('nwNetWorthVal').textContent = fmt(netWorth) + ' บาท';
-      $('nwEmergencyCoverage').textContent = fmt2(emergencyMonths) + ' เท่า';
+      if ($('nwSumAssets')) $('nwSumAssets').textContent = fmt(totalAssets) + ' ฿';
+      if ($('nwSumLiab')) $('nwSumLiab').textContent = fmt(totalLiabilities) + ' ฿';
+      if ($('nwNetWorthVal')) $('nwNetWorthVal').textContent = fmt(netWorth) + ' บาท';
+      if ($('nwEmergencyCoverage')) $('nwEmergencyCoverage').textContent = fmt2(emergencyMonths) + ' เท่า';
 
       let emVerdict = '';
       if (emergencyMonths >= 6) {
@@ -3313,16 +3419,18 @@
       } else {
         emVerdict = '🔴 ควรเพิ่มเงินสำรองฉุกเฉิน ตอนนี้มีเพียง ' + fmt2(emergencyMonths) + ' เดือน (แนะนำให้มีอย่างน้อย 3-6 เดือน)';
       }
-      $('nwEmergencyVerdict').textContent = emVerdict;
+      if ($('nwEmergencyVerdict')) $('nwEmergencyVerdict').textContent = emVerdict;
 
       // 5. Update Dashboard & Asset Breakdown
-      $('dashNetWorth').textContent = fmt(netWorth) + ' บาท';
-      $('dashTotalAssets').textContent = fmt(totalAssets) + ' ฿';
-      $('dashTotalLiabilities').textContent = fmt(totalLiabilities) + ' ฿';
-      $('dashNetCashflow').textContent = (netSavings >= 0 ? '+' : '') + fmt(netSavings) + ' ฿';
-      $('dashNetCashflow').className = 'mini-value num-font ' + (netSavings >= 0 ? 'green' : 'red');
-      $('dashEmergencyMonths').textContent = fmt2(emergencyMonths) + ' ด.';
-      $('dashEmergencySub').textContent = (emergencyMonths >= 3) ? 'อยู่ในเกณฑ์ดี' : 'ควรเพิ่มสภาพคล่อง';
+      if ($('dashNetWorth')) $('dashNetWorth').textContent = fmt(netWorth) + ' บาท';
+      if ($('dashTotalAssets')) $('dashTotalAssets').textContent = fmt(totalAssets) + ' ฿';
+      if ($('dashTotalLiabilities')) $('dashTotalLiabilities').textContent = fmt(totalLiabilities) + ' ฿';
+      if ($('dashNetCashflow')) {
+        $('dashNetCashflow').textContent = (netSavings >= 0 ? '+' : '') + fmt(netSavings) + ' ฿';
+        $('dashNetCashflow').className = 'mini-value num-font ' + (netSavings >= 0 ? 'green' : 'red');
+      }
+      if ($('dashEmergencyMonths')) $('dashEmergencyMonths').textContent = fmt2(emergencyMonths) + ' ด.';
+      if ($('dashEmergencySub')) $('dashEmergencySub').textContent = (emergencyMonths >= 3) ? 'อยู่ในเกณฑ์ดี' : 'ควรเพิ่มสภาพคล่อง';
 
       renderNetWorthBreakdown(liquidRetirementAssets, personalAssets, totalAssets);
       renderDebtStrategy();
@@ -3330,7 +3438,7 @@
       // Countdown
       const yearsLeft = Math.max(state.pea_retireAge - state.pea_currentAge, 0);
       const monthsLeft = yearsLeft * 12;
-      $('dashCountdownText').textContent = `${yearsLeft} ปี (${monthsLeft} งวดเงินเดือน)`;
+      if ($('dashCountdownText')) $('dashCountdownText').textContent = `${yearsLeft} ปี (${monthsLeft} งวดเงินเดือน)`;
 
       // 6. Calculate Retirement & Financial Score
       calculateRetirement();
@@ -3577,7 +3685,7 @@
       const res = { n1, n2, expenseAtRetirement, totalNeeded, pfFutureValue, otherFutureValue, coopFutureValue, severancePay, totalAvailable, diff, percent, yearlyData, curSalary };
 
       renderRetirementResults(res);
-      renderYearlyTable(res.yearlyData, inp.retireAge);
+      renderYearlyTable(res.yearlyData, inp.retireAge, res.severancePay);
       calculateTaxSavings(inp.salary, inp.employeeRate);
       renderAssetAllocationGuide(inp.pfReturn);
       prepareSmartSolutions(inp, res);
@@ -3894,21 +4002,31 @@
       alert('🎉 ระบบได้คำนวณและปรับอัตรา กสช. และเงินออมเพื่อปิด Gap สู่เป้าหมาย 100% เรียบร้อยแล้ว!');
     }
 
-    function renderYearlyTable(data, retireAge) {
+    function renderYearlyTable(data, retireAge, severancePay) {
       const tbody = $('projTableBody');
       if (!tbody) return;
       tbody.innerHTML = '';
 
       data.forEach(row => {
         const tr = document.createElement('tr');
-        if (row.age === retireAge) tr.className = 'retire-milestone';
+        const isRetire = (row.age === retireAge);
+        if (isRetire) tr.className = 'retire-milestone';
+        
+        const sevVal = isRetire ? (severancePay || 0) : 0;
+        const grandTotal = row.total + sevVal;
+
         tr.innerHTML = `
-          <td style="text-align:center; font-weight:600;">${row.age} ${row.age === retireAge ? '⚡' : ''}</td>
+          <td style="text-align:center; font-weight:600;">${row.age} ${isRetire ? '⚡' : ''}</td>
           <td class="num-font">${fmt(row.salary)}</td>
           <td class="num-font">${fmt(row.pf)}</td>
           <td class="num-font">${fmt(row.other)}</td>
           <td class="num-font">${fmt(row.coop)}</td>
-          <td class="num-font" style="font-weight:700;">${fmt(row.total)}</td>
+          <td class="num-font" style="${isRetire ? 'color:var(--pea-purple-light); font-weight:700;' : 'color:var(--text-muted);'}">
+            ${isRetire ? fmt(sevVal) : '-'}
+          </td>
+          <td class="num-font" style="font-weight:700; ${isRetire ? 'color:var(--pea-purple-light);' : ''}">
+            ${fmt(grandTotal)}
+          </td>
         `;
         tbody.appendChild(tr);
       });
@@ -4135,6 +4253,34 @@
         triggerAutoSave();
         alert('⚡ โหลดข้อมูลตัวอย่างสำเร็จ!');
       }
+    }
+
+    function showToast(msg) {
+      let toast = $('toastBox');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toastBox';
+        toast.style.cssText = 'position:fixed; bottom:80px; left:50%; transform:translateX(-50%); z-index:9999; background:linear-gradient(135deg, #059669, #10B981); color:#fff; padding:10px 18px; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.25); font-weight:600; font-size:0.86rem; transition:all 0.3s ease; display:flex; align-items:center; gap:8px; opacity:0; pointer-events:none; max-width:90%; text-align:center;';
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = msg;
+      toast.style.opacity = '1';
+      setTimeout(() => {
+        toast.style.opacity = '0';
+      }, 3000);
+    }
+
+    function manualSaveData() {
+      collectInputs();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      $('saveDot').className = 'save-dot synced';
+      $('saveStatusText').textContent = 'บันทึกแล้ว';
+      showToast('💾 บันทึกข้อมูลลงในเบราว์เซอร์สำเร็จ ข้อมูลจะไม่หายเมื่อเปิดใหม่');
+    }
+
+    function manualPrint() {
+      renderAll();
+      window.print();
     }
 
     function confirmResetAll() {
