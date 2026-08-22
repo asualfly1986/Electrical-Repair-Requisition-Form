@@ -812,6 +812,71 @@
       border-radius: 50%;
     }
 
+    /* Dynamic Debt Sub-items */
+    .debt-item-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      transition: all 0.2s ease;
+    }
+    .debt-item-card:hover {
+      border-color: var(--pea-purple-soft);
+    }
+    .debt-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 8px;
+    }
+    .debt-delete-btn {
+      background: none;
+      border: none;
+      color: var(--danger);
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      opacity: 0.7;
+    }
+    .debt-delete-btn:hover {
+      opacity: 1;
+      background: #FEE2E2;
+    }
+    .debt-grid-3 {
+      display: grid;
+      grid-template-columns: 1.2fr 1.2fr 1fr;
+      gap: 8px;
+    }
+    @media (max-width: 480px) {
+      .debt-grid-3 {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .add-debt-btn {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1.5px dashed var(--pea-purple-soft);
+      background: var(--card-sub);
+      color: var(--pea-purple-light);
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .add-debt-btn:hover {
+      background: var(--pea-purple-bg);
+      border-color: var(--pea-purple-light);
+    }
+
     /* ---------- SLIDERS (ลองปรับแผน) ---------- */
     .slider-box {
       background: var(--pea-purple-bg);
@@ -1262,6 +1327,14 @@
             <span class="badge badge-red">รวม: <span class="num-font" id="cfTotalExpenseBadge">0</span> ฿</span>
           </div>
 
+          <div style="background:var(--pea-purple-bg); border:1px solid var(--border-focus); border-radius:10px; padding:10px 12px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <span style="font-size:0.82rem; font-weight:700; color:var(--pea-purple-light);">📑 ภาระผ่อนหนี้สินรวม (จากงบดุล):</span>
+              <div style="font-size:0.74rem; color:var(--text-muted); margin-top:2px;">คำนวณอัตโนมัติจากรายการหนี้สินย่อยในหน้างบดุล</div>
+            </div>
+            <span class="num-font red" id="cfDebtAutoSummary" style="font-weight:700; font-size:1.05rem;">0 ฿/ด.</span>
+          </div>
+
           <div class="input-group">
             <label class="input-label"><span>ค่าผ่อนบ้าน / ค่าเช่าห้อง</span></label>
             <div class="input-wrap">
@@ -1469,62 +1542,121 @@
 
       <!-- NW SUB 2: หนี้สิน (LIABILITIES) -->
       <div id="nw-sub-liabilities" style="display:none;">
+
+        <!-- Category 1: หนี้สินระยะยาว / มีหลักประกัน -->
         <div class="card">
-          <div class="card-header">
-            <div class="card-title"><span class="icon">🧾</span><span>หนี้สินทั้งหมด (Liabilities)</span></div>
-            <span class="badge badge-red">รวม: <span class="num-font" id="nwTotalLiabBadge">0</span> ฿</span>
+          <div class="card-header" style="margin-bottom:6px;">
+            <div class="card-title" style="font-size:0.95rem;"><span class="icon">🏠</span><span>หนี้สินระยะยาว / มีหลักประกัน</span></div>
+            <span class="badge badge-purple" id="subtotalBadge_secured">0 ฿ | 0 ฿/ด.</span>
+          </div>
+          <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:10px;">สินเชื่อบ้าน, คอนโดมิเนียม, สินเชื่อรถยนต์</p>
+          
+          <div id="debtList_secured">
+            <!-- Dynamically populated debt items -->
           </div>
 
-          <div class="input-group">
-            <label class="input-label"><span>ยอดคงค้างสินเชื่อบ้าน</span></label>
-            <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="lia_home" value="0" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
-            </div>
-          </div>
-
-          <div class="input-group">
-            <label class="input-label"><span>ยอดคงค้างสินเชื่อรถยนต์</span></label>
-            <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="lia_car" value="0" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
-            </div>
-          </div>
-
-          <div class="input-group">
-            <label class="input-label"><span>ยอดคงค้างหนี้บัตรเครดิต</span></label>
-            <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="lia_card" value="0" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
-            </div>
-          </div>
-
-          <div class="input-group">
-            <label class="input-label"><span>ยอดคงค้างสินเชื่อส่วนบุคคล</span></label>
-            <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="lia_personal" value="0" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
-            </div>
-          </div>
-
-          <div class="input-group">
-            <label class="input-label"><span>หนี้เพื่อการศึกษา (กยศ./กรอ.)</span></label>
-            <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="lia_edu" value="0" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
-            </div>
-          </div>
-
-          <div class="input-group">
-            <label class="input-label"><span>หนี้สินอื่นๆ</span></label>
-            <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="lia_other" value="0" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
-            </div>
-          </div>
-
-          <button class="btn btn-primary" onclick="switchNWSub('summary', document.querySelectorAll('#tab-networth .seg-btn')[2])">ดูสรุปงบดุลสุทธิ →</button>
+          <button type="button" class="add-debt-btn" onclick="addNewDebt('secured')">
+            <span>+ เพิ่มรายการหนี้บ้าน / รถยนต์</span>
+          </button>
         </div>
+
+        <!-- Category 2: หนี้สินสวัสดิการ กฟภ. / สหกรณ์ฯ -->
+        <div class="card">
+          <div class="card-header" style="margin-bottom:6px;">
+            <div class="card-title" style="font-size:0.95rem;"><span class="icon">⚡</span><span>หนี้สินสวัสดิการ กฟภ. / สหกรณ์ฯ</span></div>
+            <span class="badge badge-gold" id="subtotalBadge_welfare">0 ฿ | 0 ฿/ด.</span>
+          </div>
+          <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:10px;">เงินกู้สามัญสหกรณ์, เงินกู้ฉุกเฉิน, เงินกู้สวัสดิการ กฟภ.</p>
+          
+          <div id="debtList_welfare">
+            <!-- Dynamically populated debt items -->
+          </div>
+
+          <button type="button" class="add-debt-btn" onclick="addNewDebt('welfare')">
+            <span>+ เพิ่มรายการหนี้สหกรณ์ / สวัสดิการ กฟภ.</span>
+          </button>
+        </div>
+
+        <!-- Category 3: หนี้สินระยะสั้น / ดอกเบี้ยสูง -->
+        <div class="card">
+          <div class="card-header" style="margin-bottom:6px;">
+            <div class="card-title" style="font-size:0.95rem;"><span class="icon">💳</span><span>หนี้สินระยะสั้น / ดอกเบี้ยสูง</span></div>
+            <span class="badge badge-red" id="subtotalBadge_unsecured">0 ฿ | 0 ฿/ด.</span>
+          </div>
+          <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:10px;">หนี้บัตรเครดิต, สินเชื่อส่วนบุคคล, ผ่อนสินค้า ฯลฯ</p>
+          
+          <div id="debtList_unsecured">
+            <!-- Dynamically populated debt items -->
+          </div>
+
+          <button type="button" class="add-debt-btn" onclick="addNewDebt('unsecured')">
+            <span>+ เพิ่มรายการหนี้บัตร / สินเชื่อบุคคล</span>
+          </button>
+        </div>
+
+        <!-- Category 4: หนี้สินอื่นๆ -->
+        <div class="card">
+          <div class="card-header" style="margin-bottom:6px;">
+            <div class="card-title" style="font-size:0.95rem;"><span class="icon">📑</span><span>หนี้สินอื่นๆ</span></div>
+            <span class="badge badge-blue" id="subtotalBadge_other">0 ฿ | 0 ฿/ด.</span>
+          </div>
+          <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:10px;">หนี้ กยศ./กรอ., หนี้ยืมบุคคลอื่น</p>
+          
+          <div id="debtList_other">
+            <!-- Dynamically populated debt items -->
+          </div>
+
+          <button type="button" class="add-debt-btn" onclick="addNewDebt('other')">
+            <span>+ เพิ่มรายการหนี้สินอื่นๆ</span>
+          </button>
+        </div>
+
+        <!-- Grand Total Liabilities & DSR Card -->
+        <div class="card" style="background:linear-gradient(135deg, var(--pea-purple-bg), var(--pea-purple-tint)); border-color:var(--pea-purple-soft);">
+          <div class="card-header" style="margin-bottom:8px;">
+            <div class="card-title" style="font-size:0.95rem;"><span class="icon">📊</span><span>สรุปภาระหนี้สิน & สัดส่วน DSR</span></div>
+            <span class="badge badge-red" id="dsrBadge">DSR 0%</span>
+          </div>
+
+          <div class="stat-grid-2" style="margin-bottom:12px;">
+            <div class="mini-stat">
+              <span class="mini-label">รวมยอดหนี้คงเหลือทั้งหมด</span>
+              <div class="mini-value num-font red" id="totalDebtPrincipalText" style="font-size:1.1rem;">0 ฿</div>
+            </div>
+            <div class="mini-stat">
+              <span class="mini-label">รวมค่างวดผ่อนต่อเดือน</span>
+              <div class="mini-value num-font" id="totalDebtMonthlyText" style="font-size:1.1rem;">0 ฿/ด.</div>
+            </div>
+          </div>
+
+          <div style="background:var(--card-sub); border-radius:10px; padding:10px 12px; font-size:0.82rem; line-height:1.5;">
+            <b>สัดส่วนภาระหนี้ต่อรายได้ (Debt Service Ratio - DSR): <span id="dsrRateVal" class="num-font" style="font-weight:700;">0%</span></b>
+            <p id="dsrVerdictText" style="margin-top:4px; font-size:0.78rem; color:var(--text-muted);">-</p>
+          </div>
+        </div>
+
+        <!-- Debt Payoff Strategy Optimizer Card -->
+        <div class="card" id="debtStrategyCard">
+          <div class="card-header" style="margin-bottom:6px;">
+            <div class="card-title" style="font-size:0.95rem;"><span class="icon">🎯</span><span>แผนกลยุทธ์ปลดหนี้ (Debt Strategy)</span></div>
+          </div>
+          <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:10px;">เลือกลำดับการเร่งโปะหนี้เพื่อลดภาระดอกเบี้ยและปิดหนี้ได้เร็วที่สุด:</p>
+
+          <div class="segmented-control" style="margin-bottom:12px;">
+            <button type="button" class="seg-btn active" id="btnStratAvalanche" onclick="setDebtStrategy('avalanche')">🔥 Debt Avalanche (ดอกเบี้ยสูงก่อน)</button>
+            <button type="button" class="seg-btn" id="btnStratSnowball" onclick="setDebtStrategy('snowball')">⛄ Debt Snowball (ยอดเล็กก่อน)</button>
+          </div>
+
+          <div style="font-size:0.8rem; line-height:1.5; margin-bottom:10px;" id="debtStratDesc">
+            💡 <b>Debt Avalanche:</b> แนะนำเร่งชำระหนี้ที่มีอัตราดอกเบี้ยสูงสุดก่อนเพื่อประหยัดดอกเบี้ยจ่ายรวมได้มากที่สุด
+          </div>
+
+          <div id="debtStrategyList">
+            <!-- Dynamically populated ranked payoff list -->
+          </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="switchNWSub('summary', document.querySelectorAll('#tab-networth .seg-btn')[2])">ดูสรุปงบดุลสุทธิ →</button>
       </div>
 
       <!-- NW SUB 3: สรุปงบดุล (NET WORTH SUMMARY) -->
@@ -2278,10 +2410,16 @@
       ast_personal: 0,
       ast_business: 0,
       ast_other: 0,
-      // Net Worth Liabilities
-      lia_home: 0,
+      // Net Worth Liabilities (Dynamic list + legacy fallback)
+      debtStrategy: 'avalanche',
+      debts: [
+        { id: 'd_home', category: 'secured', name: 'สินเชื่อบ้าน/คอนโด', principal: 1200000, monthly: 8500, rate: 3.8 },
+        { id: 'd_coop', category: 'welfare', name: 'เงินกู้สามัญสหกรณ์ กฟภ.', principal: 300000, monthly: 5500, rate: 4.75 },
+        { id: 'd_card', category: 'unsecured', name: 'บัตรเครดิต KTC', principal: 25000, monthly: 2500, rate: 16.0 }
+      ],
+      lia_home: 1200000,
       lia_car: 0,
-      lia_card: 0,
+      lia_card: 25000,
       lia_personal: 0,
       lia_edu: 0,
       lia_other: 0,
@@ -2323,6 +2461,8 @@
     window.addEventListener('DOMContentLoaded', () => {
       initTheme();
       loadSavedData();
+      renderDebtLists();
+      renderDebtStrategy();
       renderAll();
       initServiceWorker();
     });
@@ -2455,9 +2595,148 @@
       onRetirementInput();
     }
 
+    // ==================== DYNAMIC DEBT MANAGEMENT METHODS ====================
+    function addNewDebt(category) {
+      const defaultNames = {
+        'secured': 'สินเชื่อที่อยู่อาศัย / รถยนต์',
+        'welfare': 'เงินกู้สวัสดิการ / สหกรณ์ กฟภ.',
+        'unsecured': 'บัตรเครดิต / สินเชื่อบุคคล',
+        'other': 'หนี้ กยศ. / อื่นๆ'
+      };
+      const defaultRates = {
+        'secured': 4.0,
+        'welfare': 4.75,
+        'unsecured': 16.0,
+        'other': 1.0
+      };
+      const newDebt = {
+        id: 'debt_' + Date.now(),
+        category: category,
+        name: defaultNames[category] || 'รายการหนี้สินใหม่',
+        principal: 0,
+        monthly: 0,
+        rate: defaultRates[category] || 5.0
+      };
+      if (!state.debts) state.debts = [];
+      state.debts.push(newDebt);
+      renderDebtLists();
+      onDataChanged();
+    }
+
+    function removeDebt(id) {
+      if (!state.debts) return;
+      state.debts = state.debts.filter(d => d.id !== id);
+      renderDebtLists();
+      onDataChanged();
+    }
+
+    function updateDebtField(id, field, val) {
+      if (!state.debts) return;
+      const debt = state.debts.find(d => d.id === id);
+      if (debt) {
+        if (field === 'name') debt.name = val;
+        else debt[field] = parseFloat(val) || 0;
+        onDataChanged();
+      }
+    }
+
+    function setDebtStrategy(strat) {
+      state.debtStrategy = strat;
+      if ($('btnStratAvalanche')) $('btnStratAvalanche').classList.toggle('active', strat === 'avalanche');
+      if ($('btnStratSnowball')) $('btnStratSnowball').classList.toggle('active', strat === 'snowball');
+      if ($('debtStratDesc')) {
+        $('debtStratDesc').innerHTML = strat === 'avalanche'
+          ? '💡 <b>Debt Avalanche:</b> แนะนำเร่งชำระหนี้ที่มีอัตราดอกเบี้ยสูงสุดก่อนเพื่อประหยัดดอกเบี้ยจ่ายรวมได้มากที่สุด'
+          : '💡 <b>Debt Snowball:</b> แนะนำเร่งปิดหนี้ที่มียอดคงเหลือน้อยที่สุดก่อน เพื่อสร้างขวัญกำลังใจและลดจำนวนสัญญาหนี้ได้เร็ว';
+      }
+      renderDebtStrategy();
+    }
+
+    function renderDebtLists() {
+      const categories = ['secured', 'welfare', 'unsecured', 'other'];
+      if (!state.debts) state.debts = [];
+
+      categories.forEach(cat => {
+        const container = $('debtList_' + cat);
+        if (!container) return;
+        const items = state.debts.filter(d => d.category === cat);
+        if (items.length === 0) {
+          container.innerHTML = `<div style="text-align:center; padding:10px; font-size:0.76rem; color:var(--text-muted); border:1px dashed var(--border); border-radius:8px; margin-bottom:8px;">ยังไม่มีรายการหนี้ในกลุ่มนี้ (กดปุ่มด้านล่างเพื่อเพิ่ม)</div>`;
+        } else {
+          container.innerHTML = items.map(d => `
+            <div class="debt-item-card" id="${d.id}">
+              <div class="debt-header-row">
+                <input type="text" class="form-input" style="font-weight:600; font-size:0.85rem; padding:4px 8px; flex:1;" value="${d.name || ''}" placeholder="ชื่อรายการหนี้" oninput="updateDebtField('${d.id}', 'name', this.value)">
+                <button type="button" class="debt-delete-btn" onclick="removeDebt('${d.id}')" title="ลบรายการนี้">🗑️</button>
+              </div>
+              <div class="debt-grid-3">
+                <div>
+                  <span style="font-size:0.68rem; color:var(--text-muted); display:block;">ยอดหนี้คงเหลือ</span>
+                  <div class="input-wrap">
+                    <input type="number" inputmode="decimal" class="form-input num-font" style="font-size:0.82rem; padding:4px 6px;" value="${d.principal || 0}" oninput="updateDebtField('${d.id}', 'principal', this.value)">
+                    <span class="input-unit" style="font-size:0.68rem;">฿</span>
+                  </div>
+                </div>
+                <div>
+                  <span style="font-size:0.68rem; color:var(--text-muted); display:block;">ผ่อนต่อเดือน</span>
+                  <div class="input-wrap">
+                    <input type="number" inputmode="decimal" class="form-input num-font" style="font-size:0.82rem; padding:4px 6px;" value="${d.monthly || 0}" oninput="updateDebtField('${d.id}', 'monthly', this.value)">
+                    <span class="input-unit" style="font-size:0.68rem;">฿</span>
+                  </div>
+                </div>
+                <div>
+                  <span style="font-size:0.68rem; color:var(--text-muted); display:block;">ดอกเบี้ย (%/ปี)</span>
+                  <div class="input-wrap">
+                    <input type="number" step="0.1" inputmode="decimal" class="form-input num-font" style="font-size:0.82rem; padding:4px 6px;" value="${d.rate || 0}" oninput="updateDebtField('${d.id}', 'rate', this.value)">
+                    <span class="input-unit" style="font-size:0.68rem;">%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `).join('');
+        }
+      });
+    }
+
+    function renderDebtStrategy() {
+      const list = $('debtStrategyList');
+      if (!list) return;
+      if (!state.debts || state.debts.length === 0) {
+        list.innerHTML = `<div style="text-align:center; padding:12px; font-size:0.8rem; color:var(--text-muted);">ไม่มีรายการหนี้สินค้างชำระ ยอดเยี่ยมมาก! 🎉</div>`;
+        return;
+      }
+
+      const items = [...state.debts].filter(d => (d.principal || 0) > 0);
+      if (items.length === 0) {
+        list.innerHTML = `<div style="text-align:center; padding:12px; font-size:0.8rem; color:var(--text-muted);">ไม่มียอดหนี้ค้างชำระ 🎉</div>`;
+        return;
+      }
+
+      if (state.debtStrategy === 'snowball') {
+        items.sort((a, b) => a.principal - b.principal);
+      } else {
+        items.sort((a, b) => b.rate - a.rate);
+      }
+
+      list.innerHTML = items.map((d, idx) => `
+        <div class="solution-item" style="border-left: 4px solid ${idx === 0 ? 'var(--danger)' : 'var(--pea-purple-light)'};">
+          <div style="flex:1;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px;">
+              <span style="font-weight:700; font-size:0.85rem;">ลำดับที่ ${idx + 1}: ${d.name}</span>
+              <span class="badge ${idx === 0 ? 'badge-red' : 'badge-purple'}" style="font-size:0.7rem;">${idx === 0 ? '⚡ แนะนำเร่งโปะก้อนนี้ก่อน' : 'ผ่อนขั้นต่ำตามงวด'}</span>
+            </div>
+            <div style="font-size:0.74rem; color:var(--text-muted); margin-top:3px;">
+              ยอดหนี้คงเหลือ: <b class="num-font" style="color:var(--text-main);">${fmt(d.principal)} ฿</b> · ผ่อน: <b class="num-font">${fmt(d.monthly)} ฿/ด.</b> · ดอกเบี้ย: <b class="num-font" style="color:#D97706;">${d.rate}%/ปี</b>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
     // Collect all inputs to state
     function collectInputs() {
       Object.keys(state).forEach(key => {
+        if (key === 'debts') return;
         const el = $(key);
         if (el) {
           if (el.type === 'checkbox') {
@@ -2472,6 +2751,7 @@
     // Populate inputs from state
     function populateInputs() {
       Object.keys(state).forEach(key => {
+        if (key === 'debts') return;
         const el = $(key);
         if (el) {
           if (el.type === 'checkbox') {
@@ -2484,6 +2764,8 @@
       if (state.pea_withdrawalStrategy) {
         setWithdrawalStrategy(state.pea_withdrawalStrategy);
       }
+      renderDebtLists();
+      renderDebtStrategy();
     }
 
     // Event Handler on any data change
@@ -2520,6 +2802,18 @@
       } catch (e) {
         console.error('Failed to load saved data', e);
       }
+
+      // Auto-migrate legacy debts if debts array is empty
+      if (!state.debts || state.debts.length === 0) {
+        state.debts = [];
+        if (state.lia_home > 0) state.debts.push({ id: 'd_home', category: 'secured', name: 'สินเชื่อบ้าน/คอนโด', principal: state.lia_home, monthly: Math.round(state.lia_home * 0.007), rate: 3.8 });
+        if (state.lia_car > 0) state.debts.push({ id: 'd_car', category: 'secured', name: 'สินเชื่อรถยนต์', principal: state.lia_car, monthly: Math.round(state.lia_car * 0.02), rate: 3.5 });
+        if (state.lia_card > 0) state.debts.push({ id: 'd_card', category: 'unsecured', name: 'หนี้บัตรเครดิต', principal: state.lia_card, monthly: Math.round(state.lia_card * 0.10), rate: 16.0 });
+        if (state.lia_personal > 0) state.debts.push({ id: 'd_pers', category: 'unsecured', name: 'สินเชื่อส่วนบุคคล', principal: state.lia_personal, monthly: Math.round(state.lia_personal * 0.05), rate: 18.0 });
+        if (state.lia_edu > 0) state.debts.push({ id: 'd_edu', category: 'other', name: 'หนี้ กยศ./กรอ.', principal: state.lia_edu, monthly: 1500, rate: 1.0 });
+        if (state.lia_other > 0) state.debts.push({ id: 'd_oth', category: 'other', name: 'หนี้สินอื่นๆ', principal: state.lia_other, monthly: 1000, rate: 5.0 });
+      }
+
       populateInputs();
     }
 
@@ -2554,15 +2848,49 @@
         $('printDateText').textContent = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
       }
 
-      // 1. Cash Flow Calculation
+      // 1. Dynamic Debts & Liabilities Calculation
+      if (!state.debts) state.debts = [];
+      let totalDebtPrincipal = 0;
+      let totalDebtMonthly = 0;
+      const catSums = {
+        secured: { p: 0, m: 0 },
+        welfare: { p: 0, m: 0 },
+        unsecured: { p: 0, m: 0 },
+        other: { p: 0, m: 0 }
+      };
+
+      state.debts.forEach(d => {
+        const p = d.principal || 0;
+        const m = d.monthly || 0;
+        totalDebtPrincipal += p;
+        totalDebtMonthly += m;
+        if (catSums[d.category]) {
+          catSums[d.category].p += p;
+          catSums[d.category].m += m;
+        }
+      });
+
+      // Update Subtotal Badges
+      ['secured', 'welfare', 'unsecured', 'other'].forEach(cat => {
+        const badge = $('subtotalBadge_' + cat);
+        if (badge) badge.textContent = `${fmt(catSums[cat].p)} ฿ | ${fmt(catSums[cat].m)} ฿/ด.`;
+      });
+
+      // Update Grand Totals UI
+      if ($('totalDebtPrincipalText')) $('totalDebtPrincipalText').textContent = fmt(totalDebtPrincipal) + ' ฿';
+      if ($('totalDebtMonthlyText')) $('totalDebtMonthlyText').textContent = fmt(totalDebtMonthly) + ' ฿/ด.';
+      if ($('cfDebtAutoSummary')) $('cfDebtAutoSummary').textContent = fmt(totalDebtMonthly) + ' ฿/ด.';
+      if ($('nwTotalLiabBadge')) $('nwTotalLiabBadge').textContent = fmt(totalDebtPrincipal);
+
+      // 2. Cash Flow Calculation
       const totalIncome = state.inc_salary + state.inc_business + state.inc_rent + state.inc_dividend + state.inc_bonus + state.inc_other;
-      const totalExpense = state.exp_housing + state.exp_car + state.exp_home + state.exp_family + state.exp_insurance + state.exp_lifestyle + state.exp_debt + state.exp_saving + state.exp_tax;
+      const totalExpense = state.exp_housing + state.exp_car + state.exp_home + state.exp_family + state.exp_insurance + state.exp_lifestyle + totalDebtMonthly + state.exp_saving + state.exp_tax;
       const netSavings = totalIncome - totalExpense;
       const totalSavingsWithExp = netSavings + state.exp_saving;
       const savingsRate = totalIncome > 0 ? (totalSavingsWithExp / totalIncome * 100) : 0;
       
-      const totalDebtPayment = state.exp_housing + state.exp_car + state.exp_debt;
-      const debtRatio = totalIncome > 0 ? (totalDebtPayment / totalIncome * 100) : 0;
+      // DSR (Debt Service Ratio)
+      const dsr = totalIncome > 0 ? (totalDebtMonthly / totalIncome * 100) : 0;
 
       // Update Cash Flow UI
       $('cfTotalIncomeBadge').textContent = fmt(totalIncome);
@@ -2572,12 +2900,29 @@
       $('sumNetSavings').textContent = (netSavings >= 0 ? '+' : '') + fmt(netSavings) + ' บาท';
       $('sumNetSavings').style.color = netSavings >= 0 ? 'var(--text-main)' : 'var(--danger)';
       $('sumSavingsRate').textContent = fmt2(savingsRate) + '%';
-      $('sumDebtRatio').textContent = fmt2(debtRatio) + '%' + (debtRatio > 40 ? ' (⚠️ เกิน 40%)' : ' (ปลอดภัย)');
-      $('sumDebtRatio').style.color = debtRatio > 40 ? 'var(--danger)' : 'var(--text-main)';
+      $('sumDebtRatio').textContent = fmt2(dsr) + '%' + (dsr > 40 ? ' (⚠️ เกิน 40%)' : ' (ปลอดภัย)');
+      $('sumDebtRatio').style.color = dsr > 40 ? 'var(--danger)' : 'var(--text-main)';
 
-      // 2. Net Worth Calculation
+      // Update DSR Card UI
+      if ($('dsrBadge')) {
+        $('dsrBadge').textContent = `DSR ${fmt2(dsr)}%`;
+        $('dsrBadge').className = 'badge ' + (dsr > 40 ? 'badge-red' : (dsr > 30 ? 'badge-gold' : 'badge-green'));
+      }
+      if ($('dsrRateVal')) $('dsrRateVal').textContent = fmt2(dsr) + '%';
+
+      let dsrVerdict = '';
+      if (dsr <= 30) {
+        dsrVerdict = '✅ <b>สภาพคล่องปลอดภัยมาก:</b> ภาระหนี้สินผ่อนชำระต่ำกว่า 30% ของรายรับ มีเงินเหลือออมและลงทุนสม่ำเสมอ';
+      } else if (dsr <= 40) {
+        dsrVerdict = '🟡 <b>อยู่ในเกณฑ์ควบคุม:</b> ภาระผ่อนอยู่ระหว่าง 30-40% ควรระวังการก่อหนี้ใหม่เพิ่ม';
+      } else {
+        dsrVerdict = '🔴 <b>ภาระหนี้สูงเกินเกณฑ์ 40%:</b> สภาพคล่องตึงตัว แนะนำใช้กลยุทธ์ Debt Avalanche หรือ Snowball เร่งลดหนี้ดอกเบี้ยสูง';
+      }
+      if ($('dsrVerdictText')) $('dsrVerdictText').innerHTML = dsrVerdict;
+
+      // 3. Net Worth Calculation
       const totalAssets = state.ast_cash + state.ast_fixed + state.ast_investment + state.ast_provident + state.ast_realestate + state.ast_personal + state.ast_business + state.ast_other;
-      const totalLiabilities = state.lia_home + state.lia_car + state.lia_card + state.lia_personal + state.lia_edu + state.lia_other;
+      const totalLiabilities = totalDebtPrincipal;
       const netWorth = totalAssets - totalLiabilities;
       
       const monthlyLivingExp = totalExpense - state.exp_saving;
@@ -2585,7 +2930,6 @@
 
       // Update Net Worth UI
       $('nwTotalAssetsBadge').textContent = fmt(totalAssets);
-      $('nwTotalLiabBadge').textContent = fmt(totalLiabilities);
       $('nwSumAssets').textContent = fmt(totalAssets) + ' ฿';
       $('nwSumLiab').textContent = fmt(totalLiabilities) + ' ฿';
       $('nwNetWorthVal').textContent = fmt(netWorth) + ' บาท';
@@ -2601,7 +2945,7 @@
       }
       $('nwEmergencyVerdict').textContent = emVerdict;
 
-      // 3. Update Dashboard & Asset Breakdown
+      // 4. Update Dashboard & Asset Breakdown
       $('dashNetWorth').textContent = fmt(netWorth) + ' บาท';
       $('dashTotalAssets').textContent = fmt(totalAssets) + ' ฿';
       $('dashTotalLiabilities').textContent = fmt(totalLiabilities) + ' ฿';
@@ -2612,15 +2956,16 @@
       $('dashEmergencySub').textContent = (emergencyMonths >= 3) ? 'อยู่ในเกณฑ์ดี' : 'ควรเพิ่มสภาพคล่อง';
 
       renderNetWorthBreakdown();
+      renderDebtStrategy();
 
       // Countdown
       const yearsLeft = Math.max(state.pea_retireAge - state.pea_currentAge, 0);
       const monthsLeft = yearsLeft * 12;
       $('dashCountdownText').textContent = `${yearsLeft} ปี (${monthsLeft} งวดเงินเดือน)`;
 
-      // 4. Calculate Retirement & Financial Score
+      // 5. Calculate Retirement & Financial Score
       calculateRetirement();
-      calculateFinancialScore(savingsRate, debtRatio, emergencyMonths, totalAssets, totalLiabilities);
+      calculateFinancialScore(savingsRate, dsr, emergencyMonths, totalAssets, totalLiabilities);
     }
 
     // Interactive Asset Distribution Renderer
@@ -3325,7 +3670,7 @@
           inc_dividend: 1000,
           inc_bonus: 7500,
           inc_other: 0,
-          exp_housing: 8000,
+          exp_housing: 0,
           exp_car: 0,
           exp_home: 15000,
           exp_family: 3000,
@@ -3342,9 +3687,15 @@
           ast_personal: 500000,
           ast_business: 0,
           ast_other: 0,
-          lia_home: 1200000,
+          debtStrategy: 'avalanche',
+          debts: [
+            { id: 'd_samp_home', category: 'secured', name: 'สินเชื่อบ้าน ธอส.', principal: 1800000, monthly: 11000, rate: 3.65 },
+            { id: 'd_samp_coop', category: 'welfare', name: 'เงินกู้สามัญสหกรณ์ กฟภ.', principal: 450000, monthly: 6500, rate: 4.75 },
+            { id: 'd_samp_card', category: 'unsecured', name: 'บัตรเครดิต KTC Visa', principal: 30000, monthly: 3000, rate: 16.0 }
+          ],
+          lia_home: 1800000,
           lia_car: 0,
-          lia_card: 0,
+          lia_card: 30000,
           lia_personal: 0,
           lia_edu: 0,
           lia_other: 0,
