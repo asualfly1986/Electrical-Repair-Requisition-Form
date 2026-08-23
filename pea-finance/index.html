@@ -1414,6 +1414,22 @@
     <!-- ==================== TAB 1: ภาพรวม (DASHBOARD) ==================== -->
     <div class="tab-panel active" id="tab-dashboard">
       
+      <!-- Last Saved Date & Time Banner -->
+      <div class="card" id="dashLastSavedCard" style="padding:10px 14px; margin-bottom:12px; background:linear-gradient(135deg, var(--card-bg), var(--pea-purple-bg)); border:1.5px solid var(--border-focus); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.2rem;">🕒</span>
+          <div>
+            <div style="font-size:0.84rem; font-weight:700; color:var(--text-main);">
+              ข้อมูลล่าสุด: <span id="dashLastSavedFullText" style="color:var(--pea-purple-light); font-weight:700;">-</span>
+            </div>
+            <div style="font-size:0.72rem; color:var(--text-muted);" id="dashLastSavedSubText">บันทึกข้อมูลอัตโนมัติลงในเบราว์เซอร์ของอุปกรณ์นี้</div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-outline" style="padding:5px 12px; font-size:0.78rem; width:auto; border-color:var(--pea-purple-soft); color:var(--pea-purple-light); cursor:pointer;" onclick="manualSaveData()" title="คลิกเพื่อบันทึกข้อมูลและอัปเดตเวลาล่าสุดทันที">
+          <span>💾 บันทึกข้อมูลเดี๋ยวนี้</span>
+        </button>
+      </div>
+
       <!-- Cashflow Deficit Alert (Shown if Net Cashflow < 0) -->
       <div id="dashCashflowDeficitAlert" style="display:none; background:linear-gradient(135deg, #FEF2F2, #FEE2E2); border:1.5px solid #EF4444; border-radius:12px; padding:12px 14px; margin-bottom:14px; font-size:0.82rem; line-height:1.5;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; flex-wrap:wrap; gap:6px;">
@@ -4539,15 +4555,39 @@
       triggerAutoSave();
     }
 
+    function formatThaiDateTime(d = new Date()) {
+      if (!(d instanceof Date) || isNaN(d.getTime())) d = new Date();
+      const thaiMonthsFull = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+      const day = d.getDate();
+      const month = thaiMonthsFull[d.getMonth()];
+      const year = d.getFullYear() + 543;
+      const hours = String(d.getHours()).padStart(2, '0');
+      const mins = String(d.getMinutes()).padStart(2, '0');
+      const secs = String(d.getSeconds()).padStart(2, '0');
+      return `${day} ${month} ${year} เวลา ${hours}:${mins}:${secs} น.`;
+    }
+
+    function updateSavedTimestampUI(dateStr) {
+      if (!dateStr) dateStr = formatThaiDateTime(new Date());
+      state.last_saved_time = dateStr;
+      if ($('dashLastSavedFullText')) $('dashLastSavedFullText').textContent = dateStr;
+      
+      const now = new Date();
+      const shortTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} น.`;
+      if ($('saveStatusText')) $('saveStatusText').textContent = `บันทึกแล้ว ${shortTime}`;
+    }
+
     // Auto-save debounced
     function triggerAutoSave() {
       $('saveDot').className = 'save-dot';
       $('saveStatusText').textContent = 'บันทึก...';
       clearTimeout(autoSaveTimer);
       autoSaveTimer = setTimeout(() => {
+        const timeNow = formatThaiDateTime(new Date());
+        state.last_saved_time = timeNow;
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         $('saveDot').className = 'save-dot synced';
-        $('saveStatusText').textContent = 'บันทึกแล้ว';
+        updateSavedTimestampUI(timeNow);
       }, 500);
     }
 
@@ -4559,6 +4599,13 @@
         }
       } catch (e) {
         console.error('Failed to load saved data', e);
+      }
+
+      if (state.last_saved_time) {
+        updateSavedTimestampUI(state.last_saved_time);
+      } else {
+        const initialTime = formatThaiDateTime(new Date());
+        updateSavedTimestampUI(initialTime);
       }
 
       // Auto-migrate legacy assets if assets array is empty
@@ -6367,10 +6414,12 @@
 
     function manualSaveData() {
       collectInputs();
+      const timeNow = formatThaiDateTime(new Date());
+      state.last_saved_time = timeNow;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       $('saveDot').className = 'save-dot synced';
-      $('saveStatusText').textContent = 'บันทึกแล้ว';
-      showToast('💾 บันทึกข้อมูลลงในเบราว์เซอร์สำเร็จ ข้อมูลจะไม่หายเมื่อเปิดใหม่');
+      updateSavedTimestampUI(timeNow);
+      showToast(`💾 บันทึกข้อมูลสำเร็จ ณ วันที่ ${timeNow}`);
     }
 
     function manualPrint() {
