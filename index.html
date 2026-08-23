@@ -1672,7 +1672,7 @@
         <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; position:relative; z-index:1; flex-wrap:wrap;">
           <!-- Left: User Profile & Details -->
           <div style="display:flex; align-items:center; gap:12px; min-width:240px; flex:1;">
-            <div style="position:relative; cursor:pointer;" onclick="openProfileModal()" title="คลิกเพื่อแก้ไขโปรไฟล์">
+            <div style="position:relative;">
               <div style="width:58px; height:58px; border-radius:50%; padding:2.5px; background:linear-gradient(135deg, #7C3AED, #F59E0B, #A855F7); box-shadow:0 4px 12px rgba(124,58,237,0.3);">
                 <img id="dashUserAvatar" src="" alt="Profile" style="width:100%; height:100%; object-fit:cover; border-radius:50%; background:#FFF; display:block;">
               </div>
@@ -1696,19 +1696,11 @@
             </div>
           </div>
 
-          <!-- Right: Action Buttons & Last Saved -->
+          <!-- Right: Last Saved Timestamp Badge (Clean & Minimal) -->
           <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
-            <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.12); padding:4px 10px; border-radius:8px; font-size:0.72rem; color:#E9D5FF;">
+            <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.12); padding:5px 12px; border-radius:8px; font-size:0.74rem; color:#E9D5FF; border:1px solid rgba(255,255,255,0.15);">
               <span>🕒 บันทึกล่าสุด:</span>
               <b id="dashLastSavedFullText" style="color:#FFFFFF;">-</b>
-            </div>
-            <div style="display:flex; gap:6px;">
-              <button type="button" class="btn btn-gold" style="padding:4px 10px; font-size:0.74rem; width:auto; border-radius:6px;" onclick="openProfileModal()">
-                <span>✏️ แก้ไขโปรไฟล์</span>
-              </button>
-              <button type="button" class="btn btn-outline" style="padding:4px 10px; font-size:0.74rem; width:auto; border-radius:6px; background:rgba(255,255,255,0.15); color:#FFFFFF; border-color:rgba(255,255,255,0.3);" onclick="switchTab('settings')">
-                <span>⚙️ ตั้งค่า</span>
-              </button>
             </div>
           </div>
         </div>
