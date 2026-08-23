@@ -3839,12 +3839,9 @@
       setTimeout(initQRCodes, 300);
     });
 
-    // QR Code & App Sharing Functions
+    // QR Code & Official Global App URL
     let qrRendered = false;
     function getAppUrl() {
-      if (typeof window !== 'undefined' && window.location && window.location.protocol.startsWith('http') && window.location.href.includes('github.io')) {
-        return window.location.href.split('?')[0].split('#')[0];
-      }
       return 'https://asualfly1986.github.io/pea-finance/';
     }
 
