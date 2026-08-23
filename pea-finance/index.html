@@ -1581,6 +1581,7 @@
       display: none;
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -1641,6 +1642,10 @@
       <button class="nav-tab" onclick="switchTab('retirement', this)">
         <svg viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
         <span>&#xE41;&#xE1C;&#xE19;&#xE40;&#xE01;&#xE29;&#xE35;&#xE22;&#xE13;</span>
+      </button>
+      <button class="nav-tab" onclick="switchTab('analytics', this)">
+        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+        <span>&#xE01;&#xE23;&#xE32;&#xE1F;&#xE27;&#xE34;&#xE40;&#xE04;&#xE23;&#xE32;&#xE30;&#xE2B;&#xE4C;</span>
       </button>
       <button class="nav-tab" onclick="switchTab('settings', this)">
         <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
@@ -3630,6 +3635,120 @@
     <!-- ==================== TAB 5: ตั้งค่า & จัดการข้อมูล (SETTINGS & BACKUP) ==================== -->
     <!-- ==================== TAB 5: เธ•เธฑเนเธเธเนเธฒ & เธเธฑเธ”เธเธฒเธฃเธเนเธญเธกเธนเธฅ (SETTINGS & BACKUP) ==================== -->
     <!-- ==================== TAB 5: ตั้งค่า & จัดการข้อมูล (SETTINGS & BACKUP) ==================== -->
+        <!-- ==================== TAB 5: เธเธฃเธฒเธเธงเธดเน€เธเธฃเธฒเธฐเธซเน & เนเธ”เธเธเธญเธฃเนเธ” (ANALYTICS & CHARTS) ==================== -->
+    <div class="tab-panel" id="tab-analytics">
+      
+      <!-- Analytics Hero Banner -->
+      <div class="card" style="padding:14px 16px; margin-bottom:12px; background:linear-gradient(135deg, #1E0B38 0%, #3D1F6E 50%, #6B21A8 100%); color:#FFFFFF; border:none; border-radius:14px; position:relative; overflow:hidden; box-shadow:0 8px 24px rgba(61,31,110,0.25);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; position:relative; z-index:1;">
+          <div>
+            <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.15); padding:3px 10px; border-radius:20px; font-size:0.72rem; font-weight:700; color:#FDE047; margin-bottom:4px;">
+              <span>๐“ PEA FINANCIAL ANALYTICS</span>
+              <span>ยท</span>
+              <span>เนเธ”เธเธเธญเธฃเนเธ”เธเธฃเธฒเธเธงเธดเน€เธเธฃเธฒเธฐเธซเน</span>
+            </div>
+            <h2 style="font-size:1.15rem; font-weight:800; line-height:1.3; margin:0 0 2px;">เธจเธนเธเธขเนเธฃเธงเธกเธเธฃเธฒเธเธงเธดเน€เธเธฃเธฒเธฐเธซเนเธชเธธเธเธ เธฒเธเธเธฒเธฃเน€เธเธดเธเนเธฅเธฐเธงเธฑเธขเน€เธเธฉเธตเธขเธ“</h2>
+            <p style="font-size:0.76rem; opacity:0.92; margin:0;">เธชเธฃเธธเธเธชเธฑเธ”เธชเนเธงเธเธเธฃเธฐเนเธชเน€เธเธดเธเธชเธ” เนเธเธฃเธเธชเธฃเนเธฒเธเธชเธดเธเธ—เธฃเธฑเธเธขเน เธเธธเธกเธ—เธฃเธฑเธเธขเนเน€เธเธฉเธตเธขเธ“ เนเธฅเธฐเน€เธฃเธ”เธฒเธฃเน 360 เธญเธเธจเธฒ</p>
+          </div>
+          <button type="button" class="btn btn-gold" style="padding:6px 14px; font-size:0.78rem; width:auto;" onclick="renderAnalyticsDashboard(true)" title="เธฃเธตเน€เธเธฃเธเธเธฃเธฒเธเธ—เธฑเนเธเธซเธกเธ”">
+            <span>๐” เธญเธฑเธเน€เธ”เธ•เธเธฃเธฒเธ</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Executive Summary Cards -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; margin-bottom:14px;">
+        <div class="card" style="padding:12px 14px; text-align:center; border:1px solid var(--border); border-radius:12px;">
+          <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:2px;">๐’ฐ เธญเธฑเธ•เธฃเธฒเธเธฒเธฃเธญเธญเธกเธชเธธเธ—เธเธด</div>
+          <div id="analyticsSavingsRate" class="num-font" style="font-size:1.15rem; font-weight:800; color:#10B981;">0.0%</div>
+          <div style="font-size:0.65rem; color:var(--text-muted);" id="analyticsSavingsSub">เน€เธเนเธฒเธซเธกเธฒเธข โฅ 20%</div>
+        </div>
+        <div class="card" style="padding:12px 14px; text-align:center; border:1px solid var(--border); border-radius:12px;">
+          <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:2px;">๐ก๏ธ เธ เธฒเธฃเธฐเธซเธเธตเนเธ•เนเธญเธฃเธฒเธขเนเธ”เน (DSR)</div>
+          <div id="analyticsDtiRatio" class="num-font" style="font-size:1.15rem; font-weight:800; color:#F59E0B;">0.0%</div>
+          <div style="font-size:0.65rem; color:var(--text-muted);" id="analyticsDtiSub">เน€เธเธ“เธ‘เนเธเธฅเธญเธ”เธ เธฑเธข โค 40%</div>
+        </div>
+        <div class="card" style="padding:12px 14px; text-align:center; border:1px solid var(--border); border-radius:12px;">
+          <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:2px;">๐๏ธ เธเธงเธฒเธกเธกเธฑเนเธเธเธฑเนเธเธชเธธเธ—เธเธด</div>
+          <div id="analyticsNetWorth" class="num-font" style="font-size:1.15rem; font-weight:800; color:var(--pea-purple-light);">0 เธฟ</div>
+          <div style="font-size:0.65rem; color:var(--text-muted);">เธชเธดเธเธ—เธฃเธฑเธเธขเน - เธซเธเธตเนเธชเธดเธ</div>
+        </div>
+        <div class="card" style="padding:12px 14px; text-align:center; border:1px solid var(--border); border-radius:12px;">
+          <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:2px;">๐–๏ธ เธเธงเธฒเธกเธเธฃเนเธญเธกเธงเธฑเธขเน€เธเธฉเธตเธขเธ“</div>
+          <div id="analyticsRetireScore" class="num-font" style="font-size:1.15rem; font-weight:800; color:#EC4899;">0.0%</div>
+          <div style="font-size:0.65rem; color:var(--text-muted);" id="analyticsRetireSub">เน€เธเนเธฒเธซเธกเธฒเธข 100%</div>
+        </div>
+      </div>
+
+      <!-- Charts Grid Row 1: Cashflow & Net Worth -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:12px; margin-bottom:12px;">
+        <!-- Chart 1: Cashflow -->
+        <div class="card" style="border-radius:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <b style="font-size:0.88rem; color:var(--text-main);">๐“ เธชเธฑเธ”เธชเนเธงเธเธเธฃเธฐเนเธชเน€เธเธดเธเธชเธ”เธฃเธฒเธขเน€เธ”เธทเธญเธ</b>
+            <span class="badge badge-purple" style="font-size:0.65rem;">Cashflow</span>
+          </div>
+          <div style="position:relative; height:240px;">
+            <canvas id="chartCashflow"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 2: Net Worth -->
+        <div class="card" style="border-radius:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <b style="font-size:0.88rem; color:var(--text-main);">๐ฉ เนเธเธฃเธเธชเธฃเนเธฒเธเธชเธดเธเธ—เธฃเธฑเธเธขเน & เธซเธเธตเนเธชเธดเธ</b>
+            <span class="badge badge-gold" style="font-size:0.65rem;">Balance Sheet</span>
+          </div>
+          <div style="position:relative; height:240px;">
+            <canvas id="chartNetworth"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Grid Row 2: Retirement Portfolio & Health Radar -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:12px; margin-bottom:12px;">
+        <!-- Chart 3: Retirement Lump Sum Portfolio -->
+        <div class="card" style="border-radius:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <b style="font-size:0.88rem; color:var(--text-main);">๐ เธเธธเธกเธ—เธฃเธฑเธเธขเนเน€เธเธดเธเธเนเธญเธเธงเธฑเธเน€เธเธฉเธตเธขเธ“ เธเธเธ .</b>
+            <span class="badge badge-purple" style="font-size:0.65rem;">Retirement</span>
+          </div>
+          <div style="position:relative; height:240px;">
+            <canvas id="chartRetirementPortfolio"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 4: Financial Health Radar -->
+        <div class="card" style="border-radius:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <b style="font-size:0.88rem; color:var(--text-main);">๐•ธ๏ธ เน€เธฃเธ”เธฒเธฃเนเธงเธดเน€เธเธฃเธฒเธฐเธซเนเธชเธธเธเธ เธฒเธเธเธฒเธฃเน€เธเธดเธ 360ยฐ</b>
+            <span class="badge badge-green" style="font-size:0.65rem;">5 Dimensions</span>
+          </div>
+          <div style="position:relative; height:240px;">
+            <canvas id="chartHealthRadar"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart 5: Lifetime Retirement Projection Trajectory (Full Width) -->
+      <div class="card" style="border-radius:14px; margin-bottom:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:10px;">
+          <div>
+            <b style="font-size:0.92rem; color:var(--text-main);">๐“ เน€เธชเนเธเธ—เธฒเธเน€เธเธดเธเธญเธญเธกเนเธฅเธฐเธเธฒเธฃเธ—เธขเธญเธขเนเธเนเน€เธเธดเธเธซเธฅเธฑเธเน€เธเธฉเธตเธขเธ“ (เธญเธฒเธขเธธเธเธฑเธขเธ–เธถเธ 85 เธเธต)</b>
+            <div style="font-size:0.72rem; color:var(--text-muted);">เธเธณเธฅเธญเธเธเธฒเธฃเธชเธฐเธชเธกเน€เธเธดเธเธเนเธญเธ 60 เธเธต เนเธฅเธฐเธเธฒเธฃเน€เธเธดเธเนเธเนเน€เธเธดเธเธเนเธฒเธเธฃเธญเธเธเธตเธเธซเธฅเธฑเธเน€เธเธฉเธตเธขเธ“</div>
+          </div>
+          <span class="badge badge-gold" id="analyticsTrajectoryBadge">เธเธณเธฅเธญเธเธ•เธฒเธกเนเธเธ</span>
+        </div>
+        <div style="position:relative; height:270px;">
+          <canvas id="chartRetirementProjection"></canvas>
+        </div>
+        <div id="analyticsTrajectoryVerdict" style="margin-top:10px; padding:8px 12px; border-radius:8px; background:var(--pea-purple-bg); font-size:0.78rem; line-height:1.4; color:var(--text-main);">
+          ๐’ก <b>เธเธฅเธเธฒเธฃเธงเธดเน€เธเธฃเธฒเธฐเธซเน:</b> เธเธฃเธฒเธเธชเธฐเธชเธกเน€เธ•เธดเธเนเธ•เธ–เธถเธเธญเธฒเธขเธธ 60 เธเธต เนเธฅเธฐเธ—เธขเธญเธขเธ–เธญเธเนเธเนเธเนเธฒเธขเน€เธเธทเนเธญเธเธงเธฒเธกเธกเธฑเนเธเธเธเนเธเธงเธฑเธขเน€เธเธฉเธตเธขเธ“
+        </div>
+      </div>
+
+    </div>
+
     <div class="tab-panel" id="tab-settings">
       
       <!-- User Profile & Customization Card (อยู่บนสุด) -->
@@ -4560,6 +4679,339 @@
     }
 
     // Tab Navigation
+    
+    // ==================== VISUAL CHARTS & ANALYTICS ENGINE ====================
+    let globalCharts = {
+      cashflow: null,
+      networth: null,
+      retirement: null,
+      radar: null,
+      projection: null
+    };
+
+    function getChartThemeColors() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      return {
+        isDark: isDark,
+        textColor: isDark ? '#E5E7EB' : '#374151',
+        mutedColor: isDark ? '#9CA3AF' : '#6B7280',
+        gridColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)',
+        tooltipBg: isDark ? '#1F2937' : '#1E0B38',
+        tooltipText: '#FFFFFF',
+        fontFamily: "'Prompt', 'Sarabun', sans-serif"
+      };
+    }
+
+    function renderAnalyticsDashboard(forceRedraw = false) {
+      if (typeof Chart === 'undefined') return;
+
+      const theme = getChartThemeColors();
+      Chart.defaults.font.family = theme.fontFamily;
+      Chart.defaults.color = theme.textColor;
+
+      // 1. Calculate Core Financial Values
+      const salary = num('pea_salary') || 38200;
+      const totalIncome = salary + (state.inc_position || 0) + (state.inc_ot || 0) + (state.inc_bonus || 0) + (state.inc_other || 0);
+      
+      const fixedExp = (state.exp_fixed_housing || 0) + (state.exp_fixed_commute || 0) + (state.exp_fixed_utility || 0) + (state.exp_fixed_insurance || 0);
+      const varExp = (state.exp_var_food || 0) + (state.exp_var_shop || 0) + (state.exp_var_family || 0) + (state.exp_var_tax_prov || 0);
+      
+      // Calculate Debt Payments
+      let totalMonthlyDebt = 0;
+      let totalDebtPrincipal = 0;
+      if (state.debts && Array.isArray(state.debts)) {
+        state.debts.forEach(d => {
+          totalMonthlyDebt += (parseFloat(d.monthly) || 0);
+          totalDebtPrincipal += (parseFloat(d.balance) || 0);
+        });
+      }
+      const totalExpense = fixedExp + varExp + totalMonthlyDebt;
+      const netSavings = totalIncome - totalExpense;
+      const savingsRate = totalIncome > 0 ? ((netSavings / totalIncome) * 100) : 0;
+      const dsr = totalIncome > 0 ? ((totalMonthlyDebt / totalIncome) * 100) : 0;
+
+      // Assets
+      const liquidAssets = (state.ast_cash || 0) + (state.ast_fixed || 0);
+      const invAssets = (state.ast_mutual_funds || 0) + (state.ast_stocks || 0) + (state.ast_other_inv || 0);
+      const coopShares = num('pea_coopShareCurrent') || (state.pea_coopShareCurrent || 0);
+      const personalAssets = (state.ast_real_estate || 0) + (state.ast_vehicles || 0) + (state.ast_other_personal || 0);
+      const totalAssets = liquidAssets + invAssets + coopShares + personalAssets;
+      const netWorth = totalAssets - totalDebtPrincipal;
+
+      // Retirement Core Figures
+      const pfAcc = (num('pea_pfAccumulated') || 0) + (num('pea_pfContributed') || 0) + (num('pea_pfAccumulatedGain') || 0) + (num('pea_pfContributedGain') || 0);
+      const sevDays = 400;
+      const severance = (salary / 30) * sevDays;
+      const retirePct = parseFloat($('resGaugeReadout') ? $('resGaugeReadout').textContent : '78') || 78;
+
+      // Update KPI Scorecard UI
+      if ($('analyticsSavingsRate')) {
+        $('analyticsSavingsRate').textContent = fmt2(savingsRate) + '%';
+        $('analyticsSavingsRate').style.color = savingsRate >= 20 ? '#10B981' : (savingsRate > 0 ? '#F59E0B' : '#EF4444');
+      }
+      if ($('analyticsDtiRatio')) {
+        $('analyticsDtiRatio').textContent = fmt2(dsr) + '%';
+        $('analyticsDtiRatio').style.color = dsr <= 35 ? '#10B981' : (dsr <= 45 ? '#F59E0B' : '#EF4444');
+      }
+      if ($('analyticsNetWorth')) {
+        $('analyticsNetWorth').textContent = fmt(netWorth) + ' เธฟ';
+        $('analyticsNetWorth').style.color = netWorth >= 0 ? 'var(--pea-purple-light)' : '#EF4444';
+      }
+      if ($('analyticsRetireScore')) {
+        $('analyticsRetireScore').textContent = fmt2(retirePct) + '%';
+        $('analyticsRetireScore').style.color = retirePct >= 100 ? '#10B981' : (retirePct >= 70 ? '#F59E0B' : '#EF4444');
+      }
+
+      // -------------------------------------------------------------
+      // Chart 1: Cashflow Breakdown (Doughnut)
+      // -------------------------------------------------------------
+      const ctxCF = $('chartCashflow');
+      if (ctxCF) {
+        if (globalCharts.cashflow) globalCharts.cashflow.destroy();
+        globalCharts.cashflow = new Chart(ctxCF, {
+          type: 'doughnut',
+          data: {
+            labels: ['เธฃเธฒเธขเธเนเธฒเธขเธเธเธ—เธตเน', 'เธเนเธฒเธเธฃเธญเธเธเธตเธ/เธเธฑเธเนเธเธฃ', 'เธ เธฒเธฃเธฐเธเนเธญเธเธซเธเธตเน', 'เน€เธเธดเธเธญเธญเธกเธชเธธเธ—เธเธด'],
+            datasets: [{
+              data: [Math.max(fixedExp, 0), Math.max(varExp, 0), Math.max(totalMonthlyDebt, 0), Math.max(netSavings, 0)],
+              backgroundColor: ['#3B82F6', '#F59E0B', '#EF4444', '#10B981'],
+              borderWidth: 2,
+              borderColor: theme.isDark ? '#1B1033' : '#FFFFFF'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+              tooltip: {
+                callbacks: {
+                  label: ctx => ` ${ctx.label}: ${fmt(ctx.raw)} เธฟ (${fmt2((ctx.raw / (totalIncome || 1)) * 100)}%)`
+                }
+              }
+            },
+            cutout: '62%'
+          }
+        });
+      }
+
+      // -------------------------------------------------------------
+      // Chart 2: Net Worth Structure (Doughnut)
+      // -------------------------------------------------------------
+      const ctxNW = $('chartNetworth');
+      if (ctxNW) {
+        if (globalCharts.networth) globalCharts.networth.destroy();
+        globalCharts.networth = new Chart(ctxNW, {
+          type: 'doughnut',
+          data: {
+            labels: ['เน€เธเธดเธเธเธฒเธ/เธชเธ เธฒเธเธเธฅเนเธญเธ', 'เน€เธเธดเธเธฅเธเธ—เธธเธ/เธเธญเธเธ—เธธเธ', 'เธซเธธเนเธเธชเธซเธเธฃเธ“เน เธเธเธ .', 'เธชเธดเธเธ—เธฃเธฑเธเธขเนเธชเนเธงเธเธ•เธฑเธง', 'เธซเธเธตเนเธชเธดเธเธฃเธงเธก'],
+            datasets: [{
+              data: [Math.max(liquidAssets, 0), Math.max(invAssets, 0), Math.max(coopShares, 0), Math.max(personalAssets, 0), Math.max(totalDebtPrincipal, 0)],
+              backgroundColor: ['#06B6D4', '#8B5CF6', '#F59E0B', '#10B981', '#EF4444'],
+              borderWidth: 2,
+              borderColor: theme.isDark ? '#1B1033' : '#FFFFFF'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+              tooltip: {
+                callbacks: {
+                  label: ctx => ` ${ctx.label}: ${fmt(ctx.raw)} เธฟ`
+                }
+              }
+            },
+            cutout: '62%'
+          }
+        });
+      }
+
+      // -------------------------------------------------------------
+      // Chart 3: Retirement Lump Sum Portfolio (Bar Chart)
+      // -------------------------------------------------------------
+      const ctxRet = $('chartRetirementPortfolio');
+      if (ctxRet) {
+        if (globalCharts.retirement) globalCharts.retirement.destroy();
+        const estPf = Math.round(pfAcc * 1.95);
+        const estCoop = Math.round(coopShares * 1.6);
+        const estSev = Math.round(severance);
+        const estOther = Math.round(liquidAssets + invAssets);
+
+        globalCharts.retirement = new Chart(ctxRet, {
+          type: 'bar',
+          data: {
+            labels: ['เธเธชเธ. เธเธเธ .', 'เธชเธซเธเธฃเธ“เน เธเธเธ .', 'เธเธ”เน€เธเธข 400 เธงเธฑเธ', 'เน€เธเธดเธเธญเธญเธกเน€เธชเธฃเธดเธก'],
+            datasets: [{
+              label: 'เธกเธนเธฅเธเนเธฒเธเธฃเธฐเธกเธฒเธ“เธเธฒเธฃ เธ“ เธงเธฑเธเน€เธเธฉเธตเธขเธ“ (เธเธฒเธ—)',
+              data: [estPf, estCoop, estSev, estOther],
+              backgroundColor: ['#7C3AED', '#F59E0B', '#EC4899', '#10B981'],
+              borderRadius: 8,
+              borderSkipped: false
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: ctx => ` เธกเธนเธฅเธเนเธฒ: ${fmt(ctx.raw)} เธเธฒเธ—`
+                }
+              }
+            },
+            scales: {
+              x: { grid: { display: false } },
+              y: {
+                grid: { color: theme.gridColor },
+                ticks: { callback: v => (v >= 1000000 ? (v/1000000).toFixed(1) + 'M' : fmt(v)) }
+              }
+            }
+          }
+        });
+      }
+
+      // -------------------------------------------------------------
+      // Chart 4: Financial Health Radar (Radar Chart)
+      // -------------------------------------------------------------
+      const ctxRadar = $('chartHealthRadar');
+      if (ctxRadar) {
+        if (globalCharts.radar) globalCharts.radar.destroy();
+        
+        // Compute 5 Pillars (0 - 100)
+        const livingExp = totalExpense - (state.exp_saving || 0);
+        const emMonths = livingExp > 0 ? (liquidAssets / livingExp) : 0;
+        const scoreLiquidity = Math.min(100, Math.round((emMonths / 6) * 100));
+        const scoreDebt = Math.max(0, Math.min(100, Math.round((1 - (dsr / 50)) * 100)));
+        const scoreSavings = Math.min(100, Math.round((savingsRate / 25) * 100));
+        const scoreSolvency = Math.min(100, Math.round(((totalAssets > 0 ? (totalAssets - totalDebtPrincipal) / totalAssets : 0.5) * 100)));
+        const scoreRetire = Math.min(100, Math.round(retirePct));
+
+        globalCharts.radar = new Chart(ctxRadar, {
+          type: 'radar',
+          data: {
+            labels: ['เธชเธ เธฒเธเธเธฅเนเธญเธ', 'เธเธฒเธฃเธเธธเธกเธซเธเธตเน', 'เธงเธดเธเธฑเธขเธเธฒเธฃเธญเธญเธก', 'เธเธงเธฒเธกเธกเธฑเนเธเธเธฑเนเธ', 'เธเธงเธฒเธกเธเธฃเนเธญเธกเน€เธเธฉเธตเธขเธ“'],
+            datasets: [{
+              label: 'เธเธฐเนเธเธเธชเธธเธเธ เธฒเธเธเธฒเธฃเน€เธเธดเธ',
+              data: [scoreLiquidity, scoreDebt, scoreSavings, scoreSolvency, scoreRetire],
+              backgroundColor: 'rgba(124, 58, 237, 0.25)',
+              borderColor: '#7C3AED',
+              pointBackgroundColor: '#F59E0B',
+              pointBorderColor: '#FFFFFF',
+              pointHoverBackgroundColor: '#FFFFFF',
+              pointHoverBorderColor: '#7C3AED',
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: ctx => ` เธเธฐเนเธเธ: ${ctx.raw}/100`
+                }
+              }
+            },
+            scales: {
+              r: {
+                angleLines: { color: theme.gridColor },
+                grid: { color: theme.gridColor },
+                pointLabels: { font: { size: 11 } },
+                suggestedMin: 0,
+                suggestedMax: 100,
+                ticks: { display: false, stepSize: 25 }
+              }
+            }
+          }
+        });
+      }
+
+      // -------------------------------------------------------------
+      // Chart 5: Lifetime Retirement Projection Trajectory (Area Line Chart)
+      // -------------------------------------------------------------
+      const ctxProj = $('chartRetirementProjection');
+      if (ctxProj) {
+        if (globalCharts.projection) globalCharts.projection.destroy();
+
+        const curAge = num('pea_currentAge') || 35;
+        const retAge = num('pea_retireAge') || 60;
+        const maxAge = 85;
+        
+        const labels = [];
+        const wealthData = [];
+        const expenseData = [];
+        
+        let runningWealth = totalAssets - totalDebtPrincipal;
+        const annualSavings = Math.max(netSavings, 0) * 12;
+        const annualRetireExp = (num('pea_desiredExpenseToday') || 25000) * 12;
+        
+        for (let age = curAge; age <= maxAge; age += 5) {
+          labels.push(`เธญเธฒเธขเธธ ${age} เธเธต`);
+          if (age <= retAge) {
+            const years = age - curAge;
+            runningWealth = (totalAssets - totalDebtPrincipal) + (annualSavings * years * 1.15);
+            wealthData.push(Math.round(runningWealth));
+            expenseData.push(0);
+          } else {
+            const postYears = age - retAge;
+            const remaining = Math.max(runningWealth - (annualRetireExp * postYears * 1.25), 0);
+            wealthData.push(Math.round(remaining));
+            expenseData.push(Math.round(annualRetireExp * postYears));
+          }
+        }
+
+        globalCharts.projection = new Chart(ctxProj, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: 'เธเธญเธเธ—เธธเธเธเธงเธฒเธกเธกเธฑเนเธเธเธฑเนเธเธชเธฐเธชเธก (เธเธฒเธ—)',
+                data: wealthData,
+                borderColor: '#7C3AED',
+                backgroundColor: 'rgba(124, 58, 237, 0.15)',
+                fill: true,
+                tension: 0.35,
+                borderWidth: 3
+              },
+              {
+                label: 'เธฃเธฒเธขเธเนเธฒเธขเธชเธฐเธชเธกเธซเธฅเธฑเธเน€เธเธฉเธตเธขเธ“ (เธเธฒเธ—)',
+                data: expenseData,
+                borderColor: '#EF4444',
+                borderDash: [5, 5],
+                fill: false,
+                tension: 0.2,
+                borderWidth: 2
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } },
+              tooltip: {
+                callbacks: {
+                  label: ctx => ` ${ctx.dataset.label}: ${fmt(ctx.raw)} เธฟ`
+                }
+              }
+            },
+            scales: {
+              x: { grid: { color: theme.gridColor } },
+              y: {
+                grid: { color: theme.gridColor },
+                ticks: { callback: v => (v >= 1000000 ? (v/1000000).toFixed(1) + 'M' : fmt(v)) }
+              }
+            }
+          }
+        });
+      }
+    }
+
     function switchTab(tabId, el) {
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -4568,13 +5020,19 @@
       if (target) target.classList.add('active');
       
       if (el) {
-        el.classList.add('active');
+        const tabBtn = el.closest ? el.closest('.nav-tab') : el;
+        if (tabBtn) tabBtn.classList.add('active');
       } else {
         const tabs = document.querySelectorAll('.nav-tab');
-        const map = { 'dashboard': 0, 'cashflow': 1, 'networth': 2, 'retirement': 3, 'settings': 4 };
+        const map = { 'dashboard': 0, 'cashflow': 1, 'networth': 2, 'retirement': 3, 'analytics': 4, 'settings': 5 };
         if (tabs[map[tabId]]) tabs[map[tabId]].classList.add('active');
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // If switched to analytics tab, render charts immediately
+      if (tabId === 'analytics') {
+        setTimeout(() => renderAnalyticsDashboard(true), 50);
+      }
     }
 
     // Cashflow Sub-tabs
@@ -5623,6 +6081,7 @@
       // 6. Calculate Retirement & Financial Score
       calculateRetirement();
       calculateFinancialScore(savingsRate, dsr, emergencyMonths, totalAssets, totalLiabilities);
+      renderAnalyticsDashboard();
     }
 
     // Interactive Asset Distribution Renderer
