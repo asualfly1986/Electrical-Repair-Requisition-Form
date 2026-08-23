@@ -1795,19 +1795,7 @@
             </div>
           </div>
 
-          <!-- 3. ค่าหุ้นสหกรณ์ออมทรัพย์ กฟภ. -->
-          <div class="input-group">
-            <label class="input-label">
-              <span>📈 ค่าหุ้นสะสม สหกรณ์ออมทรัพย์ กฟภ.</span>
-              <span class="input-hint">สะสมรายเดือน</span>
-            </label>
-            <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="exp_pea_coop_share" value="1000" oninput="onPeaCoopShareExpenseChanged()">
-              <span class="input-unit">บาท/ด.</span>
-            </div>
-          </div>
-
-          <!-- 4. ฌาปนกิจสงเคราะห์ -->
+          <!-- 3. ฌาปนกิจสงเคราะห์ -->
           <div class="input-group">
             <label class="input-label">
               <span>🤝 เงินสงเคราะห์ / สมาคมฌาปนกิจสงเคราะห์ (กฟภ. / สหกรณ์)</span>
@@ -1818,9 +1806,9 @@
             </div>
           </div>
 
-          <!-- Helpful note for PEA Coop Loans -->
+          <!-- Helpful note for PEA Coop Loans & Coop Shares -->
           <div style="margin-top:10px; padding:8px 12px; border-radius:8px; background:var(--card-sub); font-size:0.75rem; color:var(--text-muted); line-height:1.4; border-left:3px solid var(--pea-purple-light);">
-            💡 <b>สำหรับเงินกู้สามัญ / เงินกู้ฉุกเฉิน สหกรณ์ กฟภ.:</b> ให้กรอกใน <b>หมวดที่ 3: หนี้สิน</b> ระบบจะนำค่างวดผ่อนรายเดือนมารวมเป็นภาระหนี้สินให้อัตโนมัติ เพื่อป้องกันการนับยอดผ่อนซ้ำซ้อนในงบกระแสเงินสด
+            💡 <b>สำหรับเงินกู้สหกรณ์ และค่าหุ้นสะสมสหกรณ์ กฟภ.:</b> จัดการใน <b>หมวดที่ 3 (หนี้สิน/สินทรัพย์)</b> และ <b>หมวดที่ 4 (แผนเกษียณ)</b> โดยตรง เพื่อให้งบรายจ่ายสะท้อนค่าใช้จ่ายจริง ไม่นำเงินออมค่าหุ้นหรือการผ่อนหนี้มาคิดซ้ำซ้อน
           </div>
         </div>
 
@@ -3666,7 +3654,6 @@
       exp_pea_tax: 0,
       exp_pea_pf: 1050,
       exp_pea_cremation: 300,
-      exp_pea_coop_share: 1000,
       // Net Worth Assets (Dynamic list + legacy fallback)
       assets: [
         { id: 'a_cash', category: 'cash', isLiquid: true, name: 'เงินสด & บัญชีเงินฝากออมทรัพย์', amount: 100000 },
@@ -4843,12 +4830,12 @@
       // 3. Cash Flow Calculation & Logic Correction
       const totalIncome = (state.inc_salary || 0) + (state.inc_pea_electric || 0) + (state.inc_pea_shift || 0) + (state.inc_pea_hazard || 0) + (state.inc_business || 0) + (state.inc_rent || 0) + (state.inc_dividend || 0) + (state.inc_bonus || 0) + (state.inc_other || 0);
       
-      const peaDeductionsTotal = (state.exp_pea_tax || 0) + (state.exp_pea_pf || 0) + (state.exp_pea_cremation || 0) + (state.exp_pea_coop_share || 0);
+      const peaDeductionsTotal = (state.exp_pea_tax || 0) + (state.exp_pea_pf || 0) + (state.exp_pea_cremation || 0);
       const livingExpensesTotal = (state.exp_housing || 0) + (state.exp_car || 0) + (state.exp_home || 0) + (state.exp_family || 0) + (state.exp_insurance || 0) + (state.exp_lifestyle || 0) + (state.exp_debt || 0) + (state.exp_saving || 0) + (state.exp_tax || 0);
       const totalExpense = peaDeductionsTotal + livingExpensesTotal + totalDebtMonthly;
       
       const netSavings = totalIncome - totalExpense;
-      const totalSavingsWithExp = netSavings + (state.exp_saving || 0) + (state.exp_pea_pf || 0) + (state.exp_pea_coop_share || 0);
+      const totalSavingsWithExp = netSavings + (state.exp_saving || 0) + (state.exp_pea_pf || 0) + (state.pea_coopSharePerMonth || 0);
       
       // Update PEA Deduction Hint & Subtotal
       if ($('peaDeductionsSubtotalBadge')) $('peaDeductionsSubtotalBadge').textContent = fmt(peaDeductionsTotal) + ' ฿/ด.';
@@ -6314,7 +6301,6 @@
           exp_pea_tax: 850,
           exp_pea_pf: 2250,
           exp_pea_cremation: 350,
-          exp_pea_coop_share: 2000,
           assets: [
             { id: 'a_samp_cash1', category: 'cash', isLiquid: true, name: 'บัญชีเงินเดือน กรุงไทย', amount: 120000 },
             { id: 'a_samp_cash2', category: 'cash', isLiquid: true, name: 'บัญชีออมทรัพย์ฉุกเฉิน SCB', amount: 30000 },
@@ -6412,14 +6398,6 @@
         const card = $('gapTimelineOptimizerCard');
         if (card) card.scrollIntoView({ behavior: 'smooth' });
       }, 100);
-    }
-
-    function onPeaCoopShareExpenseChanged() {
-      const val = parseFloat($('exp_pea_coop_share').value) || 0;
-      state.exp_pea_coop_share = val;
-      state.pea_coopSharePerMonth = val;
-      if ($('pea_coopSharePerMonth')) $('pea_coopSharePerMonth').value = val;
-      onDataChanged();
     }
 
     function goToSmartGap() {
