@@ -1550,7 +1550,7 @@
           <div class="brand-info">
             <div class="brand-title-wrap">
               <h1 class="brand-title">PEA Financial Planner</h1>
-              <span class="badge badge-gold brand-badge">&#xE01;&#xE1F;&#xE20;. PROUD</span>
+              <span class="badge badge-gold brand-badge" id="headerVersionBadge">เธเธเธ . PROUD v3.1</span>
             </div>
             <p class="brand-sub">&#xE23;&#xE30;&#xE1A;&#xE1A;&#xE27;&#xE32;&#xE07;&#xE41;&#xE1C;&#xE19;&#xE01;&#xE32;&#xE23;&#xE40;&#xE07;&#xE34;&#xE19; &amp; &#xE40;&#xE01;&#xE29;&#xE35;&#xE22;&#xE13;&#xE1E;&#xE19;&#xE31;&#xE01;&#xE07;&#xE32;&#xE19; &#xE01;&#xE1F;&#xE20;.</p>
           </div>
@@ -3577,6 +3577,7 @@
 
     <!-- ==================== TAB 5: เธ•เธฑเนเธเธเนเธฒ & เธเธฑเธ”เธเธฒเธฃเธเนเธญเธกเธนเธฅ (SETTINGS & BACKUP) ==================== -->
     <!-- ==================== TAB 5: ตั้งค่า & จัดการข้อมูล (SETTINGS & BACKUP) ==================== -->
+    <!-- ==================== TAB 5: ตั้งค่า & จัดการข้อมูล (SETTINGS & BACKUP) ==================== -->
     <div class="tab-panel" id="tab-settings">
       
       <!-- User Profile & Customization Card (อยู่บนสุด) -->
@@ -3708,6 +3709,11 @@
             <span>💾 บันทึกข้อมูลลงในเบราว์เซอร์ทันที (Save to Browser)</span>
           </button>
 
+          <!-- Edit App Creator & Version Button -->
+          <button class="btn btn-outline" onclick="openMetaModal()" style="border-color:var(--pea-purple-light); color:var(--pea-purple-light); font-weight:700;">
+            <span>⚙️ ปรับแต่งข้อมูลผู้จัดทำ วันที่เผยแพร่ & Version</span>
+          </button>
+
           <button class="btn btn-outline" onclick="loadSampleData()">
             <span>⚡ โหลดตัวอย่างข้อมูลพนักงาน กฟภ.</span>
           </button>
@@ -3738,7 +3744,12 @@
             <span style="font-size:1.2rem;">👨‍💻</span>
             <b style="font-size:1rem; color:var(--text-main);">ข้อมูลผู้จัดทำและพัฒนาโปรแกรม</b>
           </div>
-          <span class="badge badge-purple" style="font-size:0.72rem; font-weight:700;">กฟภ. นวัตกรรมสร้างสรรค์</span>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span class="badge badge-purple" style="font-size:0.72rem; font-weight:700;">กฟภ. นวัตกรรมสร้างสรรค์</span>
+            <button type="button" class="btn btn-outline" style="padding:2px 8px; font-size:0.72rem; width:auto; border-radius:6px;" onclick="openMetaModal()" title="แก้ไขข้อมูลผู้จัดทำ วันที่ และ Version">
+              <span>✏️ แก้ไข</span>
+            </button>
+          </div>
         </div>
 
         <div style="display:flex; flex-direction:column; sm:flex-direction:row; align-items:center; gap:16px; text-align:center;">
@@ -3753,20 +3764,20 @@
           <!-- Creator Details -->
           <div style="flex:1; width:100%;">
             <div style="display:flex; align-items:center; justify-content:center; sm:justify-content:flex-start; gap:8px; flex-wrap:wrap; margin-bottom:4px;">
-              <h4 style="margin:0; font-size:1.15rem; color:var(--pea-purple-light); font-weight:800;">นายอภิชาติ ยุพิน</h4>
-              <span class="badge badge-gold" style="font-size:0.75rem; font-weight:700;">รหัส 504195</span>
+              <h4 style="margin:0; font-size:1.15rem; color:var(--pea-purple-light); font-weight:800;" id="creatorCardName">นายอภิชาติ ยุพิน</h4>
+              <span class="badge badge-gold" style="font-size:0.75rem; font-weight:700;" id="creatorCardEmpId">รหัส 504195</span>
             </div>
             
-            <div style="font-size:0.86rem; font-weight:600; color:var(--text-main); margin-bottom:8px;">
+            <div style="font-size:0.86rem; font-weight:600; color:var(--text-main); margin-bottom:8px;" id="creatorCardPosition">
               พนักงานช่าง (ปฏิบัติการระบบไฟฟ้า) ระดับ 6
             </div>
 
             <!-- Affiliation Box with Theme-Adaptive Background & High Contrast Text in Dark Mode -->
             <div style="background:var(--card-sub); border:1px solid var(--border); border-radius:10px; padding:10px 12px; font-size:0.78rem; line-height:1.6; text-align:left; margin-bottom:10px;">
               <div style="color:var(--pea-purple-light); font-weight:700; margin-bottom:4px;">
-                🏷️ <b>สังกัดย่อ:</b> <span style="color:var(--text-main); font-weight:600;">ผปบ./กฟส.ขก.2/กฟจ.ขก./กฟฉ.1/สายงาน (ฉ)</span>
+                🏷️ <b>สังกัดย่อ:</b> <span style="color:var(--text-main); font-weight:600;" id="creatorCardAffilShort">ผปบ./กฟส.ขก.2/กฟจ.ขก./กฟฉ.1/สายงาน (ฉ)</span>
               </div>
-              <div style="color:var(--text-main); opacity:0.92;">
+              <div style="color:var(--text-main); opacity:0.92;" id="creatorCardAffilFull">
                 <b style="color:var(--pea-purple-light);">🏢 สังกัดเต็ม:</b><br>
                 • แผนกปฏิบัติการและบำรุงรักษาระบบไฟฟ้า<br>
                 • การไฟฟ้าส่วนภูมิภาคสาขาเมืองขอนแก่น 2<br>
@@ -3778,8 +3789,8 @@
 
             <!-- Release Date & System Version -->
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px; font-size:0.75rem; color:var(--text-muted);">
-              <span>📅 <b>วันที่จัดทำ/เผยแพร่:</b> 22 สิงหาคม 2569</span>
-              <span style="color:var(--pea-purple-light); font-weight:700;">⚡ PEA Financial Planner v3.0</span>
+              <span id="creatorCardDate">📅 <b>วันที่จัดทำ/เผยแพร่:</b> 23 สิงหาคม 2569</span>
+              <span style="color:var(--pea-purple-light); font-weight:700;" id="creatorCardVersion">⚡ PEA Financial Planner v3.1</span>
             </div>
           </div>
         </div>
@@ -3787,6 +3798,8 @@
       </div>
 
     </div>
+
+    
 
     
 
@@ -3894,6 +3907,73 @@
       <button type="button" class="btn btn-purple" style="width:100%;" onclick="closePwaGuideModal()">
         <span>เข้าใจแล้ว</span>
       </button>
+    </div>
+  </div>
+
+  <!-- ==================== APP METADATA & VERSION EDIT MODAL ==================== -->
+  <div id="appMetaModal" class="qr-modal-overlay" style="display:none;" onclick="if(event.target===this) closeMetaModal()">
+    <div class="qr-modal-content" style="max-width:460px; padding:18px; max-height:90vh; overflow-y:auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:8px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.2rem;">⚙️</span>
+          <b style="font-size:1rem; color:var(--text-main);">ข้อมูลผู้จัดทำ วันที่เผยแพร่ &amp; Version</b>
+        </div>
+        <button type="button" style="background:none; border:none; font-size:1.3rem; cursor:pointer; color:var(--text-muted);" onclick="closeMetaModal()">✕</button>
+      </div>
+
+      <form onsubmit="event.preventDefault(); saveAppMetadata();">
+        <div class="stat-grid-2" style="margin-bottom:8px;">
+          <div class="input-group">
+            <label class="input-label"><span>👤 ชื่อ - นามสกุล ผู้จัดทำ</span></label>
+            <input type="text" class="form-input" id="inp_meta_name" placeholder="นายอภิชาติ ยุพิน" required>
+          </div>
+          <div class="input-group">
+            <label class="input-label"><span>🆔 รหัสประจำตัว</span></label>
+            <input type="text" class="form-input" id="inp_meta_empid" placeholder="504195" required>
+          </div>
+        </div>
+
+        <div class="input-group" style="margin-bottom:8px;">
+          <label class="input-label"><span>💼 ตำแหน่ง</span></label>
+          <input type="text" class="form-input" id="inp_meta_position" placeholder="พนักงานช่าง (ปฏิบัติการระบบไฟฟ้า) ระดับ 6" required>
+        </div>
+
+        <div class="input-group" style="margin-bottom:8px;">
+          <label class="input-label"><span>🏷️ สังกัดย่อ</span></label>
+          <input type="text" class="form-input" id="inp_meta_affil_short" placeholder="ผปบ./กฟส.ขก.2/กฟจ.ขก./กฟฉ.1/สายงาน (ฉ)" required>
+        </div>
+
+        <div class="input-group" style="margin-bottom:8px;">
+          <label class="input-label"><span>🏢 สังกัดเต็ม (แยกบรรทัดละ 1 หน่วยงาน)</span></label>
+          <textarea class="form-input" id="inp_meta_affil_full" rows="5" style="resize:vertical; font-size:0.8rem; line-height:1.5;"></textarea>
+        </div>
+
+        <div class="stat-grid-2" style="margin-bottom:12px;">
+          <div class="input-group">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
+              <label class="input-label" style="margin:0;"><span>📅 วันที่จัดทำ/เผยแพร่</span></label>
+              <button type="button" style="background:none; border:none; color:var(--pea-purple-light); font-size:0.7rem; cursor:pointer; font-weight:700;" onclick="setMetaDateToday()">[ใช้วันนี้]</button>
+            </div>
+            <input type="text" class="form-input" id="inp_meta_date" placeholder="23 สิงหาคม 2569" required>
+          </div>
+          <div class="input-group">
+            <label class="input-label"><span>⚡ Version โปรแกรม</span></label>
+            <input type="text" class="form-input" id="inp_meta_version" placeholder="v3.1" required>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="submit" class="btn btn-purple" style="flex:1; font-weight:700;">
+            <span>💾 บันทึกข้อมูลระบบ</span>
+          </button>
+          <button type="button" class="btn btn-outline" style="width:auto; color:var(--text-muted);" onclick="resetAppMetadata()">
+            <span>🔄 คืนค่าเริ่มต้น</span>
+          </button>
+          <button type="button" class="btn btn-outline" style="width:auto;" onclick="closeMetaModal()">
+            <span>ปิด</span>
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -7150,6 +7230,124 @@
 
     // ==================== PERSONAL USER PROFILE LOGIC ====================
     let tempProfileAvatar = null;
+
+    // ==================== APP METADATA & VERSION CONFIG ====================
+    const DEFAULT_APP_META = {
+      creatorName: 'นายอภิชาติ ยุพิน',
+      creatorEmpId: '504195',
+      creatorPosition: 'พนักงานช่าง (ปฏิบัติการระบบไฟฟ้า) ระดับ 6',
+      creatorAffiliationShort: 'ผปบ./กฟส.ขก.2/กฟจ.ขก./กฟฉ.1/สายงาน (ฉ)',
+      creatorAffiliationFull: 'แผนกปฏิบัติการและบำรุงรักษาระบบไฟฟ้า\nการไฟฟ้าส่วนภูมิภาคสาขาเมืองขอนแก่น 2\nการไฟฟ้าส่วนภูมิภาคจังหวัดขอนแก่น\nการไฟฟ้าส่วนภูมิภาค เขต 1 (ภาคตะวันออกเฉียงเหนือ) จังหวัดอุดรธานี\nสายงานภาคตะวันออกเฉียงเหนือ',
+      releaseDate: '23 สิงหาคม 2569',
+      appVersion: 'v3.1'
+    };
+
+    function getAppMetadata() {
+      try {
+        const stored = localStorage.getItem('pea_app_metadata');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          return { ...DEFAULT_APP_META, ...parsed };
+        }
+      } catch (e) {
+        console.warn('Error reading app metadata:', e);
+      }
+      return { ...DEFAULT_APP_META };
+    }
+
+    function renderAppMetadata() {
+      const meta = getAppMetadata();
+      
+      if ($('creatorCardName')) $('creatorCardName').textContent = meta.creatorName || DEFAULT_APP_META.creatorName;
+      if ($('creatorCardEmpId')) $('creatorCardEmpId').textContent = `รหัส ${meta.creatorEmpId || DEFAULT_APP_META.creatorEmpId}`;
+      if ($('creatorCardPosition')) $('creatorCardPosition').textContent = meta.creatorPosition || DEFAULT_APP_META.creatorPosition;
+      if ($('creatorCardAffilShort')) $('creatorCardAffilShort').textContent = meta.creatorAffiliationShort || DEFAULT_APP_META.creatorAffiliationShort;
+      
+      if ($('creatorCardAffilFull')) {
+        const lines = (meta.creatorAffiliationFull || DEFAULT_APP_META.creatorAffiliationFull).split(/\r?\n/).filter(l => l.trim().length > 0);
+        let html = '<b style="color:var(--pea-purple-light);">🏢 สังกัดเต็ม:</b><br>';
+        html += lines.map(l => `• ${l.replace(/^[•\-\*\s]+/, '')}`).join('<br>');
+        $('creatorCardAffilFull').innerHTML = html;
+      }
+      
+      if ($('creatorCardDate')) {
+        $('creatorCardDate').innerHTML = `📅 <b>วันที่จัดทำ/เผยแพร่:</b> ${meta.releaseDate || DEFAULT_APP_META.releaseDate}`;
+      }
+      
+      if ($('creatorCardVersion')) {
+        $('creatorCardVersion').textContent = `⚡ PEA Financial Planner ${meta.appVersion || DEFAULT_APP_META.appVersion}`;
+      }
+
+      if ($('headerVersionBadge')) {
+        $('headerVersionBadge').textContent = `กฟภ. PROUD ${meta.appVersion || DEFAULT_APP_META.appVersion}`;
+      }
+    }
+
+    function getThaiTodayString() {
+      const months = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+      const now = new Date();
+      const day = now.getDate();
+      const month = months[now.getMonth()];
+      const year = now.getFullYear() + 543;
+      return `${day} ${month} ${year}`;
+    }
+
+    function setMetaDateToday() {
+      if ($('inp_meta_date')) {
+        $('inp_meta_date').value = getThaiTodayString();
+      }
+    }
+
+    function openMetaModal() {
+      const meta = getAppMetadata();
+      if ($('inp_meta_name')) $('inp_meta_name').value = meta.creatorName || '';
+      if ($('inp_meta_empid')) $('inp_meta_empid').value = meta.creatorEmpId || '';
+      if ($('inp_meta_position')) $('inp_meta_position').value = meta.creatorPosition || '';
+      if ($('inp_meta_affil_short')) $('inp_meta_affil_short').value = meta.creatorAffiliationShort || '';
+      if ($('inp_meta_affil_full')) $('inp_meta_affil_full').value = meta.creatorAffiliationFull || '';
+      if ($('inp_meta_date')) $('inp_meta_date').value = meta.releaseDate || getThaiTodayString();
+      if ($('inp_meta_version')) $('inp_meta_version').value = meta.appVersion || 'v3.1';
+      
+      const modal = $('appMetaModal');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeMetaModal() {
+      const modal = $('appMetaModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function saveAppMetadata() {
+      const meta = {
+        creatorName: ($('inp_meta_name') ? $('inp_meta_name').value.trim() : '') || DEFAULT_APP_META.creatorName,
+        creatorEmpId: ($('inp_meta_empid') ? $('inp_meta_empid').value.trim() : '') || DEFAULT_APP_META.creatorEmpId,
+        creatorPosition: ($('inp_meta_position') ? $('inp_meta_position').value.trim() : '') || DEFAULT_APP_META.creatorPosition,
+        creatorAffiliationShort: ($('inp_meta_affil_short') ? $('inp_meta_affil_short').value.trim() : '') || DEFAULT_APP_META.creatorAffiliationShort,
+        creatorAffiliationFull: ($('inp_meta_affil_full') ? $('inp_meta_affil_full').value.trim() : '') || DEFAULT_APP_META.creatorAffiliationFull,
+        releaseDate: ($('inp_meta_date') ? $('inp_meta_date').value.trim() : '') || getThaiTodayString(),
+        appVersion: ($('inp_meta_version') ? $('inp_meta_version').value.trim() : '') || DEFAULT_APP_META.appVersion
+      };
+
+      try {
+        localStorage.setItem('pea_app_metadata', JSON.stringify(meta));
+      } catch (e) {
+        console.error('Error saving app metadata:', e);
+      }
+
+      renderAppMetadata();
+      closeMetaModal();
+      showToast('💾 บันทึกข้อมูลผู้จัดทำ วันที่เผยแพร่ & Version เรียบร้อยแล้ว!');
+    }
+
+    function resetAppMetadata() {
+      if (!confirm('ต้องการคืนค่าข้อมูลผู้จัดทำและเวอร์ชันเป็นค่าเริ่มต้นของโปรแกรมหรือไม่?')) return;
+      try {
+        localStorage.removeItem('pea_app_metadata');
+      } catch (e) {}
+      renderAppMetadata();
+      openMetaModal();
+      showToast('🔄 คืนค่าข้อมูลเริ่มต้นเรียบร้อย');
+    }
 
     function renderUserProfile() {
       const prof = (state && state.user_profile) ? state.user_profile : {
