@@ -1502,8 +1502,11 @@
           <div class="mini-value num-font" id="dashNetCashflow">0 ฿</div>
           <div class="mini-sub">อัตราการออม <b id="dashSavingsRate">0%</b></div>
         </div>
-        <div class="mini-stat">
-          <span class="mini-label">เงินสำรองฉุกเฉิน</span>
+        <div class="mini-stat" style="cursor:pointer;" onclick="jumpToEmergencyPlanner()" title="คลิกเพื่อวางแผนสะสมเงินสำรองฉุกเฉิน">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span class="mini-label">เงินสำรองฉุกเฉิน</span>
+            <span style="font-size:0.68rem; color:var(--pea-purple-light); font-weight:700;">วางแผน →</span>
+          </div>
           <div class="mini-value num-font" id="dashEmergencyMonths">0.0 เดือน</div>
           <div class="mini-sub" id="dashEmergencySub">เป้าหมาย 3-6 เดือน</div>
         </div>
@@ -1567,14 +1570,28 @@
         <div class="card-header">
           <div class="card-title">
             <span class="icon">🚀</span>
-            <span>เมนูลัดใช้งานด่วน</span>
+            <span>เครื่องมือและการวางแผนด่วน</span>
           </div>
         </div>
-        <div style="display:flex; flex-direction:column; gap:8px;">
-          <button class="btn btn-outline" onclick="switchTab('cashflow')">💰 บันทึกรายรับ - รายจ่ายรายเดือน</button>
-          <button class="btn btn-outline" onclick="switchTab('networth')">🏦 จัดการสินทรัพย์และหนี้สิน</button>
-          <button class="btn btn-primary" onclick="switchTab('retirement')">⚡ คำนวณและปรับแผนเกษียณ กฟภ.</button>
-          <button class="btn btn-outline" onclick="openQRModal()">📱 QR Code เปิดแอป & ส่งต่อให้เพื่อนพนักงาน</button>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:8px;">
+          <button class="btn btn-outline" style="text-align:left; justify-content:flex-start;" onclick="jumpToEmergencyPlanner()">
+            <span>🛡️ วางแผนเงินสำรองฉุกเฉิน (3-6 ด.)</span>
+          </button>
+          <button class="btn btn-outline" style="text-align:left; justify-content:flex-start;" onclick="jumpToDebtPrepay()">
+            <span>⚡ จำลองการโปะหนี้ & ประหยัดดอกเบี้ย</span>
+          </button>
+          <button class="btn btn-outline" style="text-align:left; justify-content:flex-start;" onclick="jumpToGapOptimizer()">
+            <span>🎯 คำนวณปิดช่องว่างเกษียณ</span>
+          </button>
+          <button class="btn btn-outline" style="text-align:left; justify-content:flex-start;" onclick="switchTab('cashflow')">
+            <span>💰 บันทึกรายรับ - รายจ่ายรายเดือน</span>
+          </button>
+          <button class="btn btn-outline" style="text-align:left; justify-content:flex-start;" onclick="switchTab('networth')">
+            <span>🏦 จัดการสินทรัพย์และหนี้สิน</span>
+          </button>
+          <button class="btn btn-primary" style="text-align:left; justify-content:flex-start;" onclick="switchTab('retirement')">
+            <span>⚡ คำนวณแผนเกษียณ กฟภ. ฉบับเต็ม</span>
+          </button>
         </div>
       </div>
 
@@ -1856,6 +1873,66 @@
               <li>อัตราการจ่ายหนี้สินรวม <b>ไม่ควรเกิน 40% ของรายรับ</b></li>
             </ul>
           </div>
+
+          <!-- Emergency Fund & Liquidity Optimizer Card -->
+          <div class="card" id="emergencyFundCard" style="background:linear-gradient(135deg, var(--pea-purple-bg), var(--pea-purple-tint)); border:1.5px solid var(--pea-purple-soft); margin-top:14px;">
+            <div class="card-header" style="margin-bottom:8px;">
+              <div class="card-title" style="font-size:0.95rem;">
+                <span class="icon">🛡️</span>
+                <span>เครื่องมือวางแผนสร้างเงินสำรองฉุกเฉิน (Emergency Fund Planner)</span>
+              </div>
+              <span class="badge badge-purple" id="efStatusBadge">0.0 เดือน</span>
+            </div>
+
+            <!-- Target 3x vs 6x Stats -->
+            <div class="stat-grid-2" style="margin-bottom:10px;">
+              <div class="mini-stat" style="background:var(--card-bg);">
+                <span class="mini-label">เป้าหมาย 3 เท่า (รัฐวิสาหกิจ)</span>
+                <div class="mini-value num-font" id="efTarget3Amount" style="font-size:1.05rem; color:var(--pea-purple-light);">0 ฿</div>
+                <div class="mini-sub" id="efGap3Text">ขาดอีก 0 ฿</div>
+              </div>
+              <div class="mini-stat" style="background:var(--card-bg);">
+                <span class="mini-label">เป้าหมาย 6 เท่า (มั่นคงสูง)</span>
+                <div class="mini-value num-font" id="efTarget6Amount" style="font-size:1.05rem; color:#D97706;">0 ฿</div>
+                <div class="mini-sub" id="efGap6Text">ขาดอีก 0 ฿</div>
+              </div>
+            </div>
+
+            <!-- Progress to Emergency Fund -->
+            <div style="background:var(--card-bg); border-radius:10px; padding:12px; margin-bottom:12px; border:1px solid var(--border);">
+              <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:6px;">
+                <span>ความคืบหน้าเงินสำรอง (สภาพคล่องปัจจุบัน <b id="efCurrentLiquidVal" class="num-font">0 ฿</b>)</span>
+                <b id="efProgressPercentText" class="num-font">0%</b>
+              </div>
+              <div style="height:10px; background:var(--border); border-radius:6px; overflow:hidden;">
+                <div id="efProgressBar" style="height:100%; width:0%; background:linear-gradient(90deg, #F59E0B, #10B981); transition:width 0.4s ease;"></div>
+              </div>
+            </div>
+
+            <!-- Allocation from Net Cashflow -->
+            <div style="background:var(--card-bg); border-radius:10px; padding:12px; border:1px solid var(--border);">
+              <div style="font-weight:700; font-size:0.84rem; color:var(--text-main); margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                <span>💰 จัดสรรเงินจากกระแสเงินสดสุทธิเพื่อสะสม:</span>
+                <span class="badge badge-green" id="efAllocAmountBadge">0 ฿/ด.</span>
+              </div>
+              
+              <div class="input-wrap" style="margin-bottom:8px;">
+                <input type="range" class="form-range" id="ef_allocSlider" min="0" max="20000" step="500" value="3000" oninput="onEfAllocChanged()" style="width:100%;">
+              </div>
+              <div class="chips-row" style="margin-bottom:10px;">
+                <span class="chip" onclick="setEfAllocPercent(20)">20% ของเงินเหลือ</span>
+                <span class="chip" onclick="setEfAllocPercent(30)">30% ของเงินเหลือ</span>
+                <span class="chip" onclick="setEfAllocPercent(50)">50% ของเงินเหลือ</span>
+                <span class="chip" onclick="setEfAllocFixed(3000)">3,000 ฿</span>
+                <span class="chip" onclick="setEfAllocFixed(5000)">5,000 ฿</span>
+              </div>
+
+              <!-- Estimated Time to Target -->
+              <div id="efTimelineVerdict" style="font-size:0.8rem; line-height:1.5; color:var(--text-main); background:var(--card-sub); padding:10px 12px; border-radius:8px;">
+                <!-- Dynamically populated timeline -->
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -2113,6 +2190,91 @@
 
           <div id="debtStrategyList">
             <!-- Dynamically populated ranked payoff list -->
+          </div>
+        </div>
+
+        <!-- Debt Prepayment & Accelerated Payoff Simulator Card -->
+        <div class="card" id="debtPrepayCard" style="background:linear-gradient(135deg, #FAF5FF, #F3E8FF); border:1.5px solid #C084FC; margin-top:14px;">
+          <div class="card-header" style="margin-bottom:6px;">
+            <div class="card-title" style="font-size:0.95rem;">
+              <span class="icon">⚡</span>
+              <span>เครื่องมือจำลองการโปะหนี้ & ประหยัดดอกเบี้ย (Debt Prepayment Simulator)</span>
+            </div>
+            <span class="badge badge-purple">ประหยัดดอกเบี้ย</span>
+          </div>
+          <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:12px;">จำลองผลลัพธ์เมื่อจ่ายเงินต้นเพิ่มต่อเดือน หรือโปะเงินก้อนรายปี/โบนัส:</p>
+
+          <!-- Debt Selection -->
+          <div class="input-group" style="margin-bottom:12px;">
+            <label class="input-label"><span>🎯 เลือกรายการหนี้ที่ต้องการจำลอง:</span></label>
+            <div class="input-wrap">
+              <select class="form-input" id="prepay_debtSelect" onchange="onPrepayInputChanged()" style="cursor:pointer; font-weight:600; color:var(--pea-purple-light);">
+                <option value="all">🌟 รวมหนี้สินทุกรายการ (พอร์ตหนี้รวม)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Prepayment Controls -->
+          <div style="background:var(--card-bg); border-radius:12px; padding:12px; border:1px solid var(--border); margin-bottom:12px;">
+            <!-- Extra Monthly Payment -->
+            <div style="margin-bottom:12px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.84rem; margin-bottom:4px;">
+                <span>💵 โปะเงินต้นเพิ่มรายเดือน (บาท/เดือน):</span>
+                <b class="num-font" id="prepayExtraMonthlyVal" style="color:var(--success);">+0 ฿/ด.</b>
+              </div>
+              <input type="range" class="form-range" id="prepay_extraMonthly" min="0" max="30000" step="500" value="0" oninput="onPrepayInputChanged()" style="width:100%;">
+              <div class="chips-row" style="margin-top:4px;">
+                <span class="chip" onclick="setPrepayMonthly(0)">ไม่โปะ</span>
+                <span class="chip" onclick="setPrepayMonthly(2000)">+2k</span>
+                <span class="chip" onclick="setPrepayMonthly(5000)">+5k</span>
+                <span class="chip" onclick="setPrepayMonthly(10000)">+10k</span>
+                <span class="chip" onclick="setPrepayMonthly(15000)">+15k</span>
+              </div>
+            </div>
+
+            <!-- Yearly Lump-sum Prepayment (e.g. Bonus) -->
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.84rem; margin-bottom:4px;">
+                <span>🎁 โปะเงินก้อนรายปี / เงินโบนัส (บาท/ปี):</span>
+                <b class="num-font" id="prepayYearlyLumpVal" style="color:#D97706;">+0 ฿/ปี</b>
+              </div>
+              <input type="range" class="form-range" id="prepay_yearlyLump" min="0" max="200000" step="5000" value="0" oninput="onPrepayInputChanged()" style="width:100%;">
+              <div class="chips-row" style="margin-top:4px;">
+                <span class="chip" onclick="setPrepayYearly(0)">ไม่โปะก้อน</span>
+                <span class="chip" onclick="setPrepayYearly(30000)">+30k (โบนัส)</span>
+                <span class="chip" onclick="setPrepayYearly(50000)">+50k</span>
+                <span class="chip" onclick="setPrepayYearly(100000)">+100k</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Simulation Results Box -->
+          <div style="background:var(--card-bg); border-radius:12px; padding:12px; border:1px solid var(--border);">
+            <!-- High Impact Summary -->
+            <div class="stat-grid-2" style="margin-bottom:10px;">
+              <div class="mini-stat highlight" style="background:#ECFDF5; border-color:#6EE7B7;">
+                <span class="mini-label" style="color:#065F46;">💰 ประหยัดดอกเบี้ยได้ทั้งสิ้น</span>
+                <div class="mini-value num-font green" id="prepaySavedInterestVal" style="font-size:1.15rem;">0 ฿</div>
+                <div class="mini-sub" id="prepayInterestSub">ลดภาระดอกเบี้ยจ่าย</div>
+              </div>
+              <div class="mini-stat" style="background:#EFF6FF; border-color:#93C5FD;">
+                <span class="mini-label" style="color:#1E40AF;">⏳ ปลดหนี้ได้เร็วขึ้น</span>
+                <div class="mini-value num-font" id="prepayTimeSavedVal" style="font-size:1.15rem; color:#1D4ED8;">0 ปี 0 ด.</div>
+                <div class="mini-sub" id="prepayTimeSub">หมดหนี้เร็วกว่าเดิม</div>
+              </div>
+            </div>
+
+            <!-- Comparison Breakdown -->
+            <div style="font-size:0.8rem; line-height:1.6; color:var(--text-main); background:var(--card-sub); padding:10px 12px; border-radius:8px;">
+              <div style="display:flex; justify-content:space-between; border-bottom:1px dashed var(--border); padding-bottom:4px; margin-bottom:4px;">
+                <span>แผนผ่อนชำระเดิม (ขั้นต่ำ):</span>
+                <b id="prepayOriginalSummary">-</b>
+              </div>
+              <div style="display:flex; justify-content:space-between; color:var(--success); font-weight:700;">
+                <span>แผนผ่อนชำระใหม่ (เร่งโปะ):</span>
+                <span id="prepayNewSummary">-</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -2696,6 +2858,83 @@
             </div>
             <button type="button" class="solution-btn" onclick="applySolReturn()">เลือกทางนี้</button>
           </div>
+        </div>
+
+        <!-- Interactive Retirement Gap-Closing & Savings Rate Timeline Optimizer Card -->
+        <div class="card" id="gapTimelineOptimizerCard" style="background:linear-gradient(135deg, #FFFBEB, #FEF3C7); border:1.5px solid #F59E0B; margin-top:14px;">
+          <div class="card-header" style="margin-bottom:6px;">
+            <div class="card-title" style="font-size:0.95rem;">
+              <span class="icon">🎯</span>
+              <span>ตัวคำนวณปรับอัตราการออมเพื่อปิด Gap เกษียณ & ระยะเวลาบรรลุเป้าหมาย</span>
+            </div>
+            <span class="badge badge-gold" id="gapOptStatusBadge">คำนวณระยะเวลา</span>
+          </div>
+          <p style="font-size:0.78rem; color:#78350F; margin-bottom:12px;">จำลองว่าหากปรับเพิ่มเงินออมหรืออัตราสะสม จะช่วยปิดส่วนขาดเงินเกษียณได้สำเร็จภายในกี่ปี:</p>
+
+          <!-- Current Gap Display -->
+          <div style="background:#FFFFFF; border-radius:10px; padding:10px 12px; margin-bottom:12px; border:1px solid #FDE68A; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <span style="font-size:0.76rem; color:#92400E;">ส่วนต่างเงินเกษียณที่ยังขาดอยู่:</span>
+              <div class="num-font red" id="gapOptCurrentGapVal" style="font-weight:700; font-size:1.15rem;">0 ฿</div>
+            </div>
+            <div style="text-align:right;">
+              <span style="font-size:0.72rem; color:#B45309;">ระยะเวลาสะสมก่อนเกษียณ</span>
+              <div class="num-font" id="gapOptYearsLeftVal" style="font-weight:700; font-size:0.95rem; color:#78350F;">0 ปี</div>
+            </div>
+          </div>
+
+          <!-- Savings Adjustment Controls -->
+          <div style="background:#FFFFFF; border-radius:10px; padding:12px; border:1px solid #FDE68A; margin-bottom:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.84rem; margin-bottom:4px;">
+              <span>📈 ปรับเพิ่มอัตราเงินออมเสริม (% ของเงินเดือน):</span>
+              <b class="num-font" id="gapOptSavingsRateVal" style="color:#D97706;">+5.0% (+2,250 ฿/ด.)</b>
+            </div>
+            <input type="range" class="form-range" id="gapOpt_savingsRateSlider" min="1" max="25" step="0.5" value="5" oninput="onGapOptimizerChanged()" style="width:100%;">
+            
+            <div class="chips-row" style="margin-top:4px; margin-bottom:8px;">
+              <span class="chip" onclick="setGapOptSavingsRate(3)">+3%</span>
+              <span class="chip" onclick="setGapOptSavingsRate(5)">+5%</span>
+              <span class="chip" onclick="setGapOptSavingsRate(10)">+10%</span>
+              <span class="chip" onclick="setGapOptSavingsRate(15)">+15%</span>
+              <span class="chip" onclick="setGapOptSavingsRate(20)">+20%</span>
+            </div>
+
+            <!-- Dynamic Result Metric -->
+            <div style="background:#FAF5FF; border:1px solid #E9D5FF; border-radius:8px; padding:10px; margin-top:8px;">
+              <div style="font-size:0.82rem; font-weight:700; color:#581C87; margin-bottom:4px;">
+                🏁 ผลลัพธ์: <span id="gapOptTimelineText">จะปิด Gap สำเร็จได้ภายใน - ปี (ณ อายุ - ปี)</span>
+              </div>
+              <div style="font-size:0.75rem; color:#6B21A8;" id="gapOptDetailText">
+                เงินออมสะสมเสริมพร้อมผลตอบแทนทบต้นจะเพียงพอปิดช่องว่างทั้งหมดก่อนถึงวันเกษียณจริง
+              </div>
+            </div>
+          </div>
+
+          <!-- Savings Matrix Table -->
+          <div style="background:#FFFFFF; border-radius:10px; padding:10px 12px; border:1px solid #FDE68A; margin-bottom:12px;">
+            <div style="font-weight:700; font-size:0.82rem; color:#92400E; margin-bottom:6px;">
+              📊 ตารางเปรียบเทียบสัดส่วนการออม vs ระยะเวลาปิด Gap:
+            </div>
+            <div style="overflow-x:auto;">
+              <table style="width:100%; font-size:0.74rem; border-collapse:collapse; text-align:center;">
+                <thead>
+                  <tr style="background:#FEF3C7; color:#78350F; font-weight:700;">
+                    <th style="padding:4px;">อัตราการออมเพิ่ม</th>
+                    <th style="padding:4px;">เงินออมต่อเดือน</th>
+                    <th style="padding:4px;">ระยะเวลาปิด Gap</th>
+                    <th style="padding:4px;">อายุที่สำเร็จ</th>
+                  </tr>
+                </thead>
+                <tbody id="gapOptMatrixBody">
+                  <!-- Dynamically populated rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-purple" style="width:100%;" onclick="applyGapOptimizerToPlan()">
+            <span>⚡ นำสัดส่วนนี้ไปปรับใช้ในแผนเกษียณทันที</span>
+          </button>
         </div>
 
         <!-- Tax Optimization Card -->
@@ -4360,6 +4599,9 @@
 
       renderNetWorthBreakdown(liquidRetirementAssets, personalAssets, totalAssets);
       renderDebtStrategy();
+      renderEmergencyFundPlanner(totalExpense, netSavings);
+      populatePrepayDebtOptions();
+      calculateDebtPrepayment();
 
       // Countdown
       const yearsLeft = Math.max(state.pea_retireAge - state.pea_currentAge, 0);
@@ -4634,6 +4876,7 @@
       calculateTaxSavings(inp.salary, inp.employeeRate);
       renderAssetAllocationGuide(inp.pfReturn);
       prepareSmartSolutions(inp, res);
+      renderRetirementGapOptimizer(inp, res);
       runMonteCarloSimulation(500, res);
       updatePrintReportDoc(res, inp);
 
@@ -4879,6 +5122,349 @@
       if (taxableIncome > 300000) return 10;
       if (taxableIncome > 150000) return 5;
       return 0;
+    }
+
+    // ==================== EMERGENCY FUND PLANNER ENGINE ====================
+    let currentEfAlloc = 3000;
+
+    function renderEmergencyFundPlanner(totalExpense, netSavings) {
+      const card = $('emergencyFundCard');
+      if (!card) return;
+
+      const monthlyLivingExp = Math.max(1, totalExpense - (state.exp_saving || 0));
+      const currentLiquid = (state.ast_cash || 0) + (state.ast_fixed || 0);
+      const target3 = monthlyLivingExp * 3;
+      const target6 = monthlyLivingExp * 6;
+      const gap3 = Math.max(0, target3 - currentLiquid);
+      const gap6 = Math.max(0, target6 - currentLiquid);
+      const emergencyMonths = currentLiquid / monthlyLivingExp;
+
+      if ($('efStatusBadge')) {
+        $('efStatusBadge').textContent = emergencyMonths.toFixed(1) + ' เดือน';
+        $('efStatusBadge').className = 'badge ' + (emergencyMonths >= 6 ? 'badge-green' : (emergencyMonths >= 3 ? 'badge-gold' : 'badge-red'));
+      }
+      if ($('efTarget3Amount')) $('efTarget3Amount').textContent = fmt(target3) + ' ฿';
+      if ($('efTarget6Amount')) $('efTarget6Amount').textContent = fmt(target6) + ' ฿';
+      if ($('efGap3Text')) $('efGap3Text').textContent = gap3 > 0 ? ('ขาดอีก ' + fmt(gap3) + ' ฿') : '✅ ครบ 3 เดือนแล้ว';
+      if ($('efGap6Text')) $('efGap6Text').textContent = gap6 > 0 ? ('ขาดอีก ' + fmt(gap6) + ' ฿') : '✅ ครบ 6 เดือนแล้ว';
+      if ($('efCurrentLiquidVal')) $('efCurrentLiquidVal').textContent = fmt(currentLiquid) + ' ฿';
+
+      const progress6 = target6 > 0 ? Math.min(100, Math.round(currentLiquid / target6 * 100)) : 100;
+      if ($('efProgressPercentText')) $('efProgressPercentText').textContent = progress6 + '% (ของเป้าหมาย 6 เดือน)';
+      if ($('efProgressBar')) $('efProgressBar').style.width = progress6 + '%';
+
+      // Update Slider Range
+      const slider = $('ef_allocSlider');
+      if (slider) {
+        const maxLimit = Math.max(20000, Math.round(Math.max(0, netSavings) * 1.5 / 1000) * 1000);
+        slider.max = maxLimit;
+        if (parseFloat(slider.value) > maxLimit) slider.value = maxLimit;
+        if (!currentEfAlloc || currentEfAlloc > maxLimit) {
+          currentEfAlloc = netSavings > 0 ? Math.min(netSavings, 3000) : 1000;
+          slider.value = currentEfAlloc;
+        }
+      }
+
+      updateEfTimelineDisplay(gap3, gap6, currentEfAlloc, netSavings);
+    }
+
+    function onEfAllocChanged() {
+      const slider = $('ef_allocSlider');
+      if (slider) {
+        currentEfAlloc = parseFloat(slider.value) || 0;
+      }
+      renderAll();
+    }
+
+    function setEfAllocPercent(pct) {
+      const totalIncome = (state.inc_salary || 0) + (state.inc_pea_electric || 0) + (state.inc_pea_shift || 0) + (state.inc_pea_hazard || 0) + (state.inc_business || 0) + (state.inc_rent || 0) + (state.inc_dividend || 0) + (state.inc_bonus || 0) + (state.inc_other || 0);
+      let totalDebtMonthly = 0;
+      if (state.debts) state.debts.forEach(d => totalDebtMonthly += (d.monthly || 0));
+      const totalExpense = state.exp_housing + state.exp_car + state.exp_home + state.exp_family + state.exp_insurance + state.exp_lifestyle + totalDebtMonthly + state.exp_saving + state.exp_tax;
+      const netSavings = Math.max(0, totalIncome - totalExpense);
+      
+      const val = Math.round((netSavings * (pct / 100)) / 500) * 500;
+      currentEfAlloc = Math.max(500, val);
+      if ($('ef_allocSlider')) $('ef_allocSlider').value = currentEfAlloc;
+      renderAll();
+    }
+
+    function setEfAllocFixed(amt) {
+      currentEfAlloc = amt;
+      if ($('ef_allocSlider')) $('ef_allocSlider').value = amt;
+      renderAll();
+    }
+
+    function updateEfTimelineDisplay(gap3, gap6, alloc, netSavings) {
+      if ($('efAllocAmountBadge')) $('efAllocAmountBadge').textContent = fmt(alloc) + ' ฿/ด.';
+      const verdictEl = $('efTimelineVerdict');
+      if (!verdictEl) return;
+
+      if (alloc <= 0) {
+        verdictEl.innerHTML = '⚠️ ยังไม่ได้จัดสรรเงินสะสม กรุณาเลื่อนแถบเพื่อกำหนดจำนวนเงินที่ต้องการออมเข้าเงินสำรองฉุกเฉิน';
+        return;
+      }
+
+      const m3 = gap3 > 0 ? Math.ceil(gap3 / alloc) : 0;
+      const m6 = gap6 > 0 ? Math.ceil(gap6 / alloc) : 0;
+
+      let html = '';
+      if (gap3 === 0 && gap6 === 0) {
+        html = '🟢 <b>ยอดเยี่ยมมาก:</b> คุณมีเงินสำรองฉุกเฉินครบ 6 เดือนแล้ว สามารถนำเงินส่วนนี้ไปลงทุนสร้างผลตอบแทนระยะยาวได้เต็มที่';
+      } else {
+        const t3Text = m3 > 0 ? `${Math.floor(m3 / 12) > 0 ? Math.floor(m3 / 12) + ' ปี ' : ''}${m3 % 12} เดือน` : 'ครบแล้ว';
+        const t6Text = m6 > 0 ? `${Math.floor(m6 / 12) > 0 ? Math.floor(m6 / 12) + ' ปี ' : ''}${m6 % 12} เดือน` : 'ครบแล้ว';
+        html = `
+          ⚡ <b>ระยะเวลาในการสะสม (ด้วยยอด ${fmt(alloc)} ฿/ด.):</b><br>
+          • เป้าหมาย 3 เดือน (เกณฑ์ขั้นต่ำ): <b>จะครบใน ${t3Text}</b><br>
+          • เป้าหมาย 6 เดือน (เกณฑ์ปลอดภัยสูง): <b>จะครบใน ${t6Text}</b>
+        `;
+      }
+      verdictEl.innerHTML = html;
+    }
+
+    // ==================== DEBT PREPAYMENT SIMULATOR ENGINE ====================
+    function populatePrepayDebtOptions() {
+      const sel = $('prepay_debtSelect');
+      if (!sel) return;
+      const curVal = sel.value || 'all';
+
+      let optionsHtml = '<option value="all">🌟 รวมหนี้สินทุกรายการ (พอร์ตหนี้รวม)</option>';
+      if (state.debts && state.debts.length > 0) {
+        state.debts.forEach((d, idx) => {
+          optionsHtml += `<option value="${d.id || idx}">${d.name} (คงเหลือ ${fmt(d.principal)} ฿ | ${d.rate}%/ปี)</option>`;
+        });
+      }
+      sel.innerHTML = optionsHtml;
+      sel.value = curVal;
+    }
+
+    function onPrepayInputChanged() {
+      calculateDebtPrepayment();
+    }
+
+    function setPrepayMonthly(amt) {
+      if ($('prepay_extraMonthly')) $('prepay_extraMonthly').value = amt;
+      calculateDebtPrepayment();
+    }
+
+    function setPrepayYearly(amt) {
+      if ($('prepay_yearlyLump')) $('prepay_yearlyLump').value = amt;
+      calculateDebtPrepayment();
+    }
+
+    function calculateDebtPrepayment() {
+      if (!$('debtPrepayCard')) return;
+
+      const selVal = $('prepay_debtSelect') ? $('prepay_debtSelect').value : 'all';
+      const extraM = parseFloat($('prepay_extraMonthly') ? $('prepay_extraMonthly').value : 0) || 0;
+      const yearlyLump = parseFloat($('prepay_yearlyLump') ? $('prepay_yearlyLump').value : 0) || 0;
+
+      if ($('prepayExtraMonthlyVal')) $('prepayExtraMonthlyVal').textContent = `+${fmt(extraM)} ฿/ด.`;
+      if ($('prepayYearlyLumpVal')) $('prepayYearlyLumpVal').textContent = `+${fmt(yearlyLump)} ฿/ปี`;
+
+      let targetPrincipal = 0;
+      let targetMonthly = 0;
+      let targetRate = 0;
+
+      if (selVal === 'all') {
+        if (!state.debts || state.debts.length === 0) {
+          targetPrincipal = 0;
+          targetMonthly = 0;
+          targetRate = 0;
+        } else {
+          let sumP = 0, sumM = 0, weightedRateSum = 0;
+          state.debts.forEach(d => {
+            const p = d.principal || 0;
+            const m = d.monthly || 0;
+            const r = d.rate || 0;
+            sumP += p;
+            sumM += m;
+            weightedRateSum += p * r;
+          });
+          targetPrincipal = sumP;
+          targetMonthly = sumM;
+          targetRate = sumP > 0 ? (weightedRateSum / sumP) : 0;
+        }
+      } else {
+        const found = (state.debts || []).find(d => (d.id === selVal || d.id == selVal));
+        if (found) {
+          targetPrincipal = found.principal || 0;
+          targetMonthly = found.monthly || 0;
+          targetRate = found.rate || 0;
+        }
+      }
+
+      if (targetPrincipal <= 0) {
+        if ($('prepaySavedInterestVal')) $('prepaySavedInterestVal').textContent = '0 ฿';
+        if ($('prepayTimeSavedVal')) $('prepayTimeSavedVal').textContent = '0 ปี 0 ด.';
+        if ($('prepayOriginalSummary')) $('prepayOriginalSummary').textContent = 'ไม่มีภาระหนี้สิน';
+        if ($('prepayNewSummary')) $('prepayNewSummary').textContent = '-';
+        return;
+      }
+
+      // Amortization simulation
+      const r = (targetRate / 100) / 12;
+
+      // 1. Normal Plan
+      let bal1 = targetPrincipal, totalInt1 = 0, m1 = 0;
+      const minPayment = Math.max(targetMonthly, bal1 * r + 10);
+      while (bal1 > 0 && m1 < 600) {
+        m1++;
+        const interest = bal1 * r;
+        totalInt1 += interest;
+        const prinPaid = Math.min(bal1, minPayment - interest);
+        if (prinPaid <= 0) break;
+        bal1 -= prinPaid;
+      }
+
+      // 2. Accelerated Plan
+      let bal2 = targetPrincipal, totalInt2 = 0, m2 = 0;
+      while (bal2 > 0 && m2 < 600) {
+        m2++;
+        const interest = bal2 * r;
+        totalInt2 += interest;
+        let extraThisMonth = extraM;
+        if (m2 % 12 === 0) extraThisMonth += yearlyLump;
+        const prinPaid = Math.min(bal2, (minPayment - interest) + extraThisMonth);
+        if (prinPaid <= 0) break;
+        bal2 -= prinPaid;
+      }
+
+      const intSaved = Math.max(0, Math.round(totalInt1 - totalInt2));
+      const monthsSaved = Math.max(0, m1 - m2);
+
+      if ($('prepaySavedInterestVal')) $('prepaySavedInterestVal').textContent = fmt(intSaved) + ' ฿';
+      if ($('prepayTimeSavedVal')) $('prepayTimeSavedVal').textContent = `${Math.floor(monthsSaved / 12)} ปี ${monthsSaved % 12} ด.`;
+      
+      const origYears = Math.floor(m1 / 12);
+      const origMos = m1 % 12;
+      const newYears = Math.floor(m2 / 12);
+      const newMos = m2 % 12;
+
+      if ($('prepayOriginalSummary')) {
+        $('prepayOriginalSummary').textContent = `ผ่อน ${origYears} ปี ${origMos} ด. | ดอกเบี้ยรวม ${fmt(Math.round(totalInt1))} ฿`;
+      }
+      if ($('prepayNewSummary')) {
+        $('prepayNewSummary').textContent = `ผ่อนเหลือ ${newYears} ปี ${newMos} ด. | ดอกเบี้ยรวม ${fmt(Math.round(totalInt2))} ฿ (ประหยัด ${fmt(intSaved)} ฿)`;
+      }
+    }
+
+    // ==================== RETIREMENT GAP CLOSING & TIMELINE OPTIMIZER ====================
+    let currentGapOptRate = 5;
+
+    function onGapOptimizerChanged() {
+      const slider = $('gapOpt_savingsRateSlider');
+      if (slider) currentGapOptRate = parseFloat(slider.value) || 5;
+      if (baseRetirementInputs && currentRetirementResults) {
+        renderRetirementGapOptimizer(baseRetirementInputs, currentRetirementResults);
+      }
+    }
+
+    function setGapOptSavingsRate(rate) {
+      currentGapOptRate = rate;
+      if ($('gapOpt_savingsRateSlider')) $('gapOpt_savingsRateSlider').value = rate;
+      if (baseRetirementInputs && currentRetirementResults) {
+        renderRetirementGapOptimizer(baseRetirementInputs, currentRetirementResults);
+      }
+    }
+
+    function renderRetirementGapOptimizer(inp, res) {
+      const card = $('gapTimelineOptimizerCard');
+      if (!card) return;
+
+      const gap = Math.max(0, -res.diff);
+      const yearsLeft = Math.max(0, res.n1);
+
+      if ($('gapOptCurrentGapVal')) $('gapOptCurrentGapVal').textContent = fmt(gap) + ' ฿';
+      if ($('gapOptYearsLeftVal')) $('gapOptYearsLeftVal').textContent = `${yearsLeft} ปี (เกษียณ ${inp.retireAge})`;
+
+      if (gap <= 0) {
+        if ($('gapOptStatusBadge')) {
+          $('gapOptStatusBadge').textContent = '✅ ไม่ขาดเงิน';
+          $('gapOptStatusBadge').className = 'badge badge-green';
+        }
+        if ($('gapOptTimelineText')) $('gapOptTimelineText').innerHTML = '🎉 แผนเกษียณของคุณเพียงพอ 100% แล้ว ไม่จำเป็นต้องเพิ่มเงินออม';
+        if ($('gapOptDetailText')) $('gapOptDetailText').textContent = `เงินที่จะมี ณ วันเกษียณ (${fmt(res.totalAvailable)} ฿) เกินเป้าหมายเรียบร้อยแล้ว`;
+        return;
+      }
+
+      if ($('gapOptStatusBadge')) {
+        $('gapOptStatusBadge').textContent = '⚠️ ขาด ' + fmt(gap) + ' ฿';
+        $('gapOptStatusBadge').className = 'badge badge-red';
+      }
+
+      const extraMonthly = Math.round(inp.salary * (currentGapOptRate / 100));
+      if ($('gapOptSavingsRateVal')) {
+        $('gapOptSavingsRateVal').textContent = `+${currentGapOptRate.toFixed(1)}% (+${fmt(extraMonthly)} ฿/ด.)`;
+      }
+
+      const preMonthlyReturn = Math.pow(1 + inp.preRetireReturn / 100, 1 / 12) - 1;
+      
+      // Calculate months to close gap
+      let acc = 0, monthsToClose = 0;
+      for (let m = 1; m <= yearsLeft * 12; m++) {
+        acc = acc * (1 + preMonthlyReturn) + extraMonthly;
+        if (acc >= gap && monthsToClose === 0) {
+          monthsToClose = m;
+        }
+      }
+
+      if (monthsToClose > 0) {
+        const yearsToClose = Math.ceil(monthsToClose / 12);
+        const ageAchieved = inp.currentAge + yearsToClose;
+        if ($('gapOptTimelineText')) {
+          $('gapOptTimelineText').innerHTML = `จะปิด Gap สำเร็จได้ภายใน <b>${yearsToClose} ปี (ณ อายุ ${ageAchieved} ปี)</b>`;
+        }
+        if ($('gapOptDetailText')) {
+          const fasterYears = yearsLeft - yearsToClose;
+          $('gapOptDetailText').textContent = `✅ บรรลุเป้าหมายเร็วกว่าวันเกษียณ ${fasterYears > 0 ? fasterYears + ' ปี' : 'พอดี'} โดยเงินก้อนนี้จะเติบโตรวมเป็น ${fmt(Math.round(acc))} บาท`;
+        }
+      } else {
+        const pctClosed = Math.round(acc / gap * 100);
+        if ($('gapOptTimelineText')) {
+          $('gapOptTimelineText').innerHTML = `เงินออมเพิ่มจะเติบโตรวมเป็น <b>${fmt(Math.round(acc))} ฿</b> (ปิด Gap ได้ ${pctClosed}%)`;
+        }
+        if ($('gapOptDetailText')) {
+          $('gapOptDetailText').textContent = `💡 แนะนำปรับเพิ่มอัตราการออมขึ้นเป็น +${(currentGapOptRate + 5).toFixed(0)}% หรือปรับผลตอบแทนการลงทุนเพื่อปิด Gap ให้ครบ 100%`;
+        }
+      }
+
+      // Matrix Table Generation
+      const testRates = [3, 5, 8, 10, 15, 20];
+      const rows = testRates.map(r => {
+        const mContrib = Math.round(inp.salary * (r / 100));
+        let mAcc = 0, mClose = 0;
+        for (let m = 1; m <= yearsLeft * 12; m++) {
+          mAcc = mAcc * (1 + preMonthlyReturn) + mContrib;
+          if (mAcc >= gap && mClose === 0) mClose = m;
+        }
+        const yClose = mClose > 0 ? Math.ceil(mClose / 12) : 0;
+        const ageClose = yClose > 0 ? (inp.currentAge + yClose) : '-';
+        const isCurrent = Math.abs(r - currentGapOptRate) < 0.3;
+        return `
+          <tr style="border-bottom:1px solid #FEF3C7; ${isCurrent ? 'background:#FDE68A; font-weight:700;' : ''}">
+            <td style="padding:5px;">+${r}%</td>
+            <td style="padding:5px;" class="num-font">+${fmt(mContrib)} ฿</td>
+            <td style="padding:5px; color:${yClose > 0 ? '#15803D' : '#B45309'}; font-weight:700;">
+              ${yClose > 0 ? yClose + ' ปี' : (Math.round(mAcc / gap * 100) + '% ของ Gap')}
+            </td>
+            <td style="padding:5px;">${ageClose !== '-' ? ageClose + ' ปี' : 'ยังไม่ครบ'}</td>
+          </tr>
+        `;
+      }).join('');
+
+      if ($('gapOptMatrixBody')) $('gapOptMatrixBody').innerHTML = rows;
+    }
+
+    function applyGapOptimizerToPlan() {
+      if (!baseRetirementInputs) return;
+      const extraMonthly = Math.round(baseRetirementInputs.salary * (currentGapOptRate / 100));
+      state.pea_monthlySavings = (state.pea_monthlySavings || 0) + extraMonthly;
+      if ($('pea_monthlySavings')) $('pea_monthlySavings').value = state.pea_monthlySavings;
+      
+      onRetirementInput();
+      showToast(`🎉 ปรับเพิ่มเงินออม +${fmt(extraMonthly)} ฿/ด. เข้าสู่แผนเกษียณเรียบร้อยแล้ว!`);
     }
 
     // ==================== TAX SAVINGS ENGINE ====================
@@ -5377,6 +5963,38 @@
     function jumpToCashflow() {
       switchTab('cashflow');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function jumpToEmergencyPlanner() {
+      switchTab('cashflow');
+      const subBtns = document.querySelectorAll('#tab-cashflow .seg-btn');
+      if (subBtns && subBtns[2]) switchCFSub('summary', subBtns[2]);
+      setTimeout(() => {
+        const card = $('emergencyFundCard');
+        if (card) card.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+
+    function jumpToDebtPrepay() {
+      switchTab('networth');
+      const subBtns = document.querySelectorAll('#tab-networth .seg-btn');
+      if (subBtns && subBtns[1]) switchNWSub('liabilities', subBtns[1]);
+      setTimeout(() => {
+        const card = $('debtPrepayCard');
+        if (card) card.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+
+    function jumpToGapOptimizer() {
+      switchTab('retirement');
+      setTimeout(() => {
+        const card = $('gapTimelineOptimizerCard');
+        if (card) card.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+
+    function goToSmartGap() {
+      jumpToGapOptimizer();
     }
 
     function showToast(msg) {
