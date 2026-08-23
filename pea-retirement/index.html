@@ -1430,7 +1430,8 @@
       font-weight: 700;
     }
 
-    /* ---------- BOTTOM NAVIGATION (NATIVE MOBILE FEEL) ---------- */
+    /* ---------- TAB / BOTTOM NAVIGATION ---------- */
+    .app-nav,
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -1440,9 +1441,10 @@
       background: var(--nav-bg);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border-top: 1px solid var(--border);
-      padding: 6px 6px calc(6px + var(--safe-bottom));
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+      border-top: 1.5px solid var(--border);
+      padding: 6px 8px calc(6px + var(--safe-bottom));
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+      transition: all 0.25s ease;
     }
 
     .nav-container {
@@ -1450,6 +1452,7 @@
       margin: 0 auto;
       display: flex;
       justify-content: space-around;
+      gap: 4px;
     }
 
     .nav-tab {
@@ -1465,14 +1468,16 @@
       cursor: pointer;
       padding: 6px 2px;
       border-radius: 12px;
-      transition: all 0.2s ease;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .nav-tab svg {
       width: 22px;
       height: 22px;
       fill: currentColor;
-      transition: transform 0.2s ease;
+      transition: transform 0.2s ease, fill 0.2s ease;
     }
 
     .nav-tab span {
@@ -1481,29 +1486,70 @@
       letter-spacing: -0.01em;
     }
 
+    .nav-tab:hover {
+      color: var(--pea-purple-light);
+    }
+
+    /* Active Highlight (Mobile) */
     .nav-tab.active {
       color: var(--pea-purple-light);
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.14), rgba(245, 158, 11, 0.1));
+      border: 1px solid rgba(124, 58, 237, 0.25);
+      font-weight: 700;
     }
 
     .nav-tab.active svg {
       transform: translateY(-2px);
-      color: var(--pea-purple-light);
+      fill: var(--pea-purple-light);
+      filter: drop-shadow(0 2px 5px rgba(124, 58, 237, 0.35));
     }
 
-    /* Responsive adjustments for desktop */
+    /* Responsive adjustments for Desktop & Tablet */
     @media (min-width: 768px) {
-      body { padding-bottom: 40px; }
+      body { padding-bottom: 30px; }
+      .app-nav,
       .bottom-nav {
         position: sticky;
-        top: 60px;
+        top: 0;
         bottom: auto;
         border-top: none;
-        border-bottom: 1px solid var(--border);
+        border-bottom: 1.5px solid var(--border);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
         padding: 8px 16px;
         margin-bottom: 16px;
+        z-index: 95;
       }
-      .nav-tab { flex-direction: row; gap: 8px; padding: 8px 16px; }
-      .nav-tab span { font-size: 0.85rem; }
+      .nav-container {
+        max-width: 760px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+      }
+      .nav-tab {
+        flex: 1;
+        max-width: 145px;
+        flex-direction: row;
+        gap: 8px;
+        padding: 8px 14px;
+        border-radius: 10px;
+      }
+      .nav-tab svg { width: 19px; height: 19px; }
+      .nav-tab span { font-size: 0.84rem; }
+      .nav-tab.active {
+        color: #FFFFFF !important;
+        background: linear-gradient(135deg, #6B21A8, #7C3AED) !important;
+        box-shadow: 0 4px 14px rgba(124, 58, 237, 0.32);
+        border: 1.5px solid rgba(245, 158, 11, 0.45) !important;
+      }
+      .nav-tab.active svg {
+        fill: #FDE047 !important;
+        filter: drop-shadow(0 1px 3px rgba(0,0,0,0.3));
+        transform: none;
+      }
+      .nav-tab.active span {
+        color: #FFFFFF !important;
+      }
     }
 
     @media print {
@@ -1576,6 +1622,32 @@
       </div>
     </div>
   </header>
+
+  <!-- TAB NAVIGATION BAR (RESPONSIVE: TOP ON DESKTOP / FLOATING BOTTOM ON MOBILE) -->
+  <nav class="app-nav">
+    <div class="nav-container">
+      <button class="nav-tab active" onclick="switchTab('dashboard', this)">
+        <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+        <span>เธ เธฒเธเธฃเธงเธก</span>
+      </button>
+      <button class="nav-tab" onclick="switchTab('cashflow', this)">
+        <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+        <span>เธเธฃเธฐเนเธชเน€เธเธดเธเธชเธ”</span>
+      </button>
+      <button class="nav-tab" onclick="switchTab('networth', this)">
+        <svg viewBox="0 0 24 24"><path d="M4 10v7h3v-7H4zm6 0v7h3v-7h-3zM2 22h19v-3H2v3zm14-12v7h3v-7h-3zm-4.5-9L2 6v2h19V6l-9.5-5z"/></svg>
+        <span>เธเธเธ”เธธเธฅ</span>
+      </button>
+      <button class="nav-tab" onclick="switchTab('retirement', this)">
+        <svg viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+        <span>เนเธเธเน€เธเธฉเธตเธขเธ“</span>
+      </button>
+      <button class="nav-tab" onclick="switchTab('settings', this)">
+        <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+        <span>เธเธฑเธ”เธเธฒเธฃ</span>
+      </button>
+    </div>
+  </nav>
 
   <!-- MAIN CONTENT CONTAINER -->
   <main class="app-main">
@@ -4085,32 +4157,6 @@
       </div>
     </div>
   </div>
-
-  <!-- BOTTOM NAVIGATION BAR (FIXED) -->
-  <nav class="bottom-nav">
-    <div class="nav-container">
-      <button class="nav-tab active" onclick="switchTab('dashboard', this)">
-        <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
-        <span>ภาพรวม</span>
-      </button>
-      <button class="nav-tab" onclick="switchTab('cashflow', this)">
-        <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
-        <span>กระแสเงินสด</span>
-      </button>
-      <button class="nav-tab" onclick="switchTab('networth', this)">
-        <svg viewBox="0 0 24 24"><path d="M4 10v7h3v-7H4zm6 0v7h3v-7h-3zM2 22h19v-3H2v3zm14-12v7h3v-7h-3zm-4.5-9L2 6v2h19V6l-9.5-5z"/></svg>
-        <span>งบดุล</span>
-      </button>
-      <button class="nav-tab" onclick="switchTab('retirement', this)">
-        <svg viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
-        <span>แผนเกษียณ</span>
-      </button>
-      <button class="nav-tab" onclick="switchTab('settings', this)">
-        <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-        <span>จัดการ</span>
-      </button>
-    </div>
-  </nav>
 
   <!-- ==================== JAVASCRIPT LOGIC ==================== -->
   <script>
