@@ -1783,19 +1783,7 @@
             </div>
           </div>
 
-          <!-- 2. เงินสะสม กสช. -->
-          <div class="input-group">
-            <label class="input-label">
-              <span>⚡ เงินสะสมกองทุนสำรองเลี้ยงชีพ (กสช. กฟภ.)</span>
-              <span class="input-hint" id="expPeaPfHint">หักรายเดือน</span>
-            </label>
-            <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="exp_pea_pf" value="1050" oninput="onDataChanged()">
-              <span class="input-unit">บาท/ด.</span>
-            </div>
-          </div>
-
-          <!-- 3. ฌาปนกิจสงเคราะห์ -->
+          <!-- 2. ฌาปนกิจสงเคราะห์ -->
           <div class="input-group">
             <label class="input-label">
               <span>🤝 เงินสงเคราะห์ / สมาคมฌาปนกิจสงเคราะห์ (กฟภ. / สหกรณ์)</span>
@@ -1806,9 +1794,9 @@
             </div>
           </div>
 
-          <!-- Helpful note for PEA Coop Loans & Coop Shares -->
+          <!-- Helpful note for PEA Provident Fund, Coop Shares & Loans -->
           <div style="margin-top:10px; padding:8px 12px; border-radius:8px; background:var(--card-sub); font-size:0.75rem; color:var(--text-muted); line-height:1.4; border-left:3px solid var(--pea-purple-light);">
-            💡 <b>สำหรับเงินกู้สหกรณ์ และค่าหุ้นสะสมสหกรณ์ กฟภ.:</b> จัดการใน <b>หมวดที่ 3 (หนี้สิน/สินทรัพย์)</b> และ <b>หมวดที่ 4 (แผนเกษียณ)</b> โดยตรง เพื่อให้งบรายจ่ายสะท้อนค่าใช้จ่ายจริง ไม่นำเงินออมค่าหุ้นหรือการผ่อนหนี้มาคิดซ้ำซ้อน
+            💡 <b>สำหรับเงินสะสม กสช., ค่าหุ้นสหกรณ์, และเงินกู้สหกรณ์:</b> ถือเป็นเงินออมสะสมสินทรัพย์และภาระหนี้สิน โดยสามารถตั้งค่าและคำนวณเงินก้อนได้ใน <b>หมวดที่ 3 (งบดุล)</b> และ <b>หมวดที่ 4 (แผนเกษียณ)</b> โดยตรง เพื่อให้งบรายจ่ายสะท้อนเฉพาะค่าใช้จ่ายจริง
           </div>
         </div>
 
@@ -3652,7 +3640,6 @@
       exp_tax: 0,
       // PEA Payroll Deductions (รายการหักสลิปเงินเดือน กฟภ.)
       exp_pea_tax: 0,
-      exp_pea_pf: 1050,
       exp_pea_cremation: 300,
       // Net Worth Assets (Dynamic list + legacy fallback)
       assets: [
@@ -4830,16 +4817,16 @@
       // 3. Cash Flow Calculation & Logic Correction
       const totalIncome = (state.inc_salary || 0) + (state.inc_pea_electric || 0) + (state.inc_pea_shift || 0) + (state.inc_pea_hazard || 0) + (state.inc_business || 0) + (state.inc_rent || 0) + (state.inc_dividend || 0) + (state.inc_bonus || 0) + (state.inc_other || 0);
       
-      const peaDeductionsTotal = (state.exp_pea_tax || 0) + (state.exp_pea_pf || 0) + (state.exp_pea_cremation || 0);
+      const peaDeductionsTotal = (state.exp_pea_tax || 0) + (state.exp_pea_cremation || 0);
       const livingExpensesTotal = (state.exp_housing || 0) + (state.exp_car || 0) + (state.exp_home || 0) + (state.exp_family || 0) + (state.exp_insurance || 0) + (state.exp_lifestyle || 0) + (state.exp_debt || 0) + (state.exp_saving || 0) + (state.exp_tax || 0);
       const totalExpense = peaDeductionsTotal + livingExpensesTotal + totalDebtMonthly;
       
+      const pfEmployeeMonthly = (state.inc_salary || 0) * ((state.pea_employeeRate || 0) / 100);
       const netSavings = totalIncome - totalExpense;
-      const totalSavingsWithExp = netSavings + (state.exp_saving || 0) + (state.exp_pea_pf || 0) + (state.pea_coopSharePerMonth || 0);
+      const totalSavingsWithExp = netSavings + (state.exp_saving || 0) + pfEmployeeMonthly + (state.pea_coopSharePerMonth || 0);
       
-      // Update PEA Deduction Hint & Subtotal
+      // Update PEA Deduction Subtotal
       if ($('peaDeductionsSubtotalBadge')) $('peaDeductionsSubtotalBadge').textContent = fmt(peaDeductionsTotal) + ' ฿/ด.';
-      if ($('expPeaPfHint')) $('expPeaPfHint').textContent = `${state.pea_employeeRate || 3}% (${fmt(Math.round((state.inc_salary || 35000) * ((state.pea_employeeRate || 3)/100)))} ฿)`;
       
       // True Net Savings Rate Logic:
       let savingsRate = 0;
@@ -6299,7 +6286,6 @@
           exp_saving: 8000,
           exp_tax: 1000,
           exp_pea_tax: 850,
-          exp_pea_pf: 2250,
           exp_pea_cremation: 350,
           assets: [
             { id: 'a_samp_cash1', category: 'cash', isLiquid: true, name: 'บัญชีเงินเดือน กรุงไทย', amount: 120000 },
