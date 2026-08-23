@@ -1451,7 +1451,7 @@
       </div>
       <div class="header-actions">
         <!-- User Profile Header Chip -->
-        <div class="user-profile-chip" onclick="handleAvatarEasterEggClick(event)" title="แตะรัว 5 ครั้งเพื่อเปิด Google Gravity หรือคลิกเพื่อแก้ไขโปรไฟล์">
+        <div class="user-profile-chip" onclick="openProfileModal()" title="เธเธฅเธดเธเน€เธเธทเนเธญเนเธเนเนเธเนเธเธฃเนเธเธฅเนเนเธฅเธฐเธเนเธญเธกเธนเธฅเธชเนเธงเธเธ•เธฑเธง">
           <div class="user-avatar-wrap">
             <img id="headerUserAvatar" src="" alt="Avatar">
           </div>
@@ -1491,7 +1491,7 @@
       <div class="card" style="margin-bottom:12px; padding:12px 14px; background:linear-gradient(135deg, var(--card-bg), var(--pea-purple-bg)); border:1.5px solid var(--pea-purple-soft); border-radius:14px;">
         <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
           <div style="display:flex; align-items:center; gap:12px;">
-            <div style="position:relative; cursor:pointer;" onclick="handleAvatarEasterEggClick(event)" title="แตะรัว 5 ครั้งเพื่อเปิด Google Gravity!">
+            <div style="position:relative; cursor:pointer;" onclick="openProfileModal()" title="เธเธฅเธดเธเน€เธเธทเนเธญเนเธเนเนเธเนเธเธฃเนเธเธฅเน">
               <div style="width:56px; height:56px; border-radius:50%; padding:2.5px; background:linear-gradient(135deg, #7C3AED, #F59E0B, #A855F7); box-shadow:0 4px 12px rgba(124,58,237,0.25);">
                 <img id="dashUserAvatar" src="" alt="Profile" style="width:100%; height:100%; object-fit:cover; border-radius:50%; background:#fff; display:block;">
               </div>
@@ -3617,20 +3617,6 @@
             <span>✏️ แก้ไขข้อมูลโปรไฟล์ & รูปภาพ</span>
           </button>
         </div>
-      </div>
-
-      <!-- Google Gravity Easter Egg Card (Matter.js) -->
-      <div class="card" style="border:1.5px solid var(--pea-purple-soft); background:linear-gradient(135deg, var(--card-bg), var(--pea-purple-bg)); text-align:center; padding:16px;">
-        <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:6px;">
-          <span style="font-size:1.4rem;">🌌</span>
-          <b style="font-size:0.98rem; color:var(--pea-purple-light);">Google Gravity Simulator (Matter.js)</b>
-        </div>
-        <p style="font-size:0.78rem; color:var(--text-muted); max-width:440px; margin:0 auto 12px; line-height:1.45;">
-          จำลองแรงโน้มถ่วงฟิสิกส์ ทุก Element บนหน้าเว็บจะตกลงมากองที่พื้น สามารถใช้เมาส์ลาก โยน และปาเล่นได้! (หรือคลิกที่รูปโปรไฟล์บนแถบด้านบน 5 ครั้งติด)
-        </p>
-        <button type="button" class="btn btn-purple" style="width:auto; padding:8px 24px; font-size:0.86rem; font-weight:700;" onclick="initGoogleGravity()">
-          <span>🌌 เปิดใช้งาน Google Gravity</span>
-        </button>
       </div>
 
       <!-- Creator & System Development Credits Card -->
