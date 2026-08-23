@@ -1414,6 +1414,51 @@
     <!-- ==================== TAB 1: ภาพรวม (DASHBOARD) ==================== -->
     <div class="tab-panel active" id="tab-dashboard">
       
+      <!-- Hero Welcome & Financial Vision Graphic Banner -->
+      <div class="card" style="padding:14px 16px; margin-bottom:12px; background:linear-gradient(135deg, #2A1054 0%, #4B1A7A 60%, #6B21A8 100%); color:#FFFFFF; border:none; position:relative; overflow:hidden; border-radius:14px; box-shadow:0 8px 24px rgba(75,26,122,0.25);">
+        <!-- Decorative Background Circles SVG -->
+        <svg style="position:absolute; right:-15px; top:-15px; width:150px; height:150px; opacity:0.12; pointer-events:none;" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" fill="none" stroke="#F6AD55" stroke-width="5"/>
+          <circle cx="50" cy="50" r="30" fill="none" stroke="#FFFFFF" stroke-width="3"/>
+          <path d="M50 10 L50 90 M10 50 L90 50" stroke="#F6AD55" stroke-width="2"/>
+        </svg>
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; position:relative; z-index:1; flex-wrap:wrap;">
+          <div style="flex:1; min-width:200px;">
+            <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.15); padding:3px 10px; border-radius:20px; font-size:0.72rem; font-weight:700; color:#FDE047; margin-bottom:6px;">
+              <span>⚡ PEA SMART WEALTH</span>
+              <span>·</span>
+              <span>แผนการเงินพนักงาน กฟภ.</span>
+            </div>
+            <div style="font-size:1.15rem; font-weight:800; line-height:1.3; margin-bottom:4px; text-shadow:0 2px 4px rgba(0,0,0,0.3);">
+              วางแผนการเงินเพื่อความมั่นคงและวัยเกษียณสุขใจ 🏖️
+            </div>
+            <div style="font-size:0.76rem; opacity:0.92; line-height:1.4;">
+              คำนวณสินทรัพย์ กสช. สหกรณ์ ชดเชย 400 วัน และแผนปลอดหนี้แบบครบวงจร
+            </div>
+          </div>
+
+          <!-- Vector Graphic Visual Icon -->
+          <div style="display:flex; align-items:center; justify-content:center; width:58px; height:58px; background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(251,191,36,0.15)); border:2px solid rgba(251,191,36,0.5); border-radius:16px; flex-shrink:0;">
+            <svg style="width:34px; height:34px;" viewBox="0 0 24 24" fill="none" stroke="#FDE047" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Financial Health Milestone Dynamic Trophy Banner -->
+      <div id="dashMilestoneAchievementBadge" style="display:none; padding:10px 14px; margin-bottom:12px; border-radius:12px; background:linear-gradient(135deg, #FEF3C7, #FDE68A); border:1.5px solid #F59E0B; color:#92400E; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.4rem;">🏆</span>
+          <div>
+            <b id="dashMilestoneTitle" style="font-size:0.86rem; color:#78350F; display:block;">PEA Financial Milestone</b>
+            <span id="dashMilestoneSubtitle" style="font-size:0.75rem; color:#92400E;">-</span>
+          </div>
+        </div>
+        <span class="badge badge-gold" id="dashMilestoneTag">ยอดเยี่ยม</span>
+      </div>
+
       <!-- Last Saved Date & Time Banner -->
       <div class="card" id="dashLastSavedCard" style="padding:10px 14px; margin-bottom:12px; background:linear-gradient(135deg, var(--card-bg), var(--pea-purple-bg)); border:1.5px solid var(--border-focus); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
         <div style="display:flex; align-items:center; gap:8px;">
@@ -2446,6 +2491,40 @@
             <div style="font-size:0.75rem; color:#B91C1C; margin-top:2px;">เงินออมสะสมถูกนำมาชดเชยขาดดุลรายเดือน (Cash-Burn Drag) ทำให้ยอดเงินออมลดลง</div>
           </div>
           <button type="button" class="btn btn-outline" style="padding:5px 12px; font-size:0.78rem; background:#fff; color:#DC2626; border-color:#FCA5A5; cursor:pointer;" onclick="jumpToCashflow()">✏️ แก้ไขงบรายรับ-รายจ่ายทันที →</button>
+        </div>
+      </div>
+
+      <!-- 4-Pillar PEA Retirement Welfare Visual Infographic -->
+      <div class="card" style="padding:12px; margin-bottom:12px; background:linear-gradient(135deg, var(--card-bg), var(--pea-purple-bg)); border:1.5px solid var(--border-focus);">
+        <div style="font-size:0.82rem; font-weight:700; color:var(--pea-purple-light); margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+          <span>⚡ 4 เสาหลักสิทธิประโยชน์เงินก้อนวัยเกษียณ กฟภ. (PEA Retirement Pillars):</span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:8px;">
+          
+          <div style="background:var(--card-sub); border-radius:8px; padding:8px; text-align:center; border:1px solid var(--border);">
+            <div style="font-size:1.3rem; margin-bottom:2px;">⚡</div>
+            <b style="font-size:0.75rem; color:var(--pea-purple-light); display:block;">กสช. กฟภ.</b>
+            <span style="font-size:0.68rem; color:var(--text-muted);">กฟภ. สมทบ 9-11%</span>
+          </div>
+
+          <div style="background:var(--card-sub); border-radius:8px; padding:8px; text-align:center; border:1px solid var(--border);">
+            <div style="font-size:1.3rem; margin-bottom:2px;">🎁</div>
+            <b style="font-size:0.75rem; color:#D97706; display:block;">ชดเชย 400 วัน</b>
+            <span style="font-size:0.68rem; color:var(--text-muted);">กฟภ. จ่ายก้อนโต 60 ปี</span>
+          </div>
+
+          <div style="background:var(--card-sub); border-radius:8px; padding:8px; text-align:center; border:1px solid var(--border);">
+            <div style="font-size:1.3rem; margin-bottom:2px;">📈</div>
+            <b style="font-size:0.75rem; color:#059669; display:block;">หุ้นสหกรณ์ กฟภ.</b>
+            <span style="font-size:0.68rem; color:var(--text-muted);">ปันผลเฉลี่ย 4.5-5%</span>
+          </div>
+
+          <div style="background:var(--card-sub); border-radius:8px; padding:8px; text-align:center; border:1px solid var(--border);">
+            <div style="font-size:1.3rem; margin-bottom:2px;">🌱</div>
+            <b style="font-size:0.75rem; color:#2563EB; display:block;">เงินออมส่วนตัว</b>
+            <span style="font-size:0.68rem; color:var(--text-muted);">DCA / กองทุนรวม</span>
+          </div>
+
         </div>
       </div>
 
@@ -4346,7 +4425,11 @@
         if (!container) return;
         const items = state.debts.filter(d => d.category === cat);
         if (items.length === 0) {
-          container.innerHTML = `<div style="text-align:center; padding:10px; font-size:0.76rem; color:var(--text-muted); border:1px dashed var(--border); border-radius:8px; margin-bottom:8px;">ยังไม่มีรายการหนี้ในกลุ่มนี้ (กดปุ่มด้านล่างเพื่อเพิ่ม)</div>`;
+          container.innerHTML = `
+            <div style="text-align:center; padding:12px 10px; font-size:0.76rem; color:var(--text-muted); border:1.5px dashed var(--border-focus); border-radius:10px; margin-bottom:8px; background:var(--card-sub); display:flex; align-items:center; justify-content:center; gap:8px;">
+              <span style="font-size:1.1rem;">🕊️</span>
+              <span>ไม่มีรายการหนี้สินในกลุ่มนี้ (กดปุ่ม <b>+ เพิ่ม</b> ด้านล่างหากมีสัญญาใหม่)</span>
+            </div>`;
         } else {
           container.innerHTML = items.map(d => {
             const totalT = d.total_terms || 0;
@@ -4838,7 +4921,7 @@
       const totalIncome = (state.inc_salary || 0) + (state.inc_pea_electric || 0) + (state.inc_pea_shift || 0) + (state.inc_pea_hazard || 0) + (state.inc_business || 0) + (state.inc_rent || 0) + (state.inc_dividend || 0) + (state.inc_bonus || 0) + (state.inc_other || 0);
       
       const peaDeductionsTotal = (state.exp_pea_tax || 0) + (state.exp_pea_cremation || 0);
-      const livingExpensesTotal = (state.exp_housing || 0) + (state.exp_car || 0) + (state.exp_home || 0) + (state.exp_family || 0) + (state.exp_insurance || 0) + (state.exp_lifestyle || 0) + (state.exp_debt || 0) + (state.exp_saving || 0) + (state.exp_tax || 0);
+      const livingExpensesTotal = (state.exp_housing || 0) + (state.exp_car || 0) + (state.exp_home || 0) + (state.exp_family || 0) + (state.exp_insurance || 0) + (state.exp_lifestyle || 0) + (state.exp_saving || 0) + (state.exp_tax || 0);
       const totalExpense = peaDeductionsTotal + livingExpensesTotal + totalDebtMonthly;
       
       const pfEmployeeMonthly = (state.inc_salary || 0) * ((state.pea_employeeRate || 0) / 100);
@@ -5331,6 +5414,38 @@
       if (res.severancePay > 0) availBreakdown += ` + ชดเชย ${fmt(res.severancePay)}`;
       $('barAvailVal').textContent = `${fmt(res.totalAvailable)} บาท (${availBreakdown})`;
       $('barNeedVal').textContent = fmt(res.totalNeeded) + ' บาท';
+
+      // Update Dashboard Milestone Achievement Dynamic Trophy Banner
+      const milestoneBadge = $('dashMilestoneAchievementBadge');
+      if (milestoneBadge) {
+        let totalDebt = 0;
+        if (state.debts) state.debts.forEach(d => totalDebt += (d.principal || 0));
+        if (res.gap <= 0) {
+          milestoneBadge.style.display = 'flex';
+          milestoneBadge.style.background = 'linear-gradient(135deg, #ECFDF5, #D1FAE5)';
+          milestoneBadge.style.borderColor = '#10B981';
+          milestoneBadge.style.color = '#065F46';
+          if ($('dashMilestoneTitle')) $('dashMilestoneTitle').innerHTML = '🎉 ยินดีด้วย! แผนการเงินบรรลุเป้าหมายเกษียณ 100% (Zero Gap)';
+          if ($('dashMilestoneSubtitle')) $('dashMilestoneSubtitle').textContent = `เงินก้อนพร้อมเกษียณ ${fmt(Math.round(res.totalAvailable))} ฿ ครอบคลุมเป้าหมายตลอดอายุขัยอย่างมั่นคง`;
+          if ($('dashMilestoneTag')) {
+            $('dashMilestoneTag').textContent = '🏆 PEA Retirement Champion';
+            $('dashMilestoneTag').className = 'badge badge-green';
+          }
+        } else if (totalDebt === 0) {
+          milestoneBadge.style.display = 'flex';
+          milestoneBadge.style.background = 'linear-gradient(135deg, #EFF6FF, #DBEAFE)';
+          milestoneBadge.style.borderColor = '#3B82F6';
+          milestoneBadge.style.color = '#1E40AF';
+          if ($('dashMilestoneTitle')) $('dashMilestoneTitle').innerHTML = '🕊️ ปลอดภาระหนี้สิน 100% (Debt Freedom)';
+          if ($('dashMilestoneSubtitle')) $('dashMilestoneSubtitle').textContent = 'ไม่มีภาระดอกเบี้ยจ่าย สามารถเร่งออมและลงทุนเพื่อปิด Gap เกษียณได้เต็มกำลัง';
+          if ($('dashMilestoneTag')) {
+            $('dashMilestoneTag').textContent = '💎 Debt Free Master';
+            $('dashMilestoneTag').className = 'badge badge-blue';
+          }
+        } else {
+          milestoneBadge.style.display = 'none';
+        }
+      }
     }
 
     // ==================== MONTE CARLO SIMULATION ENGINE ====================
