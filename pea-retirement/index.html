@@ -19,7 +19,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 
   <style>
     :root {
@@ -279,9 +278,6 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
-    @keyframes gravityPulse {
-      0% { transform: scale(1); box-shadow: 0 8px 24px rgba(124,58,237,0.4); }
       50% { transform: scale(1.04); box-shadow: 0 12px 32px rgba(245,158,11,0.6); }
       100% { transform: scale(1); box-shadow: 0 8px 24px rgba(124,58,237,0.4); }
     }
@@ -3868,13 +3864,6 @@
     </div>
   </div>
 
-  <!-- ==================== FLOATING RESTORE GOOGLE GRAVITY BUTTON ==================== -->
-  <div id="gravityFloatingBar" style="display:none; position:fixed; top:18px; left:50%; transform:translateX(-50%); z-index:999999; text-align:center;">
-    <button type="button" class="btn btn-purple" style="padding:10px 24px; font-size:0.95rem; font-weight:800; border-radius:30px; border:2px solid #FDE047; box-shadow:0 8px 30px rgba(0,0,0,0.6); display:inline-flex; align-items:center; gap:8px; animation:gravityPulse 1.5s infinite;" onclick="stopGoogleGravity()">
-      <span>🚀 คืนค่าหน้าเว็บปกติ (Restore Gravity)</span>
-    </button>
-  </div>
-
   <!-- ==================== 1-PAGE A4 PRINT / PDF REPORT (PRINT ONLY) ==================== -->
   <div class="print-only-report" id="printReportDoc">
     <!-- Header -->
@@ -7177,164 +7166,6 @@
       manualSaveData();
       closeProfileModal();
       showToast('💾 บันทึกข้อมูลโปรไฟล์ส่วนตัวเรียบร้อยแล้ว!');
-    }
-
-    // ==================== GOOGLE GRAVITY & EASTER EGG (Matter.js) ====================
-    let avatarClickTimes = [];
-    function handleAvatarEasterEggClick(e) {
-      if (e) e.stopPropagation();
-      const now = Date.now();
-      avatarClickTimes = avatarClickTimes.filter(t => now - t < 2500);
-      avatarClickTimes.push(now);
-
-      const clicks = avatarClickTimes.length;
-      if (clicks >= 5) {
-        avatarClickTimes = [];
-        showToast('🚀 BOOM! ระเบิดแรงโน้มถ่วง Google Gravity!');
-        setTimeout(initGoogleGravity, 200);
-      } else if (clicks >= 2) {
-        showToast(`⚡ แตะอีก ${5 - clicks} ครั้ง เพื่อเปิดใช้งาน Google Gravity!`);
-      } else {
-        setTimeout(() => {
-          if (avatarClickTimes.length === 1) {
-            openProfileModal();
-          }
-        }, 320);
-      }
-    }
-
-    let gravityEngine = null;
-    let gravityRunner = null;
-    let gravityElements = [];
-    let gravityActive = false;
-
-    function initGoogleGravity() {
-      if (gravityActive) return;
-      if (typeof Matter === 'undefined') {
-        showToast('⚠️ ไลบรารีฟิสิกส์ Matter.js กำลังโหลด กรุณาลองใหม่อีกครั้ง');
-        return;
-      }
-
-      gravityActive = true;
-      window.scrollTo({ top: 0, behavior: 'instant' });
-
-      const { Engine, World, Bodies, Mouse, MouseConstraint, Runner } = Matter;
-
-      gravityEngine = Engine.create();
-      gravityEngine.world.gravity.y = 1.0;
-      gravityEngine.world.gravity.x = 0;
-
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-
-      // Viewport Boundaries
-      const ground = Bodies.rectangle(width / 2, height + 30, width * 2, 60, { isStatic: true });
-      const leftWall = Bodies.rectangle(-30, height / 2, 60, height * 2, { isStatic: true });
-      const rightWall = Bodies.rectangle(width + 30, height / 2, 60, height * 2, { isStatic: true });
-      const ceiling = Bodies.rectangle(width / 2, -300, width * 2, 60, { isStatic: true });
-
-      World.add(gravityEngine.world, [ground, leftWall, rightWall, ceiling]);
-
-      const candidates = document.querySelectorAll('.card, .app-header, .stat-box, .stat-card, .btn, .badge, .user-profile-chip');
-      gravityElements = [];
-
-      candidates.forEach(el => {
-        if (el.closest('#gravityFloatingBar') || el.closest('.qr-modal-overlay') || el.offsetParent === null) return;
-
-        const rect = el.getBoundingClientRect();
-        if (rect.width <= 0 || rect.height <= 0 || rect.top > height + 200 || rect.bottom < -200) return;
-
-        const origStyle = el.getAttribute('style') || '';
-        const x = rect.left + rect.width / 2;
-        const y = rect.top + rect.height / 2;
-
-        const body = Bodies.rectangle(x, y, rect.width, rect.height, {
-          restitution: 0.65,
-          friction: 0.1,
-          frictionAir: 0.015,
-          density: 0.001
-        });
-
-        World.add(gravityEngine.world, body);
-
-        el.style.width = rect.width + 'px';
-        el.style.height = rect.height + 'px';
-        el.style.position = 'fixed';
-        el.style.left = '0px';
-        el.style.top = '0px';
-        el.style.margin = '0px';
-        el.style.zIndex = '10000';
-        el.style.transformOrigin = 'center center';
-        el.style.pointerEvents = 'auto';
-
-        gravityElements.push({
-          el,
-          body,
-          origStyle,
-          w: rect.width,
-          h: rect.height
-        });
-      });
-
-      const mouse = Mouse.create(document.body);
-      const mouseConstraint = MouseConstraint.create(gravityEngine, {
-        mouse: mouse,
-        constraint: {
-          stiffness: 0.2,
-          render: { visible: false }
-        }
-      });
-      World.add(gravityEngine.world, mouseConstraint);
-
-      gravityRunner = Runner.create();
-      Runner.run(gravityRunner, gravityEngine);
-
-      function syncLoop() {
-        if (!gravityActive) return;
-        gravityElements.forEach(item => {
-          const { el, body, w, h } = item;
-          const posX = body.position.x - w / 2;
-          const posY = body.position.y - h / 2;
-          const angle = body.angle;
-          el.style.transform = `translate3d(${posX}px, ${posY}px, 0px) rotate(${angle}rad)`;
-        });
-        requestAnimationFrame(syncLoop);
-      }
-      requestAnimationFrame(syncLoop);
-
-      const floatBar = $('gravityFloatingBar');
-      if (floatBar) floatBar.style.display = 'block';
-
-      showToast('🌌 Google Gravity ทำงานแล้ว! ลองใช้เมาส์ลากโยน Element ต่างๆ ดูสิ!');
-    }
-
-    function stopGoogleGravity() {
-      if (!gravityActive) return;
-      gravityActive = false;
-
-      if (gravityRunner) Matter.Runner.stop(gravityRunner);
-      if (gravityEngine) {
-        Matter.World.clear(gravityEngine.world, false);
-        Matter.Engine.clear(gravityEngine);
-      }
-
-      gravityElements.forEach(item => {
-        const { el, origStyle } = item;
-        if (origStyle) {
-          el.setAttribute('style', origStyle);
-        } else {
-          el.removeAttribute('style');
-        }
-      });
-
-      gravityElements = [];
-      gravityEngine = null;
-      gravityRunner = null;
-
-      const floatBar = $('gravityFloatingBar');
-      if (floatBar) floatBar.style.display = 'none';
-
-      showToast('🚀 คืนค่าหน้าเว็บสู่สภาพปกติเรียบร้อยแล้ว!');
     }
   </script>
 </body>
