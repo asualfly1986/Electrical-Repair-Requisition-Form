@@ -2628,6 +2628,18 @@
               </div>
             </div>
 
+            <!-- Dynamic PEA Work Tenure Benefits Summary Box -->
+            <div style="background:var(--pea-purple-bg); border:1px solid var(--border-focus); border-radius:10px; padding:10px 12px; margin-top:6px; margin-bottom:12px; font-size:0.78rem; line-height:1.5;">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px; margin-bottom:4px;">
+                <span style="font-weight:700; color:var(--pea-purple-light);">⚡ สรุปสิทธิประโยชน์ตามอายุงาน กฟภ. (คำนวณอัตโนมัติ):</span>
+                <span class="badge badge-purple" id="peaTenureRetireBadge">อายุงาน ณ เกษียณ 35 ปี</span>
+              </div>
+              <div style="color:var(--text-muted); font-size:0.74rem;">
+                • <b>กสช. กฟภ. สมทบ:</b> ปัจจุบัน <b id="peaCurrentMatchText" style="color:var(--pea-gold-light);">10%</b> → ขยับเป็น <b id="peaMaxMatchText" style="color:var(--pea-gold-light);">11%</b> เมื่ออายุงานครบ 20 ปี<br>
+                • <b>สิทธิเงินชดเชยเกษียณ:</b> ได้รับสิทธิ <b id="peaSevDaysText" style="color:#10B981;">400 วัน (13.33 เท่าของเงินเดือนสุดท้าย)</b>
+              </div>
+            </div>
+
             <div class="wizard-nav-btns" id="navStep1">
               <button type="button" class="btn btn-purple" onclick="goToRetireStep(2)">ถัดไป: หมวด 2 ค่าใช้จ่ายเกษียณ →</button>
             </div>
@@ -5376,10 +5388,31 @@
         });
       }
       
+      const totalServiceAtRetire = inp.serviceYears + n1;
+      const currentPeaMatch = inp.serviceYears >= 20 ? 11 : (inp.serviceYears >= 10 ? 10 : 9);
+      const maxPeaMatch = totalServiceAtRetire >= 20 ? 11 : (totalServiceAtRetire >= 10 ? 10 : 9);
+      
+      let sevDays = 400;
+      if (totalServiceAtRetire >= 20) sevDays = 400;
+      else if (totalServiceAtRetire >= 10) sevDays = 300;
+      else if (totalServiceAtRetire >= 6) sevDays = 240;
+      else if (totalServiceAtRetire >= 3) sevDays = 180;
+      else if (totalServiceAtRetire >= 1) sevDays = 90;
+      else sevDays = 0;
+
       const pfFutureValue = pfBalance;
       const otherFutureValue = other;
       const coopFutureValue = coop;
-      const severancePay = inp.enableSeverance ? (curSalary * (400 / 30)) : 0;
+      const severancePay = inp.enableSeverance ? (curSalary * (sevDays / 30)) : 0;
+
+      // Update Live Tenure Summary Badge & PEA Match UI
+      if ($('peaTenureRetireBadge')) $('peaTenureRetireBadge').textContent = `อายุงาน ณ เกษียณ ${totalServiceAtRetire} ปี`;
+      if ($('peaCurrentMatchText')) $('peaCurrentMatchText').textContent = `${currentPeaMatch}%`;
+      if ($('peaMaxMatchText')) $('peaMaxMatchText').textContent = `${maxPeaMatch}%`;
+      if ($('peaSevDaysText')) $('peaSevDaysText').textContent = sevDays > 0 ? `${sevDays} วัน (${(sevDays/30).toFixed(2)} เท่าของเงินเดือนสุดท้าย)` : 'ไม่มีสิทธิรับเงินชดเชย (อายุงานไม่ถึง 1 ปี)';
+      if (inp.useStepEmployerRate && $('pea_employerRate')) {
+        $('pea_employerRate').value = currentPeaMatch;
+      }
 
       const totalAvailable = pfFutureValue + otherFutureValue + coopFutureValue + severancePay;
       const diff = totalAvailable - totalNeeded;
@@ -5388,9 +5421,9 @@
       // Update Severance Details Card
       if ($('sevSalaryGrowthRate')) $('sevSalaryGrowthRate').textContent = inp.salaryGrowth;
       if ($('sevFinalSalary')) $('sevFinalSalary').textContent = fmt(curSalary) + ' บาท/ด.';
-      if ($('sevPayTotal')) $('sevPayTotal').textContent = fmt(severancePay) + ' บาท';
+      if ($('sevPayTotal')) $('sevPayTotal').textContent = fmt(severancePay) + ' บาท' + (sevDays < 400 ? ` (${sevDays} วัน ตามอายุงาน ${totalServiceAtRetire} ปี)` : '');
 
-      const res = { n1, n2, expenseAtRetirement, totalNeeded, pfFutureValue, otherFutureValue, coopFutureValue, severancePay, totalAvailable, diff, percent, yearlyData, curSalary };
+      const res = { n1, n2, expenseAtRetirement, totalNeeded, pfFutureValue, otherFutureValue, coopFutureValue, severancePay, totalAvailable, diff, percent, yearlyData, curSalary, sevDays, totalServiceAtRetire };
 
       renderRetirementResults(res);
       renderYearlyTable(res.yearlyData, inp.retireAge, res.severancePay);
