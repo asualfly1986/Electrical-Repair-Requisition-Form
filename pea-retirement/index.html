@@ -3581,6 +3581,7 @@
     <!-- ==================== TAB 5: ตั้งค่า & จัดการข้อมูล (SETTINGS & BACKUP) ==================== -->
     <!-- ==================== TAB 5: ตั้งค่า & จัดการข้อมูล (SETTINGS & BACKUP) ==================== -->
     <!-- ==================== TAB 5: ตั้งค่า & จัดการข้อมูล (SETTINGS & BACKUP) ==================== -->
+    <!-- ==================== TAB 5: ตั้งค่า & จัดการข้อมูล (SETTINGS & BACKUP) ==================== -->
     <div class="tab-panel" id="tab-settings">
       
       <!-- User Profile & Customization Card (อยู่บนสุด) -->
@@ -3675,63 +3676,76 @@
         </div>
       </div>
 
-      <!-- Management & Backup Card with Passcode Protection (Collapsed by default, อยู่ล่างส่วนวิธีติดตั้ง) -->
-      <div class="card" id="settingsManageLockedCard" style="border:1.5px solid var(--pea-purple-soft); background:linear-gradient(135deg, var(--card-bg), var(--pea-purple-bg)); text-align:center; padding:20px 16px;">
-        <div style="width:52px; height:52px; background:linear-gradient(135deg, #7C3AED, #A855F7); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 10px; box-shadow:0 6px 18px rgba(124,58,237,0.3);">
-          <span style="font-size:1.6rem; color:#fff;">🔒</span>
-        </div>
-        <b style="font-size:1rem; color:var(--text-main); display:block; margin-bottom:4px;">สำรองและจัดการข้อมูล (ล็อกความปลอดภัย)</b>
-        <p style="font-size:0.78rem; color:var(--text-muted); max-width:340px; margin:0 auto 14px; line-height:1.45;">
-          เพื่อความปลอดภัยของข้อมูลการเงินส่วนบุคคล กรุณากรอกรหัสผ่านเพื่อปลดล็อกฟังก์ชันสำรอง โหลดข้อมูล หรือล้างค่าระบบ
-        </p>
-
-        <div style="max-width:320px; margin:0 auto; display:flex; flex-direction:column; gap:8px;">
-          <div class="input-wrap">
-            <input type="password" class="form-input" id="passcodeSettingsInput" placeholder="ใส่ข้อความช่องนี้" style="text-align:center; font-weight:700; letter-spacing:0.1em;" onkeydown="if(event.key==='Enter') unlockSettingsSection()">
-          </div>
-          <button type="button" class="btn btn-purple" style="width:100%; font-weight:700;" onclick="unlockSettingsSection()">
-            <span>🔓 ปลดล็อกเข้าจัดการข้อมูล</span>
-          </button>
-          <div id="passcodeErrorMsg" style="display:none; font-size:0.75rem; color:#DC2626; font-weight:600;">
-            ❌ รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง
+      <!-- Management & Backup Card (Collapsible by default, อยู่ล่างส่วนวิธีติดตั้ง) -->
+      <div class="card" style="padding:0; overflow:hidden; border:1.5px solid var(--pea-purple-soft);">
+        <div class="card-header" style="cursor:pointer; padding:14px 16px; user-select:none; margin:0;" onclick="toggleCardCollapse('tab5BackupCardBody', this)">
+          <div class="card-title"><span class="icon">🔒</span><span>สำรองและจัดการข้อมูล (ล็อกความปลอดภัย)</span></div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="badge badge-purple">ความปลอดภัย</span>
+            <span class="arrow" style="font-size:0.8rem; color:var(--text-muted); transition:transform 0.3s ease;">▼</span>
           </div>
         </div>
-      </div>
 
-      <!-- Unlocked Management Section (Shown after Passcode Verified) -->
-      <div class="card" id="settingsManageUnlockedCard" style="display:none; border:1.5px solid #10B981; background:linear-gradient(135deg, var(--card-bg), #ECFDF5);">
-        <div class="card-header" style="border-bottom:1px solid #A7F3D0; padding-bottom:8px; margin-bottom:12px;">
-          <div class="card-title"><span class="icon">🔓</span><span>สำรองและจัดการข้อมูล (ปลดล็อกแล้ว)</span></div>
-          <button type="button" class="btn btn-outline" style="padding:4px 10px; font-size:0.75rem; width:auto; border-color:#9CA3AF; color:var(--text-muted);" onclick="lockSettingsSection()" title="กดเพื่อล็อกความปลอดภัย">
-            <span>🔒 ล็อกหน้านี้</span>
-          </button>
-        </div>
+        <div id="tab5BackupCardBody" style="display:none; padding:16px; border-top:1px solid var(--border);">
+          <!-- Locked State Container -->
+          <div id="settingsManageLockedCard" style="text-align:center; padding:10px 0;">
+            <div style="width:50px; height:50px; background:linear-gradient(135deg, #7C3AED, #A855F7); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 10px; box-shadow:0 6px 18px rgba(124,58,237,0.3);">
+              <span style="font-size:1.5rem; color:#fff;">🔒</span>
+            </div>
+            <b style="font-size:0.95rem; color:var(--text-main); display:block; margin-bottom:4px;">กรุณากรอกรหัสผ่านเพื่อจัดการข้อมูล</b>
+            <p style="font-size:0.78rem; color:var(--text-muted); max-width:340px; margin:0 auto 14px; line-height:1.45;">
+              เพื่อความปลอดภัยของข้อมูลการเงินส่วนบุคคล กรุณากรอกรหัสผ่านเพื่อปลดล็อกฟังก์ชันสำรอง โหลดข้อมูล หรือล้างค่าระบบ
+            </p>
 
-        <div style="display:flex; flex-direction:column; gap:10px;">
-          <button class="btn btn-purple" onclick="manualSaveData()">
-            <span>💾 บันทึกข้อมูลลงในเบราว์เซอร์ทันที (Save to Browser)</span>
-          </button>
+            <div style="max-width:320px; margin:0 auto; display:flex; flex-direction:column; gap:8px;">
+              <div class="input-wrap">
+                <input type="password" class="form-input" id="passcodeSettingsInput" placeholder="ใส่ข้อความช่องนี้" style="text-align:center; font-weight:700; letter-spacing:0.1em;" onkeydown="if(event.key==='Enter') unlockSettingsSection()">
+              </div>
+              <button type="button" class="btn btn-purple" style="width:100%; font-weight:700;" onclick="unlockSettingsSection()">
+                <span>🔓 ปลดล็อกเข้าจัดการข้อมูล</span>
+              </button>
+              <div id="passcodeErrorMsg" style="display:none; font-size:0.75rem; color:#DC2626; font-weight:600;">
+                ❌ รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง
+              </div>
+            </div>
+          </div>
 
-          <button class="btn btn-outline" onclick="loadSampleData()">
-            <span>⚡ โหลดตัวอย่างข้อมูลพนักงาน กฟภ.</span>
-          </button>
-          
-          <button class="btn btn-outline" onclick="exportDataBackup()">
-            <span>📤 ส่งออกไฟล์สำรองข้อมูล (Export JSON)</span>
-          </button>
+          <!-- Unlocked State Container -->
+          <div id="settingsManageUnlockedCard" style="display:none; border:1px solid #10B981; border-radius:10px; padding:14px; background:linear-gradient(135deg, var(--card-bg), #ECFDF5);">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #A7F3D0; padding-bottom:8px; margin-bottom:12px;">
+              <div style="font-weight:700; color:#065F46; font-size:0.92rem;"><span class="icon">🔓</span><span>สำรองและจัดการข้อมูล (ปลดล็อกแล้ว)</span></div>
+              <button type="button" class="btn btn-outline" style="padding:4px 10px; font-size:0.75rem; width:auto; border-color:#9CA3AF; color:var(--text-muted);" onclick="lockSettingsSection()" title="กดเพื่อล็อกความปลอดภัย">
+                <span>🔒 ล็อกหน้านี้</span>
+              </button>
+            </div>
 
-          <label class="btn btn-outline" style="cursor:pointer; margin:0;">
-            <span>📥 นำเข้าไฟล์สำรองข้อมูล (Import JSON)</span>
-            <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="importDataBackup(event)">
-          </label>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <button class="btn btn-purple" onclick="manualSaveData()">
+                <span>💾 บันทึกข้อมูลลงในเบราว์เซอร์ทันที (Save to Browser)</span>
+              </button>
 
-          <button class="btn btn-outline" onclick="exportRetirementPDF()">
-            <span>📄 ดาวน์โหลดรายงานสรุปแผนเกษียณ (PDF / Print A4)</span>
-          </button>
+              <button class="btn btn-outline" onclick="loadSampleData()">
+                <span>⚡ โหลดตัวอย่างข้อมูลพนักงาน กฟภ.</span>
+              </button>
+              
+              <button class="btn btn-outline" onclick="exportDataBackup()">
+                <span>📤 ส่งออกไฟล์สำรองข้อมูล (Export JSON)</span>
+              </button>
 
-          <button class="btn btn-outline" style="color:var(--danger); border-color:#FECACA;" onclick="confirmResetAll()">
-            <span>🗑️ ล้างข้อมูลทั้งหมดเป็นค่าเริ่มต้น</span>
-          </button>
+              <label class="btn btn-outline" style="cursor:pointer; margin:0;">
+                <span>📥 นำเข้าไฟล์สำรองข้อมูล (Import JSON)</span>
+                <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="importDataBackup(event)">
+              </label>
+
+              <button class="btn btn-outline" onclick="exportRetirementPDF()">
+                <span>📄 ดาวน์โหลดรายงานสรุปแผนเกษียณ (PDF / Print A4)</span>
+              </button>
+
+              <button class="btn btn-outline" style="color:var(--danger); border-color:#FECACA;" onclick="confirmResetAll()">
+                <span>🗑️ ล้างข้อมูลทั้งหมดเป็นค่าเริ่มต้น</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -3750,9 +3764,9 @@
           <div style="position:relative; flex-shrink:0; margin:0 auto;">
             <div style="width:110px; height:110px; border-radius:50%; padding:3px; background:linear-gradient(135deg, #7C3AED, #F59E0B, #A855F7); box-shadow:0 6px 20px rgba(124,58,237,0.25);">
               <img id="creatorProfileImg" src="data:image/jpeg;base64,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" alt="นายอภิชาติ ยุพิน" style="width:100%; height:100%; object-fit:cover; border-radius:50%; background:#fff; display:block;" />
-            </div>
-            <span style="position:absolute; bottom:2px; right:2px; background:#10B981; color:#fff; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; border:2px solid var(--card-bg);" title="ผู้พัฒนา">⚡</span>
-          </div>
+3753:             </div>
+3754:             <span style="position:absolute; bottom:2px; right:2px; background:#10B981; color:#fff; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; border:2px solid var(--card-bg);" title="ผู้พัฒนา">⚡</span>
+3755:           </div>
 
           <!-- Creator Details -->
           <div style="flex:1; width:100%;">
@@ -3791,6 +3805,8 @@
       </div>
 
     </div>
+
+    
 
     
 
