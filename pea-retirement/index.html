@@ -1807,29 +1807,7 @@
             </div>
           </div>
 
-          <!-- 4. เงินกู้ฉุกเฉิน สหกรณ์ กฟภ. -->
-          <div class="input-group">
-            <label class="input-label">
-              <span>🚨 หักชำระเงินกู้ฉุกเฉิน สหกรณ์ กฟภ.</span>
-            </label>
-            <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="exp_pea_loan_emergency" value="0" oninput="onDataChanged()">
-              <span class="input-unit">บาท/ด.</span>
-            </div>
-          </div>
-
-          <!-- 5. เงินกู้สามัญ สหกรณ์ กฟภ. -->
-          <div class="input-group">
-            <label class="input-label">
-              <span>🏛️ หักชำระเงินกู้สามัญ สหกรณ์ กฟภ.</span>
-            </label>
-            <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="exp_pea_loan_ordinary" value="0" oninput="onDataChanged()">
-              <span class="input-unit">บาท/ด.</span>
-            </div>
-          </div>
-
-          <!-- 6. ฌาปนกิจสงเคราะห์ -->
+          <!-- 4. ฌาปนกิจสงเคราะห์ -->
           <div class="input-group">
             <label class="input-label">
               <span>🤝 เงินสงเคราะห์ / สมาคมฌาปนกิจสงเคราะห์ (กฟภ. / สหกรณ์)</span>
@@ -1838,6 +1816,11 @@
               <input type="number" inputmode="decimal" class="form-input" id="exp_pea_cremation" value="300" oninput="onDataChanged()">
               <span class="input-unit">บาท/ด.</span>
             </div>
+          </div>
+
+          <!-- Helpful note for PEA Coop Loans -->
+          <div style="margin-top:10px; padding:8px 12px; border-radius:8px; background:var(--card-sub); font-size:0.75rem; color:var(--text-muted); line-height:1.4; border-left:3px solid var(--pea-purple-light);">
+            💡 <b>สำหรับเงินกู้สามัญ / เงินกู้ฉุกเฉิน สหกรณ์ กฟภ.:</b> ให้กรอกใน <b>หมวดที่ 3: หนี้สิน</b> ระบบจะนำค่างวดผ่อนรายเดือนมารวมเป็นภาระหนี้สินให้อัตโนมัติ เพื่อป้องกันการนับยอดผ่อนซ้ำซ้อนในงบกระแสเงินสด
           </div>
         </div>
 
@@ -3684,8 +3667,6 @@
       exp_pea_pf: 1050,
       exp_pea_cremation: 300,
       exp_pea_coop_share: 1000,
-      exp_pea_loan_emergency: 0,
-      exp_pea_loan_ordinary: 0,
       // Net Worth Assets (Dynamic list + legacy fallback)
       assets: [
         { id: 'a_cash', category: 'cash', isLiquid: true, name: 'เงินสด & บัญชีเงินฝากออมทรัพย์', amount: 100000 },
@@ -4862,7 +4843,7 @@
       // 3. Cash Flow Calculation & Logic Correction
       const totalIncome = (state.inc_salary || 0) + (state.inc_pea_electric || 0) + (state.inc_pea_shift || 0) + (state.inc_pea_hazard || 0) + (state.inc_business || 0) + (state.inc_rent || 0) + (state.inc_dividend || 0) + (state.inc_bonus || 0) + (state.inc_other || 0);
       
-      const peaDeductionsTotal = (state.exp_pea_tax || 0) + (state.exp_pea_pf || 0) + (state.exp_pea_cremation || 0) + (state.exp_pea_coop_share || 0) + (state.exp_pea_loan_emergency || 0) + (state.exp_pea_loan_ordinary || 0);
+      const peaDeductionsTotal = (state.exp_pea_tax || 0) + (state.exp_pea_pf || 0) + (state.exp_pea_cremation || 0) + (state.exp_pea_coop_share || 0);
       const livingExpensesTotal = (state.exp_housing || 0) + (state.exp_car || 0) + (state.exp_home || 0) + (state.exp_family || 0) + (state.exp_insurance || 0) + (state.exp_lifestyle || 0) + (state.exp_debt || 0) + (state.exp_saving || 0) + (state.exp_tax || 0);
       const totalExpense = peaDeductionsTotal + livingExpensesTotal + totalDebtMonthly;
       
@@ -6334,8 +6315,6 @@
           exp_pea_pf: 2250,
           exp_pea_cremation: 350,
           exp_pea_coop_share: 2000,
-          exp_pea_loan_emergency: 0,
-          exp_pea_loan_ordinary: 6500,
           assets: [
             { id: 'a_samp_cash1', category: 'cash', isLiquid: true, name: 'บัญชีเงินเดือน กรุงไทย', amount: 120000 },
             { id: 'a_samp_cash2', category: 'cash', isLiquid: true, name: 'บัญชีออมทรัพย์ฉุกเฉิน SCB', amount: 30000 },
