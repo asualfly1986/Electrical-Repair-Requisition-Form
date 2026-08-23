@@ -1997,36 +1997,53 @@
     <!-- ==================== TAB 2: งบกระแสเงินสด (CASH FLOW) ==================== -->
     <div class="tab-panel" id="tab-cashflow">
       
-      <div class="segmented-control">
+      <!-- Live Cashflow Executive Status Header Strip -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:8px; margin-bottom:12px;">
+        <div class="card" style="padding:10px 12px; border:1px solid var(--border); border-radius:12px; text-align:center; background:linear-gradient(135deg, var(--card-bg), var(--pea-purple-bg));">
+          <div style="font-size:0.68rem; color:var(--text-muted); margin-bottom:2px;">📥 รายรับรวม / เดือน</div>
+          <div class="num-font" id="cfLiveHeaderIncome" style="font-size:1.1rem; font-weight:800; color:#3B82F6;">0 ฿</div>
+        </div>
+        <div class="card" style="padding:10px 12px; border:1px solid var(--border); border-radius:12px; text-align:center; background:linear-gradient(135deg, var(--card-bg), var(--pea-purple-bg));">
+          <div style="font-size:0.68rem; color:var(--text-muted); margin-bottom:2px;">📤 รายจ่ายรวม / เดือน</div>
+          <div class="num-font" id="cfLiveHeaderExpense" style="font-size:1.1rem; font-weight:800; color:#EF4444;">0 ฿</div>
+        </div>
+        <div class="card" style="padding:10px 12px; border:1.5px solid var(--pea-purple-soft); border-radius:12px; text-align:center; background:linear-gradient(135deg, var(--card-bg), var(--pea-purple-bg)); grid-column:span 1;">
+          <div style="font-size:0.68rem; color:var(--text-muted); margin-bottom:2px;">💰 เงินเหลือออมสุทธิ / ด.</div>
+          <div class="num-font" id="cfLiveHeaderNetSavings" style="font-size:1.15rem; font-weight:800; color:#10B981;">0 ฿</div>
+        </div>
+      </div>
+
+      <!-- Segmented Sub-navigation -->
+      <div class="segmented-control" style="margin-bottom:12px;">
         <button class="seg-btn active" onclick="switchCFSub('income', this)">
-          <span>📥 รายรับ</span>
+          <span>📥 1. รายรับ</span>
           <span class="seg-badge" id="segBadgeIncome">0 ฿</span>
         </button>
         <button class="seg-btn" onclick="switchCFSub('expense', this)">
-          <span>📤 รายจ่าย</span>
+          <span>📤 2. รายจ่าย</span>
           <span class="seg-badge" id="segBadgeExpense">0 ฿</span>
         </button>
         <button class="seg-btn" onclick="switchCFSub('summary', this)">
-          <span>📊 สรุปผล</span>
+          <span>📊 3. สรุปผล &amp; วางแผน</span>
           <span class="seg-badge" id="segBadgeCashflow">0 ฿</span>
         </button>
       </div>
 
       <!-- CF SUB 1: รายรับ (INCOME) -->
       <div id="cf-sub-income">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title"><span class="icon">💵</span><span>รายรับต่อเดือน (Income)</span></div>
-            <span class="badge badge-green">รวม: <span class="num-font" id="cfTotalIncomeBadge">0</span> ฿</span>
+        <div class="card" style="border-radius:14px;">
+          <div class="card-header" style="margin-bottom:10px;">
+            <div class="card-title"><span class="icon">💵</span><span>รายรับประจำเดือน (Income)</span></div>
+            <span class="badge badge-green">รวม: <span class="num-font" id="cfTotalIncomeBadge">0</span> ฿/ด.</span>
           </div>
 
           <!-- Section 1: เงินเดือนพื้นฐาน -->
           <div style="font-weight:700; font-size:0.85rem; color:var(--text-main); margin-bottom:6px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:4px;">
-            <span>💼 1. เงินเดือนพื้นฐาน (Base Salary)</span>
-            <span class="badge badge-purple" style="font-size:0.68rem;">ฐานคำนวณ กสช. & ชดเชย 400 วัน</span>
+            <span>💼 1. เงินเดือนประจำ กฟภ. (Base Salary)</span>
+            <span class="badge badge-purple" style="font-size:0.68rem;">ฐานคำนวณ กสช. &amp; ชดเชย 400 วัน</span>
           </div>
           <div class="input-group">
-            <label class="input-label"><span>เงินเดือนประจำ กฟภ. (บาท/เดือน)</span><span class="input-hint">หลัก</span></label>
+            <label class="input-label"><span>เงินเดือนพื้นฐาน (บาท/เดือน)</span><span class="input-hint">ตามระดับตำแหน่ง</span></label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="inc_salary" value="35000" oninput="onDataChanged()">
               <span class="input-unit">บาท</span>
@@ -2041,10 +2058,10 @@
           </div>
 
           <!-- Section 2: สวัสดิการและค่าตอบแทนพิเศษ กฟภ. -->
-          <div style="background:var(--pea-purple-bg); border:1px solid var(--border-focus); border-radius:10px; padding:12px; margin:14px 0 14px 0;">
+          <div style="background:var(--pea-purple-bg); border:1.5px solid var(--pea-purple-soft); border-radius:12px; padding:12px; margin:14px 0;">
             <div style="font-weight:700; font-size:0.85rem; color:var(--pea-purple-light); margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px;">
-              <span>⚡ 2. สวัสดิการ & ค่าตอบแทนพิเศษ กฟภ. (PEA Allowances)</span>
-              <span class="badge badge-gold" style="font-size:0.68rem;">รวมในกระแสเงินสด & ฐานภาษี</span>
+              <span>⚡ 2. สวัสดิการ &amp; ค่าตอบแทนพิเศษ กฟภ. (PEA Allowances)</span>
+              <span class="badge badge-gold" style="font-size:0.68rem;">รวมในกระแสเงินสดรายเดือน</span>
             </div>
 
             <div class="input-group">
@@ -2092,7 +2109,7 @@
 
           <!-- Section 3: รายได้เสริม & โบนัส -->
           <div style="font-weight:700; font-size:0.85rem; color:var(--text-main); margin-bottom:6px;">
-            <span>📈 3. โบนัสและรายได้อื่นๆ (Other Incomes)</span>
+            <span>📈 3. โบนัสและรายได้อื่นๆ (Bonus &amp; Other Income)</span>
           </div>
 
           <div class="input-group">
@@ -2100,6 +2117,12 @@
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="inc_bonus" value="0" oninput="onDataChanged()">
               <span class="input-unit">บาท/ด.</span>
+            </div>
+            <div class="chips-row">
+              <span class="chip" onclick="setVal('inc_bonus', 3000)">3,000</span>
+              <span class="chip" onclick="setVal('inc_bonus', 6000)">6,000</span>
+              <span class="chip" onclick="setVal('inc_bonus', 10000)">10,000</span>
+              <span class="chip" onclick="setVal('inc_bonus', 15000)">15,000</span>
             </div>
           </div>
 
@@ -2135,23 +2158,22 @@
             </div>
           </div>
 
-          <button class="btn btn-purple" onclick="switchCFSub('expense', document.querySelectorAll('#tab-cashflow .seg-btn')[1])">ถัดไป: กรอกรายจ่าย →</button>
+          <button type="button" class="btn btn-purple" style="margin-top:10px;" onclick="switchCFSub('expense', document.querySelectorAll('#tab-cashflow .seg-btn')[1])">ถัดไป: บันทึกรายจ่าย →</button>
         </div>
       </div>
 
       <!-- CF SUB 2: รายจ่าย (EXPENSES) -->
       <div id="cf-sub-expense" style="display:none;">
         
-        <!-- หมวดที่ 1: รายการหักสวัสดิการ & สลิปเงินเดือน กฟภ. (PEA Payroll Deductions) -->
-        <div class="card" style="border:1.5px solid var(--pea-purple-soft); background:linear-gradient(135deg, var(--card-bg), var(--pea-purple-bg)); margin-bottom:14px;">
+        <!-- หมวดที่ 1: รายการหักสวัสดิการ & สลิปเงินเดือน กฟภ. -->
+        <div class="card" style="border:1.5px solid var(--pea-purple-soft); background:linear-gradient(135deg, var(--card-bg), var(--pea-purple-bg)); margin-bottom:12px; border-radius:14px;">
           <div class="card-header" style="margin-bottom:8px;">
             <div class="card-title">
               <span class="icon">⚡</span>
-              <span>รายการหักสลิปเงินเดือน & สวัสดิการ กฟภ. (Payroll Deductions)</span>
+              <span>1. รายการหักหน้าสลิปเงินเดือน กฟภ. (Payroll Deductions)</span>
             </div>
             <span class="badge badge-purple" id="peaDeductionsSubtotalBadge">0 ฿/ด.</span>
           </div>
-          <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:12px;">รายการหักจากเงินเดือนประจำเดือนของการไฟฟ้าส่วนภูมิภาค:</p>
 
           <!-- 1. ภาษีหัก ณ ที่จ่าย -->
           <div class="input-group">
@@ -2162,10 +2184,16 @@
               <input type="number" inputmode="decimal" class="form-input" id="exp_pea_tax" value="0" oninput="onDataChanged()">
               <span class="input-unit">บาท/ด.</span>
             </div>
+            <div class="chips-row">
+              <span class="chip" onclick="setVal('exp_pea_tax', 0)">0</span>
+              <span class="chip" onclick="setVal('exp_pea_tax', 500)">500</span>
+              <span class="chip" onclick="setVal('exp_pea_tax', 1200)">1,200</span>
+              <span class="chip" onclick="setVal('exp_pea_tax', 2500)">2,500</span>
+            </div>
           </div>
 
           <!-- 2. ฌาปนกิจสงเคราะห์ -->
-          <div class="input-group">
+          <div class="input-group" style="margin-bottom:6px;">
             <label class="input-label">
               <span>🤝 เงินสงเคราะห์ / สมาคมฌาปนกิจสงเคราะห์ (กฟภ. / สหกรณ์)</span>
             </label>
@@ -2173,22 +2201,31 @@
               <input type="number" inputmode="decimal" class="form-input" id="exp_pea_cremation" value="300" oninput="onDataChanged()">
               <span class="input-unit">บาท/ด.</span>
             </div>
+            <div class="chips-row">
+              <span class="chip" onclick="setVal('exp_pea_cremation', 200)">200</span>
+              <span class="chip" onclick="setVal('exp_pea_cremation', 300)">300</span>
+              <span class="chip" onclick="setVal('exp_pea_cremation', 500)">500</span>
+              <span class="chip" onclick="setVal('exp_pea_cremation', 800)">800</span>
+            </div>
           </div>
 
-          <!-- Helpful note for PEA Provident Fund, Coop Shares & Loans -->
+          <!-- Note for Provident Fund, Coop Shares & Loans -->
           <div style="margin-top:10px; padding:8px 12px; border-radius:8px; background:var(--card-sub); font-size:0.75rem; color:var(--text-muted); line-height:1.4; border-left:3px solid var(--pea-purple-light);">
             💡 <b>สำหรับเงินสะสม กสช., ค่าหุ้นสหกรณ์, และเงินกู้สหกรณ์:</b> ถือเป็นเงินออมสะสมสินทรัพย์และภาระหนี้สิน โดยสามารถตั้งค่าและคำนวณเงินก้อนได้ใน <b>หมวดที่ 3 (งบดุล)</b> และ <b>หมวดที่ 4 (แผนเกษียณ)</b> โดยตรง เพื่อให้งบรายจ่ายสะท้อนเฉพาะค่าใช้จ่ายจริง
           </div>
         </div>
 
-        <!-- หมวดที่ 2: ค่าใช้จ่ายดำเนินชีวิต & ครอบครัว (Living & Household Expenses) -->
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title"><span class="icon">💳</span><span>ค่าใช้จ่ายดำเนินชีวิต & ผ่อนชำระทั่วไป</span></div>
-            <span class="badge badge-red">รวมรายจ่ายทั้งหมด: <span class="num-font" id="cfTotalExpenseBadge">0</span> ฿</span>
+        <!-- หมวดที่ 2: รายจ่ายคงที่จำเป็น & ค่างวดผ่อนหนี้ (Fixed Needs & Debt) -->
+        <div class="card" style="border-radius:14px; margin-bottom:12px;">
+          <div class="card-header" style="margin-bottom:8px;">
+            <div class="card-title">
+              <span class="icon">🏠</span>
+              <span>2. รายจ่ายคงที่จำเป็น &amp; ภาระผ่อนหนี้สิน (Fixed Needs)</span>
+            </div>
           </div>
 
-          <div style="background:var(--pea-purple-bg); border:1px solid var(--border-focus); border-radius:10px; padding:10px 12px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
+          <!-- Debt Auto Summary Banner -->
+          <div style="background:var(--pea-purple-bg); border:1px solid var(--border-focus); border-radius:10px; padding:10px 12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
             <div>
               <span style="font-size:0.82rem; font-weight:700; color:var(--pea-purple-light);">📑 รวมค่างวดผ่อนหนี้สินทุกประเภท (ดึงจากหมวดที่ 3 หนี้สิน):</span>
               <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">คำนวณอัตโนมัติจากสินเชื่อบ้าน, รถยนต์, สหกรณ์ กฟภ. และบัตรเครดิต</div>
@@ -2199,30 +2236,82 @@
           <div class="input-group">
             <label class="input-label">
               <span>🏠 ค่าเช่าบ้าน / หอพัก / ค่าส่วนกลาง (สำหรับผู้ไม่มีหนี้บ้าน)</span>
-              <span class="input-hint">ค่าเช่าที่อยู่อาศัย</span>
             </label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="exp_housing" value="0" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
+              <span class="input-unit">บาท/ด.</span>
+            </div>
+            <div class="chips-row">
+              <span class="chip" onclick="setVal('exp_housing', 0)">0</span>
+              <span class="chip" onclick="setVal('exp_housing', 3000)">3,000</span>
+              <span class="chip" onclick="setVal('exp_housing', 5000)">5,000</span>
+              <span class="chip" onclick="setVal('exp_housing', 8000)">8,000</span>
             </div>
           </div>
 
           <div class="input-group">
             <label class="input-label">
               <span>🚗 ค่าน้ำมัน / ค่าเดินทาง / ค่าบำรุงรักษารถประจำเดือน</span>
-              <span class="input-hint">ค่าเดินทาง</span>
             </label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="exp_car" value="0" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
+              <span class="input-unit">บาท/ด.</span>
             </div>
+            <div class="chips-row">
+              <span class="chip" onclick="setVal('exp_car', 1500)">1,500</span>
+              <span class="chip" onclick="setVal('exp_car', 3000)">3,000</span>
+              <span class="chip" onclick="setVal('exp_car', 5000)">5,000</span>
+              <span class="chip" onclick="setVal('exp_car', 8000)">8,000</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label">
+              <span>🏥 เบี้ยประกันภัย (สุขภาพ/ชีวิต/รถ เฉลี่ยต่อเดือน)</span>
+            </label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="exp_insurance" value="1500" oninput="onDataChanged()">
+              <span class="input-unit">บาท/ด.</span>
+            </div>
+            <div class="chips-row">
+              <span class="chip" onclick="setVal('exp_insurance', 0)">0</span>
+              <span class="chip" onclick="setVal('exp_insurance', 1500)">1,500</span>
+              <span class="chip" onclick="setVal('exp_insurance', 3000)">3,000</span>
+              <span class="chip" onclick="setVal('exp_insurance', 5000)">5,000</span>
+            </div>
+          </div>
+
+          <div class="input-group" style="margin-bottom:0;">
+            <label class="input-label"><span>🧾 ค่าใช้จ่ายคงที่อื่นๆ</span></label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="exp_tax" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท/ด.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- หมวดที่ 3: ค่าใช้จ่ายผันแปร & ไลฟ์สไตล์ (Variable & Lifestyle) -->
+        <div class="card" style="border-radius:14px;">
+          <div class="card-header" style="margin-bottom:8px;">
+            <div class="card-title">
+              <span class="icon">🛒</span>
+              <span>3. ค่าใช้จ่ายผันแปร &amp; ไลฟ์สไตล์ครอบครัว (Variable Wants)</span>
+            </div>
+            <span class="badge badge-red">รวมรายจ่ายทั้งหมด: <span class="num-font" id="cfTotalExpenseBadge">0</span> ฿</span>
           </div>
 
           <div class="input-group">
             <label class="input-label"><span>🛒 ค่าใช้จ่ายในบ้าน (อาหาร / ค่าน้ำ-ไฟ / ของใช้)</span></label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="exp_home" value="12000" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
+              <span class="input-unit">บาท/ด.</span>
+            </div>
+            <div class="chips-row">
+              <span class="chip" onclick="setVal('exp_home', 6000)">6,000</span>
+              <span class="chip" onclick="setVal('exp_home', 9000)">9,000</span>
+              <span class="chip" onclick="setVal('exp_home', 12000)">12,000</span>
+              <span class="chip" onclick="setVal('exp_home', 15000)">15,000</span>
+              <span class="chip" onclick="setVal('exp_home', 20000)">20,000</span>
             </div>
           </div>
 
@@ -2230,15 +2319,13 @@
             <label class="input-label"><span>👨‍👩‍👧‍👦 ค่าเลี้ยงดูบุตร / ครอบครัว / การศึกษา</span></label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="exp_family" value="0" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
+              <span class="input-unit">บาท/ด.</span>
             </div>
-          </div>
-
-          <div class="input-group">
-            <label class="input-label"><span>🏥 เบี้ยประกันภัย (สุขภาพ/ชีวิต/รถ เฉลี่ยต่อเดือน)</span></label>
-            <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="exp_insurance" value="1500" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
+            <div class="chips-row">
+              <span class="chip" onclick="setVal('exp_family', 0)">0</span>
+              <span class="chip" onclick="setVal('exp_family', 3000)">3,000</span>
+              <span class="chip" onclick="setVal('exp_family', 5000)">5,000</span>
+              <span class="chip" onclick="setVal('exp_family', 10000)">10,000</span>
             </div>
           </div>
 
@@ -2246,7 +2333,13 @@
             <label class="input-label"><span>☕ ค่าใช้จ่ายส่วนตัว / ท่องเที่ยว / ไลฟ์สไตล์</span></label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="exp_lifestyle" value="5000" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
+              <span class="input-unit">บาท/ด.</span>
+            </div>
+            <div class="chips-row">
+              <span class="chip" onclick="setVal('exp_lifestyle', 2000)">2,000</span>
+              <span class="chip" onclick="setVal('exp_lifestyle', 4000)">4,000</span>
+              <span class="chip" onclick="setVal('exp_lifestyle', 6000)">6,000</span>
+              <span class="chip" onclick="setVal('exp_lifestyle', 10000)">10,000</span>
             </div>
           </div>
 
@@ -2257,64 +2350,94 @@
             </label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="exp_saving" value="3000" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
+              <span class="input-unit">บาท/ด.</span>
+            </div>
+            <div class="chips-row">
+              <span class="chip" onclick="setVal('exp_saving', 1000)">1,000</span>
+              <span class="chip" onclick="setVal('exp_saving', 3000)">3,000</span>
+              <span class="chip" onclick="setVal('exp_saving', 5000)">5,000</span>
+              <span class="chip" onclick="setVal('exp_saving', 10000)">10,000</span>
             </div>
           </div>
 
-          <div class="input-group">
-            <label class="input-label"><span>🧾 ค่าใช้จ่ายอื่นๆ</span></label>
-            <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="exp_tax" value="0" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
-            </div>
-          </div>
-
-          <button class="btn btn-primary" onclick="switchCFSub('summary', document.querySelectorAll('#tab-cashflow .seg-btn')[2])">ดูสรุปกระแสเงินสด →</button>
+          <button type="button" class="btn btn-primary" style="margin-top:10px;" onclick="switchCFSub('summary', document.querySelectorAll('#tab-cashflow .seg-btn')[2])">ดูสรุปกระแสเงินสด &amp; แผนสร้างเงินสำรอง →</button>
         </div>
       </div>
 
       <!-- CF SUB 3: สรุปผล (SUMMARY) -->
       <div id="cf-sub-summary" style="display:none;">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title"><span class="icon">📊</span><span>สรุปกระแสเงินสดรายเดือน</span></div>
+        <div class="card" style="border-radius:14px; margin-bottom:12px;">
+          <div class="card-header" style="margin-bottom:10px;">
+            <div class="card-title"><span class="icon">📊</span><span>สรุปกระแสเงินสดรายเดือน (Cash Flow Summary)</span></div>
           </div>
 
-          <div class="stat-grid-2">
-            <div class="mini-stat highlight">
+          <div class="stat-grid-2" style="margin-bottom:10px;">
+            <div class="mini-stat highlight" style="background:var(--card-bg);">
               <span class="mini-label">รวมรายรับ</span>
               <div class="mini-value num-font green" id="sumIncome">0 ฿</div>
             </div>
-            <div class="mini-stat">
+            <div class="mini-stat" style="background:var(--card-bg);">
               <span class="mini-label">รวมรายจ่าย</span>
               <div class="mini-value num-font red" id="sumExpense">0 ฿</div>
             </div>
           </div>
 
-          <div class="card" style="background:var(--pea-purple-bg); border-color:var(--border-focus); margin-bottom:14px;">
-            <div class="hero-stat-label" style="color:var(--pea-purple-soft);">เงินออมสุทธิต่อเดือน (รายรับ - รายจ่าย)</div>
-            <div class="hero-stat-value num-font" id="sumNetSavings" style="color:var(--text-main); font-size:1.8rem;">0 บาท</div>
+          <div class="card" style="background:var(--pea-purple-bg); border:1.5px solid var(--pea-purple-soft); margin-bottom:12px; text-align:center; padding:12px;">
+            <div class="hero-stat-label" style="color:var(--text-muted); font-size:0.78rem;">เงินออมสุทธิต่อเดือน (รายรับ - รายจ่าย)</div>
+            <div class="hero-stat-value num-font" id="sumNetSavings" style="color:var(--text-main); font-size:1.6rem; font-weight:800;">0 บาท</div>
           </div>
 
           <div class="breakdown-row">
-            <span>อัตราการออม (% ของรายรับ)</span>
+            <span>อัตราการออมสุทธิ (% ของรายรับ)</span>
             <span class="num-font" id="sumSavingsRate" style="font-weight:700;">0%</span>
           </div>
           <div class="breakdown-row">
-            <span>อัตราการจ่ายหนี้ (DTI)</span>
+            <span>อัตราการจ่ายหนี้ (DTI / DSR)</span>
             <span class="num-font" id="sumDebtRatio" style="font-weight:700;">0%</span>
           </div>
 
-          <div style="margin-top:12px; padding:12px; border-radius:10px; background:var(--card-sub); font-size:0.8rem; color:var(--text-muted);">
+          <!-- 50/30/20 Budgeting Rule Visualizer -->
+          <div style="margin-top:14px; background:var(--card-sub); border:1px solid var(--border); border-radius:12px; padding:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <b style="font-size:0.84rem; color:var(--text-main);">⚖️ การจัดสรรเงินตามหลักสากล (50/30/20 Rule)</b>
+              <span style="font-size:0.7rem; color:var(--text-muted);">เป้าหมาย: จำเป็น 50% | ไลฟ์สไตล์ 30% | ออม 20%</span>
+            </div>
+
+            <div style="height:12px; background:var(--border); border-radius:6px; overflow:hidden; display:flex; margin-bottom:8px;">
+              <div id="cfBarNeeds" style="background:#3B82F6; width:50%; height:100%; transition:width 0.4s ease;" title="จำเป็น (Needs)"></div>
+              <div id="cfBarWants" style="background:#F59E0B; width:30%; height:100%; transition:width 0.4s ease;" title="ไลฟ์สไตล์ (Wants)"></div>
+              <div id="cfBarSavings" style="background:#10B981; width:20%; height:100%; transition:width 0.4s ease;" title="เงินออม (Savings)"></div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; font-size:0.72rem; text-align:center;">
+              <div style="background:var(--card-bg); padding:6px; border-radius:8px; border:1px solid var(--border);">
+                <div style="color:#3B82F6; font-weight:700;">🟢 จำเป็น (Needs)</div>
+                <div id="cfNeedsVal" class="num-font" style="font-weight:700; font-size:0.82rem;">0 ฿</div>
+                <div style="color:var(--text-muted); font-size:0.65rem;" id="cfNeedsPct">0%</div>
+              </div>
+              <div style="background:var(--card-bg); padding:6px; border-radius:8px; border:1px solid var(--border);">
+                <div style="color:#F59E0B; font-weight:700;">🟡 ไลฟ์สไตล์ (Wants)</div>
+                <div id="cfWantsVal" class="num-font" style="font-weight:700; font-size:0.82rem;">0 ฿</div>
+                <div style="color:var(--text-muted); font-size:0.65rem;" id="cfWantsPct">0%</div>
+              </div>
+              <div style="background:var(--card-bg); padding:6px; border-radius:8px; border:1px solid var(--border);">
+                <div style="color:#10B981; font-weight:700;">🟣 เงินออม (Savings)</div>
+                <div id="cfSavingsVal" class="num-font" style="font-weight:700; font-size:0.82rem;">0 ฿</div>
+                <div style="color:var(--text-muted); font-size:0.65rem;" id="cfSavingsPct">0%</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px; padding:10px 12px; border-radius:10px; background:var(--pea-purple-bg); font-size:0.78rem; color:var(--text-main); line-height:1.4;">
             💡 <b>คำแนะนำสุขภาพทางการเงิน:</b>
-            <ul style="padding-left:18px; margin-top:4px;">
-              <li>ควรรักษาอัตราการออมอย่างน้อย <b>20% ของรายรับ</b></li>
-              <li>อัตราการจ่ายหนี้สินรวม <b>ไม่ควรเกิน 40% ของรายรับ</b></li>
+            <ul style="padding-left:18px; margin:4px 0 0 0;">
+              <li>ควรรักษาอัตราการออมอย่างน้อย <b>20% ของรายรับรวม</b></li>
+              <li>อัตราการผ่อนชำระหนี้สินรวม (DSR) <b>ไม่ควรเกิน 30-40% ของรายรับ</b></li>
             </ul>
           </div>
 
           <!-- Emergency Fund & Liquidity Optimizer Card -->
-          <div class="card" id="emergencyFundCard" style="background:linear-gradient(135deg, var(--pea-purple-bg), var(--pea-purple-tint)); border:1.5px solid var(--pea-purple-soft); margin-top:14px;">
+          <div class="card" id="emergencyFundCard" style="background:linear-gradient(135deg, var(--pea-purple-bg), var(--pea-purple-tint)); border:1.5px solid var(--pea-purple-soft); margin-top:14px; border-radius:14px;">
             <div class="card-header" style="margin-bottom:8px;">
               <div class="card-title" style="font-size:0.95rem;">
                 <span class="icon">🛡️</span>
@@ -2368,10 +2491,11 @@
 
               <!-- Estimated Time to Target -->
               <div id="efTimelineVerdict" style="font-size:0.8rem; line-height:1.5; color:var(--text-main); background:var(--card-sub); padding:10px 12px; border-radius:8px;">
-                <!-- Dynamically populated timeline -->
+                คำนวณระยะเวลาสร้างเงินสำรองฉุกเฉิน...
               </div>
             </div>
           </div>
+
         </div>
       </div>
 
@@ -6832,6 +6956,35 @@
       // Update Cash Flow UI
       if ($('cfTotalIncomeBadge')) $('cfTotalIncomeBadge').textContent = fmt(totalIncome);
       if ($('cfTotalExpenseBadge')) $('cfTotalExpenseBadge').textContent = fmt(totalExpense);
+      if ($('cfLiveHeaderIncome')) $('cfLiveHeaderIncome').textContent = fmt(totalIncome) + ' ฿';
+      if ($('cfLiveHeaderExpense')) $('cfLiveHeaderExpense').textContent = fmt(totalExpense) + ' ฿';
+      if ($('cfLiveHeaderNetSavings')) {
+        $('cfLiveHeaderNetSavings').textContent = (netSavings >= 0 ? '+' : '') + fmt(netSavings) + ' ฿';
+        $('cfLiveHeaderNetSavings').style.color = netSavings >= 0 ? '#10B981' : '#EF4444';
+      }
+      if ($('cfLiveHeaderSavingsRate')) $('cfLiveHeaderSavingsRate').textContent = fmt2(savingsRate) + '%';
+
+      // 50/30/20 Budgeting Rule calculations
+      const needsVal = Math.round((state.exp_housing || 0) + (state.exp_car || 0) + (state.exp_home || 0) + (state.exp_insurance || 0) + (state.exp_pea_tax || 0) + (state.exp_pea_cremation || 0) + totalDebtMonthly);
+      const wantsVal = Math.round((state.exp_lifestyle || 0) + (state.exp_family || 0) + (state.exp_tax || 0));
+      const savingsVal = Math.round(Math.max(0, netSavings) + (state.exp_saving || 0));
+      const incTotal = totalIncome || 1;
+
+      const needsPct = Math.round((needsVal / incTotal) * 100);
+      const wantsPct = Math.round((wantsVal / incTotal) * 100);
+      const savingsPct = Math.round((savingsVal / incTotal) * 100);
+
+      if ($('cfNeedsVal')) $('cfNeedsVal').textContent = fmt(needsVal) + ' ฿';
+      if ($('cfNeedsPct')) $('cfNeedsPct').textContent = needsPct + '%';
+      if ($('cfWantsVal')) $('cfWantsVal').textContent = fmt(wantsVal) + ' ฿';
+      if ($('cfWantsPct')) $('cfWantsPct').textContent = wantsPct + '%';
+      if ($('cfSavingsVal')) $('cfSavingsVal').textContent = fmt(savingsVal) + ' ฿';
+      if ($('cfSavingsPct')) $('cfSavingsPct').textContent = savingsPct + '%';
+
+      if ($('cfBarNeeds')) $('cfBarNeeds').style.width = Math.min(100, needsPct) + '%';
+      if ($('cfBarWants')) $('cfBarWants').style.width = Math.min(100, wantsPct) + '%';
+      if ($('cfBarSavings')) $('cfBarSavings').style.width = Math.min(100, savingsPct) + '%';
+
       if ($('sumIncome')) $('sumIncome').textContent = fmt(totalIncome) + ' ฿';
       if ($('sumExpense')) $('sumExpense').textContent = fmt(totalExpense) + ' ฿';
       if ($('sumNetSavings')) {
