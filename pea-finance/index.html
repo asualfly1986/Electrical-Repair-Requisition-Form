@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="th" data-theme="light">
 <head>
   <meta charset="UTF-8">
@@ -1583,32 +1583,6 @@
     <!-- ==================== TAB 1: ภาพรวม (DASHBOARD) ==================== -->
     <div class="tab-panel active" id="tab-dashboard">
       
-      <!-- Personal Profile Summary Card (Real-Time Display) -->
-      <div class="card" style="margin-bottom:12px; padding:12px 14px; background:linear-gradient(135deg, var(--card-bg), var(--pea-purple-bg)); border:1.5px solid var(--pea-purple-soft); border-radius:14px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
-          <div style="display:flex; align-items:center; gap:12px;">
-            <div style="position:relative; cursor:pointer;" onclick="openProfileModal()" title="เธเธฅเธดเธเน€เธเธทเนเธญเนเธเนเนเธเนเธเธฃเนเธเธฅเน">
-              <div style="width:56px; height:56px; border-radius:50%; padding:2.5px; background:linear-gradient(135deg, #7C3AED, #F59E0B, #A855F7); box-shadow:0 4px 12px rgba(124,58,237,0.25);">
-                <img id="dashUserAvatar" src="" alt="Profile" style="width:100%; height:100%; object-fit:cover; border-radius:50%; background:#fff; display:block;">
-              </div>
-              <span style="position:absolute; bottom:-2px; right:-2px; background:#10B981; color:#fff; border-radius:50%; width:18px; height:18px; display:flex; align-items:center; justify-content:center; font-size:0.55rem; border:2px solid var(--card-bg);" title="กฟภ.">⚡</span>
-            </div>
-            <div>
-              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:2px;">
-                <b id="dashUserName" style="font-size:0.98rem; color:var(--text-main);">นายอภิชาติ ยุพิน</b>
-                <span class="badge badge-gold" id="dashUserEmpId" style="font-size:0.68rem;">รหัส 504195</span>
-              </div>
-              <div id="dashUserPosition" style="font-size:0.78rem; color:var(--text-muted); line-height:1.3;">
-                พนักงานช่าง (ปฏิบัติการระบบไฟฟ้า) ระดับ 6
-              </div>
-              <div id="dashUserDept" style="font-size:0.72rem; color:var(--pea-purple-light); font-weight:600; margin-top:2px;">
-                ผปบ./กฟส.ขก.2/กฟจ.ขก./กฟฉ.1/สายงาน (ฉ)
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
       <!-- Hero Welcome & Financial Vision Graphic Banner -->
       <div class="card" style="padding:14px 16px; margin-bottom:12px; background:linear-gradient(135deg, #2A1054 0%, #4B1A7A 60%, #6B21A8 100%); color:#FFFFFF; border:none; position:relative; overflow:hidden; border-radius:14px; box-shadow:0 8px 24px rgba(75,26,122,0.25);">
         <!-- Decorative Background Circles SVG -->
@@ -1638,6 +1612,32 @@
             <svg style="width:34px; height:34px;" viewBox="0 0 24 24" fill="none" stroke="#FDE047" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
             </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Personal Profile Summary Card (Real-Time Display) -->
+      <div class="card" style="margin-bottom:12px; padding:12px 14px; background:linear-gradient(135deg, var(--card-bg), var(--pea-purple-bg)); border:1.5px solid var(--pea-purple-soft); border-radius:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="position:relative; cursor:pointer;" onclick="openProfileModal()" title="เธเธฅเธดเธเน€เธเธทเนเธญเนเธเนเนเธเนเธเธฃเนเธเธฅเน">
+              <div style="width:56px; height:56px; border-radius:50%; padding:2.5px; background:linear-gradient(135deg, #7C3AED, #F59E0B, #A855F7); box-shadow:0 4px 12px rgba(124,58,237,0.25);">
+                <img id="dashUserAvatar" src="" alt="Profile" style="width:100%; height:100%; object-fit:cover; border-radius:50%; background:#fff; display:block;">
+              </div>
+              <span style="position:absolute; bottom:-2px; right:-2px; background:#10B981; color:#fff; border-radius:50%; width:18px; height:18px; display:flex; align-items:center; justify-content:center; font-size:0.55rem; border:2px solid var(--card-bg);" title="กฟภ.">⚡</span>
+            </div>
+            <div>
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:2px;">
+                <b id="dashUserName" style="font-size:0.98rem; color:var(--text-main);">นายอภิชาติ ยุพิน</b>
+                <span class="badge badge-gold" id="dashUserEmpId" style="font-size:0.68rem;">รหัส 504195</span>
+              </div>
+              <div id="dashUserPosition" style="font-size:0.78rem; color:var(--text-muted); line-height:1.3;">
+                พนักงานช่าง (ปฏิบัติการระบบไฟฟ้า) ระดับ 6
+              </div>
+              <div id="dashUserDept" style="font-size:0.72rem; color:var(--pea-purple-light); font-weight:600; margin-top:2px;">
+                ผปบ./กฟส.ขก.2/กฟจ.ขก./กฟฉ.1/สายงาน (ฉ)
+              </div>
+            </div>
           </div>
         </div>
       </div>
