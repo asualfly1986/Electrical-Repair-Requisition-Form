@@ -2234,7 +2234,7 @@
             <span class="badge badge-red" id="dsrBadge">DSR 0%</span>
           </div>
 
-          <div class="stat-grid-2" style="margin-bottom:12px;">
+          <div class="stat-grid-2" style="margin-bottom:8px;">
             <div class="mini-stat">
               <span class="mini-label">รวมยอดหนี้คงเหลือทั้งหมด</span>
               <div class="mini-value num-font red" id="totalDebtPrincipalText" style="font-size:1.1rem;">0 ฿</div>
@@ -2243,6 +2243,38 @@
               <span class="mini-label">รวมค่างวดผ่อนต่อเดือน</span>
               <div class="mini-value num-font" id="totalDebtMonthlyText" style="font-size:1.1rem;">0 ฿/ด.</div>
             </div>
+          </div>
+
+          <div class="stat-grid-2" style="margin-bottom:12px;">
+            <div class="mini-stat" style="background:#FFFBEB; border-color:#FDE68A;">
+              <span class="mini-label" style="color:#92400E;">📈 ดอกเบี้ยจ่ายรวมจนหมดสัญญา</span>
+              <div class="mini-value num-font" id="totalDebtInterestText" style="font-size:1.1rem; color:#B45309;">0 ฿</div>
+            </div>
+            <div class="mini-stat" style="background:#FEF2F2; border-color:#FECACA;">
+              <span class="mini-label" style="color:#991B1B;">💰 ยอดเงินรวมที่ต้องจ่ายจริงทั้งหมด</span>
+              <div class="mini-value num-font" id="totalDebtPayoutText" style="font-size:1.1rem; color:#DC2626;">0 ฿</div>
+            </div>
+          </div>
+
+          <!-- Per-Debt Payout Breakdown Table -->
+          <div style="background:var(--card-bg); border-radius:10px; padding:10px; border:1px solid var(--border); margin-bottom:12px; overflow-x:auto;">
+            <div style="font-size:0.8rem; font-weight:700; color:var(--pea-purple-light); margin-bottom:6px;">
+              📑 รายละเอียดเงินต้นและดอกเบี้ยรวมแต่ละรายการ (ผ่อนตามสัญญาปกติ):
+            </div>
+            <table style="width:100%; font-size:0.75rem; border-collapse:collapse; text-align:right;">
+              <thead>
+                <tr style="background:var(--pea-purple-bg); color:var(--pea-purple-light); border-bottom:1.5px solid var(--border);">
+                  <th style="padding:6px; text-align:left;">รายการหนี้</th>
+                  <th style="padding:6px;">เงินต้นคงเหลือ</th>
+                  <th style="padding:6px;">ดอกเบี้ยรวม</th>
+                  <th style="padding:6px;">ยอดจ่ายจริงรวม</th>
+                  <th style="padding:6px; text-align:center;">ระยะเวลา</th>
+                </tr>
+              </thead>
+              <tbody id="debtBreakdownTableBody">
+                <!-- Dynamically populated rows -->
+              </tbody>
+            </table>
           </div>
 
           <div style="background:var(--card-sub); border-radius:10px; padding:10px 12px; font-size:0.82rem; line-height:1.5;">
@@ -4672,9 +4704,64 @@
         if (badge) badge.textContent = `${fmt(catSums[cat].p)} ฿ | ${fmt(catSums[cat].m)} ฿/ด.`;
       });
 
+      let totalDebtPayout = 0;
+      let totalDebtInterest = 0;
+      const debtBreakdownRows = [];
+
+      state.debts.forEach(d => {
+        const p = d.principal || 0;
+        const m = d.monthly || 0;
+        const r = (d.rate || 0) / 100 / 12;
+        
+        let itemInterest = 0;
+        let itemPaid = 0;
+        let itemMonths = 0;
+        let bal = p;
+
+        if (p > 0 && m > 0 && r > 0) {
+          while (bal > 0 && itemMonths < 600) {
+            itemMonths++;
+            const intVal = bal * r;
+            itemInterest += intVal;
+            const prinVal = Math.min(bal, m - intVal);
+            if (prinVal <= 0) break;
+            bal -= prinVal;
+            itemPaid += (prinVal + intVal);
+          }
+        } else if (p > 0 && m > 0) {
+          itemMonths = Math.ceil(p / m);
+          itemPaid = p;
+          itemInterest = 0;
+        }
+
+        totalDebtPayout += itemPaid;
+        totalDebtInterest += itemInterest;
+
+        const y = Math.floor(itemMonths / 12);
+        const mos = itemMonths % 12;
+        const durText = itemMonths > 0 ? `${y > 0 ? y + ' ปี ' : ''}${mos} ด. (${itemMonths} งวด)` : '-';
+
+        debtBreakdownRows.push(`
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:5px; text-align:left; font-weight:600;">${d.name || 'หนี้สิน'} <span style="font-size:0.68rem; color:var(--text-muted);">(${d.rate}%/ปี)</span></td>
+            <td style="padding:5px;" class="num-font">${fmt(p)} ฿</td>
+            <td style="padding:5px; color:#B45309;" class="num-font">${fmt(Math.round(itemInterest))} ฿</td>
+            <td style="padding:5px; font-weight:700; color:#DC2626;" class="num-font">${fmt(Math.round(itemPaid))} ฿</td>
+            <td style="padding:5px; text-align:center; font-size:0.72rem; color:var(--text-muted);">${durText}</td>
+          </tr>
+        `);
+      });
+
       // Update Grand Totals UI
       if ($('totalDebtPrincipalText')) $('totalDebtPrincipalText').textContent = fmt(totalDebtPrincipal) + ' ฿';
       if ($('totalDebtMonthlyText')) $('totalDebtMonthlyText').textContent = fmt(totalDebtMonthly) + ' ฿/ด.';
+      if ($('totalDebtInterestText')) $('totalDebtInterestText').textContent = fmt(Math.round(totalDebtInterest)) + ' ฿';
+      if ($('totalDebtPayoutText')) $('totalDebtPayoutText').textContent = fmt(Math.round(totalDebtPayout)) + ' ฿';
+      if ($('debtBreakdownTableBody')) {
+        $('debtBreakdownTableBody').innerHTML = debtBreakdownRows.length > 0 
+          ? debtBreakdownRows.join('') 
+          : '<tr><td colspan="5" style="text-align:center; padding:8px; color:var(--text-muted);">ไม่มีรายการหนี้สินค้างชำระ 🎉</td></tr>';
+      }
       // 3. Cash Flow Calculation & Logic Correction
       const totalIncome = (state.inc_salary || 0) + (state.inc_pea_electric || 0) + (state.inc_pea_shift || 0) + (state.inc_pea_hazard || 0) + (state.inc_business || 0) + (state.inc_rent || 0) + (state.inc_dividend || 0) + (state.inc_bonus || 0) + (state.inc_other || 0);
       
