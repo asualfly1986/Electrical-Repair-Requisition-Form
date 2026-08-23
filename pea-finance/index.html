@@ -2504,17 +2504,34 @@
     <!-- ==================== TAB 3: งบดุล & สินทรัพย์ (NET WORTH) ==================== -->
     <div class="tab-panel" id="tab-networth">
 
-      <div class="segmented-control">
+      <!-- Live Balance Sheet Executive Status Header Strip -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:8px; margin-bottom:12px;">
+        <div class="card" style="padding:10px 12px; border:1px solid var(--border); border-radius:12px; text-align:center; background:linear-gradient(135deg, var(--card-bg), var(--pea-purple-bg));">
+          <div style="font-size:0.68rem; color:var(--text-muted); margin-bottom:2px;">💎 รวมสินทรัพย์ทั้งหมด</div>
+          <div class="num-font" id="nwLiveHeaderAssets" style="font-size:1.1rem; font-weight:800; color:#10B981;">0 ฿</div>
+        </div>
+        <div class="card" style="padding:10px 12px; border:1px solid var(--border); border-radius:12px; text-align:center; background:linear-gradient(135deg, var(--card-bg), var(--pea-purple-bg));">
+          <div style="font-size:0.68rem; color:var(--text-muted); margin-bottom:2px;">📉 รวมหนี้สินคงค้าง</div>
+          <div class="num-font" id="nwLiveHeaderLiabilities" style="font-size:1.1rem; font-weight:800; color:#EF4444;">0 ฿</div>
+        </div>
+        <div class="card" style="padding:10px 12px; border:1.5px solid var(--pea-purple-soft); border-radius:12px; text-align:center; background:linear-gradient(135deg, var(--card-bg), var(--pea-purple-bg)); grid-column:span 1;">
+          <div style="font-size:0.68rem; color:var(--text-muted); margin-bottom:2px;">🏛️ ความมั่งคั่งสุทธิ</div>
+          <div class="num-font" id="nwLiveHeaderNetWorth" style="font-size:1.15rem; font-weight:800; color:var(--pea-purple-light);">0 ฿</div>
+        </div>
+      </div>
+
+      <!-- Segmented Sub-navigation -->
+      <div class="segmented-control" style="margin-bottom:12px;">
         <button class="seg-btn active" onclick="switchNWSub('assets', this)">
-          <span>💎 สินทรัพย์</span>
+          <span>💎 1. สินทรัพย์</span>
           <span class="seg-badge" id="segBadgeAssets">0 ฿</span>
         </button>
         <button class="seg-btn" onclick="switchNWSub('liabilities', this)">
-          <span>📉 หนี้สิน</span>
+          <span>📉 2. หนี้สิน</span>
           <span class="seg-badge" id="segBadgeLiabilities">0 ฿</span>
         </button>
         <button class="seg-btn" onclick="switchNWSub('summary', this)">
-          <span>🏛️ งบดุลสุทธิ</span>
+          <span>🏛️ 3. งบดุลสุทธิ</span>
           <span class="seg-badge" id="segBadgeNetWorth">0 ฿</span>
         </button>
       </div>
@@ -2523,9 +2540,9 @@
       <div id="nw-sub-assets">
         
         <!-- Group 1: สินทรัพย์เพื่อการเกษียณ / สภาพคล่องทางการเงิน -->
-        <div class="card">
+        <div class="card" style="border-radius:14px; margin-bottom:12px;">
           <div class="card-header" style="margin-bottom:6px;">
-            <div class="card-title" style="font-size:0.95rem;"><span class="icon">💎</span><span>1. สินทรัพย์เพื่อการเกษียณ & การเงิน (Liquid Assets)</span></div>
+            <div class="card-title" style="font-size:0.95rem;"><span class="icon">💎</span><span>1. สินทรัพย์เพื่อการเกษียณ &amp; การเงิน (Liquid Assets)</span></div>
             <span class="badge badge-green" id="subtotalLiquidAssetsBadge">0 ฿</span>
           </div>
           <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:12px;">สินทรัพย์สภาพคล่องสูงสำหรับใช้ดำรงชีพหลังเกษียณ (นำไปคำนวณแผนเกษียณ)</p>
@@ -2533,7 +2550,7 @@
           <!-- Category 1.1: เงินสด / เงินฝากออมทรัพย์ -->
           <div style="margin-bottom:14px; border-bottom:1px dashed var(--border); padding-bottom:10px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-              <b style="font-size:0.86rem; color:var(--text-main);">💵 เงินสด & บัญชีเงินฝากออมทรัพย์</b>
+              <b style="font-size:0.86rem; color:var(--text-main);">💵 เงินสด &amp; บัญชีเงินฝากออมทรัพย์</b>
               <span class="badge badge-blue" id="subtotalBadge_ast_cash">0 ฿</span>
             </div>
             <div id="assetList_cash"></div>
@@ -2543,7 +2560,7 @@
           <!-- Category 1.2: เงินฝากประจำ / สลากออมทรัพย์ -->
           <div style="margin-bottom:14px; border-bottom:1px dashed var(--border); padding-bottom:10px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-              <b style="font-size:0.86rem; color:var(--text-main);">🏦 เงินฝากประจำ & สลากออมทรัพย์</b>
+              <b style="font-size:0.86rem; color:var(--text-main);">🏦 เงินฝากประจำ &amp; สลากออมทรัพย์</b>
               <span class="badge badge-blue" id="subtotalBadge_ast_fixed">0 ฿</span>
             </div>
             <div id="assetList_fixed"></div>
@@ -2583,9 +2600,9 @@
         </div>
 
         <!-- Group 2: สินทรัพย์ใช้ส่วนตัว & สภาพคล่องต่ำ -->
-        <div class="card">
+        <div class="card" style="border-radius:14px;">
           <div class="card-header" style="margin-bottom:6px;">
-            <div class="card-title" style="font-size:0.95rem;"><span class="icon">🏠</span><span>2. สินทรัพย์ใช้ส่วนตัว & สภาพคล่องต่ำ (Personal Assets)</span></div>
+            <div class="card-title" style="font-size:0.95rem;"><span class="icon">🏠</span><span>2. สินทรัพย์ใช้ส่วนตัว &amp; สภาพคล่องต่ำ (Personal Assets)</span></div>
             <span class="badge badge-gold" id="subtotalPersonalAssetsBadge">0 ฿</span>
           </div>
           <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:12px;">สินทรัพย์ที่ใช้ประโยชน์ในชีวิตประจำวัน ไม่นำมาทยอยจ่ายเป็นค่าใช้จ่ายเกษียณ</p>
@@ -2613,7 +2630,7 @@
           <!-- Category 2.3: มูลค่าธุรกิจส่วนตัว -->
           <div style="margin-bottom:14px; border-bottom:1px dashed var(--border); padding-bottom:10px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-              <b style="font-size:0.86rem; color:var(--text-main);">🏢 มูลค่าธุรกิจส่วนตัว & ทรัพย์สินทางปัญญา</b>
+              <b style="font-size:0.86rem; color:var(--text-main);">🏢 มูลค่าธุรกิจส่วนตัว &amp; ทรัพย์สินทางปัญญา</b>
               <span class="badge badge-gold" id="subtotalBadge_ast_business">0 ฿</span>
             </div>
             <div id="assetList_business"></div>
@@ -2630,7 +2647,7 @@
             <button type="button" class="add-asset-btn" onclick="addNewAsset('other')">+ เพิ่มสินทรัพย์อื่นๆ</button>
           </div>
 
-          <button class="btn btn-purple" style="margin-top:14px;" onclick="switchNWSub('liabilities', document.querySelectorAll('#tab-networth .seg-btn')[1])">ถัดไป: กรอกหนี้สิน →</button>
+          <button class="btn btn-purple" style="margin-top:14px;" onclick="switchNWSub('liabilities', document.querySelectorAll('#tab-networth .seg-btn')[1])">ถัดไป: บันทึกหนี้สิน →</button>
         </div>
       </div>
 
@@ -2638,7 +2655,7 @@
       <div id="nw-sub-liabilities" style="display:none;">
 
         <!-- Category 1: หนี้สินระยะยาว / มีหลักประกัน -->
-        <div class="card">
+        <div class="card" style="border-radius:14px; margin-bottom:12px;">
           <div class="card-header" style="margin-bottom:6px;">
             <div class="card-title" style="font-size:0.95rem;"><span class="icon">🏠</span><span>หนี้สินระยะยาว / มีหลักประกัน</span></div>
             <span class="badge badge-purple" id="subtotalBadge_secured">0 ฿ | 0 ฿/ด.</span>
@@ -2655,7 +2672,7 @@
         </div>
 
         <!-- Category 2: หนี้สินสวัสดิการ กฟภ. / สหกรณ์ฯ -->
-        <div class="card">
+        <div class="card" style="border-radius:14px; margin-bottom:12px;">
           <div class="card-header" style="margin-bottom:6px;">
             <div class="card-title" style="font-size:0.95rem;"><span class="icon">⚡</span><span>หนี้สินสวัสดิการ กฟภ. / สหกรณ์ฯ</span></div>
             <span class="badge badge-gold" id="subtotalBadge_welfare">0 ฿ | 0 ฿/ด.</span>
@@ -2672,7 +2689,7 @@
         </div>
 
         <!-- Category 3: หนี้สินระยะสั้น / ดอกเบี้ยสูง -->
-        <div class="card">
+        <div class="card" style="border-radius:14px; margin-bottom:12px;">
           <div class="card-header" style="margin-bottom:6px;">
             <div class="card-title" style="font-size:0.95rem;"><span class="icon">💳</span><span>หนี้สินระยะสั้น / ดอกเบี้ยสูง</span></div>
             <span class="badge badge-red" id="subtotalBadge_unsecured">0 ฿ | 0 ฿/ด.</span>
@@ -2689,7 +2706,7 @@
         </div>
 
         <!-- Category 4: หนี้สินอื่นๆ -->
-        <div class="card">
+        <div class="card" style="border-radius:14px; margin-bottom:12px;">
           <div class="card-header" style="margin-bottom:6px;">
             <div class="card-title" style="font-size:0.95rem;"><span class="icon">📑</span><span>หนี้สินอื่นๆ</span></div>
             <span class="badge badge-blue" id="subtotalBadge_other">0 ฿ | 0 ฿/ด.</span>
@@ -2706,11 +2723,11 @@
         </div>
 
         <!-- Grand Total Liabilities & DSR Card -->
-        <div class="card" style="background:linear-gradient(135deg, var(--pea-purple-bg), var(--pea-purple-tint)); border-color:var(--pea-purple-soft);">
+        <div class="card" style="background:linear-gradient(135deg, var(--pea-purple-bg), var(--pea-purple-tint)); border-color:var(--pea-purple-soft); border-radius:14px; margin-bottom:12px;">
           <div class="card-header" style="margin-bottom:8px;">
             <div class="card-title" style="font-size:0.95rem;">
               <span class="icon">📊</span>
-              <span>สรุปภาระหนี้สิน & สัดส่วน DSR <span class="tooltip-tag" data-tip="Debt Service Ratio (DSR) สัดส่วนภาระหนี้ต่อรายรับรวม ไม่ควรเกิน 30-40% เพื่อความปลอดภัยทางการเงิน">ℹ</span></span>
+              <span>สรุปภาระหนี้สิน &amp; สัดส่วน DSR <span class="tooltip-tag" data-tip="Debt Service Ratio (DSR) สัดส่วนภาระหนี้ต่อรายรับรวม ไม่ควรเกิน 30-40% เพื่อความปลอดภัยทางการเงิน">ℹ</span></span>
             </div>
             <span class="badge badge-red" id="dsrBadge">DSR 0%</span>
           </div>
@@ -2765,7 +2782,7 @@
         </div>
 
         <!-- Debt Payoff Strategy Optimizer Card -->
-        <div class="card" id="debtStrategyCard">
+        <div class="card" id="debtStrategyCard" style="border-radius:14px; margin-bottom:12px;">
           <div class="card-header" style="margin-bottom:6px;">
             <div class="card-title" style="font-size:0.95rem;">
               <span class="icon">🎯</span>
@@ -2789,11 +2806,11 @@
         </div>
 
         <!-- Debt Prepayment & Accelerated Payoff Simulator Card -->
-        <div class="card" id="debtPrepayCard" style="background:linear-gradient(135deg, #FAF5FF, #F3E8FF); border:1.5px solid #C084FC; margin-top:14px;">
+        <div class="card" id="debtPrepayCard" style="background:linear-gradient(135deg, #FAF5FF, #F3E8FF); border:1.5px solid #C084FC; margin-top:14px; border-radius:14px;">
           <div class="card-header" style="margin-bottom:6px;">
             <div class="card-title" style="font-size:0.95rem;">
               <span class="icon">⚡</span>
-              <span>เครื่องมือจำลองการโปะหนี้ & ประหยัดดอกเบี้ย (Debt Prepayment Simulator)</span>
+              <span>เครื่องมือจำลองการโปะหนี้ &amp; ประหยัดดอกเบี้ย (Debt Prepayment Simulator)</span>
             </div>
             <span class="badge badge-purple">ประหยัดดอกเบี้ย</span>
           </div>
@@ -2900,38 +2917,89 @@
           </div>
         </div>
 
-        <button class="btn btn-primary" onclick="switchNWSub('summary', document.querySelectorAll('#tab-networth .seg-btn')[2])">ดูสรุปงบดุลสุทธิ →</button>
+        <button class="btn btn-primary" style="margin-top:14px;" onclick="switchNWSub('summary', document.querySelectorAll('#tab-networth .seg-btn')[2])">ดูสรุปงบดุลสุทธิ →</button>
       </div>
 
       <!-- NW SUB 3: สรุปงบดุล (NET WORTH SUMMARY) -->
       <div id="nw-sub-summary" style="display:none;">
-        <div class="card">
-          <div class="card-header">
+        <div class="card" style="border-radius:14px; margin-bottom:12px;">
+          <div class="card-header" style="margin-bottom:10px;">
             <div class="card-title"><span class="icon">🏛️</span><span>งบดุลส่วนบุคคล (Net Worth Statement)</span></div>
           </div>
 
-          <div class="hero-stat-card" style="margin-bottom:14px;">
-            <div class="hero-stat-label">มูลค่าสุทธิ (สินทรัพย์ - หนี้สิน)</div>
-            <div class="hero-stat-value num-font" id="nwNetWorthVal">0 บาท</div>
+          <!-- Hero Net Worth Statement Card -->
+          <div class="hero-stat-card" style="margin-bottom:14px; background:linear-gradient(135deg, var(--pea-purple-bg), var(--card-bg)); border:1.5px solid var(--pea-purple-soft);">
+            <div class="hero-stat-label">มูลค่าความมั่งคั่งสุทธิ (สินทรัพย์ - หนี้สิน)</div>
+            <div class="hero-stat-value num-font" id="nwNetWorthVal" style="color:var(--pea-purple-light); font-size:1.8rem;">0 บาท</div>
             <div class="hero-stat-sub">
-              <span>ความมั่งคั่งสุทธิส่วนบุคคล</span>
+              <span>ความมั่งคั่งสุทธิส่วนบุคคลที่แท้จริง</span>
             </div>
           </div>
 
           <div class="breakdown-row">
-            <span>รวมสินทรัพย์ (Assets)</span>
+            <span>รวมสินทรัพย์ทั้งหมด (Assets)</span>
             <span class="num-font green" id="nwSumAssets" style="font-weight:700;">0 ฿</span>
           </div>
           <div class="breakdown-row">
-            <span>รวมหนี้สิน (Liabilities)</span>
+            <span>รวมหนี้สินทั้งหมด (Liabilities)</span>
             <span class="num-font red" id="nwSumLiab" style="font-weight:700;">0 ฿</span>
           </div>
-          <div class="breakdown-row">
-            <span>สภาพคล่องสำรองฉุกเฉิน (เงินสด ÷ รายจ่าย)</span>
+
+          <!-- PEA Cooperative Net Position Card -->
+          <div style="margin-top:14px; background:linear-gradient(135deg, var(--card-bg), var(--pea-purple-bg)); border:1.5px solid var(--pea-purple-soft); border-radius:12px; padding:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <b style="font-size:0.86rem; color:var(--pea-purple-light);">⚡ สถานะสุทธิสหกรณ์ออมทรัพย์ กฟภ. (Coop Net Position)</b>
+              <span id="nwCoopNetPosition" class="badge badge-gold">+0 ฿</span>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.78rem;">
+              <div style="background:var(--card-bg); padding:8px; border-radius:8px; border:1px solid var(--border);">
+                <div style="color:var(--text-muted); font-size:0.7rem;">🪙 หุ้นสะสมสหกรณ์ กฟภ.</div>
+                <div id="nwCoopSharesTotal" class="num-font" style="font-weight:700; color:var(--pea-purple-light); font-size:0.95rem;">0 ฿</div>
+              </div>
+              <div style="background:var(--card-bg); padding:8px; border-radius:8px; border:1px solid var(--border);">
+                <div style="color:var(--text-muted); font-size:0.7rem;">📑 หนี้เงินกู้สวัสดิการ กฟภ.</div>
+                <div id="nwCoopLoansTotal" class="num-font" style="font-weight:700; color:#EF4444; font-size:0.95rem;">0 ฿</div>
+              </div>
+            </div>
+            <div style="font-size:0.72rem; color:var(--text-muted); margin-top:6px;">
+              💡 หุ้นสะสมสหกรณ์หักลบหนี้เงินกู้สวัสดิการ ช่วยสะท้อนความมั่งคั่งสุทธิในระบบสหกรณ์ กฟภ.
+            </div>
+          </div>
+
+          <!-- Debt-to-Asset (D/A) Ratio Solvency Solver -->
+          <div style="margin-top:14px; background:var(--card-sub); border:1px solid var(--border); border-radius:12px; padding:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <b style="font-size:0.84rem; color:var(--text-main);">⚖️ สัดส่วนหนี้สินต่อสินทรัพย์ (Debt-to-Asset Ratio)</b>
+              <span id="nwDaRatioBadge" class="badge badge-green"><span id="nwDaRatioVal" class="num-font">0%</span></span>
+            </div>
+            <div style="height:10px; background:var(--border); border-radius:5px; overflow:hidden; margin-bottom:8px;">
+              <div id="nwDaProgressBar" style="height:100%; width:0%; background:#10B981; transition:width 0.4s ease;"></div>
+            </div>
+            <div id="nwDaVerdictText" style="font-size:0.78rem; color:var(--text-main); line-height:1.4;">
+              ประเมินความเสี่ยงสัดส่วนหนี้สิน...
+            </div>
+          </div>
+
+          <!-- Liquid vs Personal Asset Split -->
+          <div style="margin-top:14px; display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div style="background:var(--card-bg); border:1px solid var(--border); border-radius:10px; padding:10px;">
+              <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:2px;">💧 สินทรัพย์เพื่อเกษียณ (Liquid)</div>
+              <div id="nwLiquidRetireVal" class="num-font" style="font-weight:700; color:#10B981; font-size:1.05rem;">0 ฿</div>
+              <div id="nwLiquidRetirePct" style="font-size:0.68rem; color:var(--text-muted);">0% ของสินทรัพย์รวม</div>
+            </div>
+            <div style="background:var(--card-bg); border:1px solid var(--border); border-radius:10px; padding:10px;">
+              <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:2px;">🏠 ทรัพย์สินส่วนตัว (Personal)</div>
+              <div id="nwPersonalAssetsVal" class="num-font" style="font-weight:700; color:#F59E0B; font-size:1.05rem;">0 ฿</div>
+              <div id="nwPersonalAssetsPct" style="font-size:0.68rem; color:var(--text-muted);">0% ของสินทรัพย์รวม</div>
+            </div>
+          </div>
+
+          <div class="breakdown-row" style="margin-top:12px;">
+            <span>สภาพคล่องเงินสำรองฉุกเฉิน (เงินสด ÷ รายจ่าย)</span>
             <span class="num-font" id="nwEmergencyCoverage" style="font-weight:700;">0 เดือน</span>
           </div>
 
-          <div style="margin-top:14px; padding:12px; border-radius:10px; background:var(--pea-purple-bg); font-size:0.82rem; color:var(--pea-purple-soft);">
+          <div style="margin-top:10px; padding:10px 12px; border-radius:10px; background:var(--pea-purple-bg); font-size:0.8rem; color:var(--pea-purple-soft);">
             🛡️ <b>การประเมินเงินสำรองฉุกเฉิน:</b>
             <div id="nwEmergencyVerdict" style="margin-top:4px; font-weight:600; color:var(--text-main);">-</div>
           </div>
@@ -7036,6 +7104,50 @@
       if ($('nwSumAssets')) $('nwSumAssets').textContent = fmt(totalAssets) + ' ฿';
       if ($('nwSumLiab')) $('nwSumLiab').textContent = fmt(totalLiabilities) + ' ฿';
       if ($('nwNetWorthVal')) $('nwNetWorthVal').textContent = fmt(netWorth) + ' บาท';
+      
+      if ($('nwLiveHeaderAssets')) $('nwLiveHeaderAssets').textContent = fmt(totalAssets) + ' ฿';
+      if ($('nwLiveHeaderLiabilities')) $('nwLiveHeaderLiabilities').textContent = fmt(totalLiabilities) + ' ฿';
+      if ($('nwLiveHeaderNetWorth')) {
+        $('nwLiveHeaderNetWorth').textContent = (netWorth >= 0 ? '+' : '') + fmt(netWorth) + ' ฿';
+        $('nwLiveHeaderNetWorth').style.color = netWorth >= 0 ? 'var(--pea-purple-light)' : 'var(--danger)';
+      }
+
+      // PEA Cooperative Net Position
+      const coopSharesTotal = astSums.pea_coop || 0;
+      const coopLoansTotal = (catSums && catSums.welfare) ? (catSums.welfare.p || 0) : 0;
+      const coopNetWealth = coopSharesTotal - coopLoansTotal;
+      if ($('nwCoopSharesTotal')) $('nwCoopSharesTotal').textContent = fmt(coopSharesTotal) + ' ฿';
+      if ($('nwCoopLoansTotal')) $('nwCoopLoansTotal').textContent = fmt(coopLoansTotal) + ' ฿';
+      if ($('nwCoopNetPosition')) {
+        $('nwCoopNetPosition').textContent = (coopNetWealth >= 0 ? '+' : '') + fmt(coopNetWealth) + ' ฿';
+        $('nwCoopNetPosition').className = 'badge ' + (coopNetWealth >= 0 ? 'badge-gold' : 'badge-red');
+      }
+
+      // Debt-to-Asset (D/A) Ratio
+      const daRatio = totalAssets > 0 ? (totalLiabilities / totalAssets * 100) : 0;
+      if ($('nwDaRatioVal')) $('nwDaRatioVal').textContent = fmt2(daRatio) + '%';
+      if ($('nwDaProgressBar')) {
+        $('nwDaProgressBar').style.width = Math.min(100, daRatio) + '%';
+        $('nwDaProgressBar').style.background = daRatio <= 50 ? '#10B981' : (daRatio <= 70 ? '#F59E0B' : '#EF4444');
+      }
+      if ($('nwDaRatioBadge')) {
+        $('nwDaRatioBadge').className = 'badge ' + (daRatio <= 50 ? 'badge-green' : (daRatio <= 70 ? 'badge-gold' : 'badge-red'));
+      }
+      if ($('nwDaVerdictText')) {
+        if (daRatio <= 50) {
+          $('nwDaVerdictText').innerHTML = '🟢 <b>ฐานะการเงินแข็งแกร่งมาก:</b> สัดส่วนหนี้สินต่ำกว่า 50% ของสินทรัพย์ ความเสี่ยงทางการเงินต่ำมาก';
+        } else if (daRatio <= 70) {
+          $('nwDaVerdictText').innerHTML = '🟡 <b>อยู่ในระดับปานกลาง:</b> สัดส่วนหนี้สิน 50-70% ควรชะลอการสร้างหนี้เพิ่มและเน้นออมสะสม';
+        } else {
+          $('nwDaVerdictText').innerHTML = '🔴 <b>ภาระหนี้สินค่อนข้างสูง:</b> สัดส่วนหนี้เกิน 70% ของสินทรัพย์ แนะนำใช้เครื่องมือโปะหนี้เพื่อเร่งลดภาระดอกเบี้ย';
+        }
+      }
+
+      // Liquid vs Personal Asset Split
+      if ($('nwLiquidRetireVal')) $('nwLiquidRetireVal').textContent = fmt(liquidRetirementAssets) + ' ฿';
+      if ($('nwLiquidRetirePct')) $('nwLiquidRetirePct').textContent = (totalAssets > 0 ? Math.round(liquidRetirementAssets / totalAssets * 100) : 0) + '% ของสินทรัพย์รวม';
+      if ($('nwPersonalAssetsVal')) $('nwPersonalAssetsVal').textContent = fmt(personalAssets) + ' ฿';
+      if ($('nwPersonalAssetsPct')) $('nwPersonalAssetsPct').textContent = (totalAssets > 0 ? Math.round(personalAssets / totalAssets * 100) : 0) + '% ของสินทรัพย์รวม';
       if ($('nwEmergencyCoverage')) $('nwEmergencyCoverage').textContent = fmt2(emergencyMonths) + ' เท่า';
 
       let emVerdict = '';
