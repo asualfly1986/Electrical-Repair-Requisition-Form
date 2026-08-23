@@ -1809,14 +1809,17 @@
 
           <div style="background:var(--pea-purple-bg); border:1px solid var(--border-focus); border-radius:10px; padding:10px 12px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
             <div>
-              <span style="font-size:0.82rem; font-weight:700; color:var(--pea-purple-light);">📑 ภาระผ่อนหนี้สินรวม (จากงบดุล):</span>
-              <div style="font-size:0.74rem; color:var(--text-muted); margin-top:2px;">คำนวณอัตโนมัติจากรายการหนี้สินย่อยในหน้างบดุล</div>
+              <span style="font-size:0.82rem; font-weight:700; color:var(--pea-purple-light);">📑 รวมค่างวดผ่อนหนี้สินทุกประเภท (ดึงจากหมวดที่ 3 หนี้สิน):</span>
+              <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">คำนวณอัตโนมัติจากสินเชื่อบ้าน, รถยนต์, สหกรณ์ กฟภ. และบัตรเครดิต</div>
             </div>
             <span class="num-font red" id="cfDebtAutoSummary" style="font-weight:700; font-size:1.05rem;">0 ฿/ด.</span>
           </div>
 
           <div class="input-group">
-            <label class="input-label"><span>🏠 ค่าผ่อนบ้าน / ค่าเช่าห้อง</span></label>
+            <label class="input-label">
+              <span>🏠 ค่าเช่าบ้าน / หอพัก / ค่าส่วนกลาง (สำหรับผู้ไม่มีหนี้บ้าน)</span>
+              <span class="input-hint">ค่าเช่าที่อยู่อาศัย</span>
+            </label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="exp_housing" value="0" oninput="onDataChanged()">
               <span class="input-unit">บาท</span>
@@ -1824,7 +1827,10 @@
           </div>
 
           <div class="input-group">
-            <label class="input-label"><span>🚗 ค่าผ่อนรถยนต์ / มอเตอร์ไซค์</span></label>
+            <label class="input-label">
+              <span>🚗 ค่าน้ำมัน / ค่าเดินทาง / ค่าบำรุงรักษารถประจำเดือน</span>
+              <span class="input-hint">ค่าเดินทาง</span>
+            </label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="exp_car" value="0" oninput="onDataChanged()">
               <span class="input-unit">บาท</span>
@@ -1864,15 +1870,10 @@
           </div>
 
           <div class="input-group">
-            <label class="input-label"><span>💳 ชำระหนี้บัตรเครดิต / สินเชื่อส่วนบุคคลภายนอก</span></label>
-            <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="exp_debt" value="0" oninput="onDataChanged()">
-              <span class="input-unit">บาท</span>
-            </div>
-          </div>
-
-          <div class="input-group">
-            <label class="input-label"><span>💰 เงินออม / เงินลงทุนเพิ่มเติม</span><span class="input-hint">ออมเพิ่ม</span></label>
+            <label class="input-label">
+              <span>💰 เงินจัดสรรออม/ลงทุนอัตโนมัติรายเดือน (DCA กองทุน / ฝากประจำ)</span>
+              <span class="input-hint">ออมเพิ่ม</span>
+            </label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="exp_saving" value="3000" oninput="onDataChanged()">
               <span class="input-unit">บาท</span>
@@ -3635,7 +3636,6 @@
       exp_family: 0,
       exp_insurance: 1500,
       exp_lifestyle: 5000,
-      exp_debt: 0,
       exp_saving: 3000,
       exp_tax: 0,
       // PEA Payroll Deductions (รายการหักสลิปเงินเดือน กฟภ.)
@@ -4550,12 +4550,32 @@
     // Event Handler on any data change
     function onDataChanged() {
       collectInputs();
+      // 2-Way Realtime Sync between Tab 2 and Tab 4
+      if (state.inc_salary !== undefined && state.pea_salary !== state.inc_salary) {
+        state.pea_salary = state.inc_salary;
+        if ($('pea_salary')) $('pea_salary').value = state.inc_salary;
+      }
+      if (state.exp_saving !== undefined && state.pea_monthlySavings !== state.exp_saving) {
+        state.pea_monthlySavings = state.exp_saving;
+        if ($('pea_monthlySavings')) $('pea_monthlySavings').value = state.exp_saving;
+      }
       renderAll();
+      calculateRetirement();
       triggerAutoSave();
     }
 
     function onRetirementInput() {
       collectInputs();
+      // 2-Way Realtime Sync between Tab 4 and Tab 2
+      if (state.pea_salary !== undefined && state.inc_salary !== state.pea_salary) {
+        state.inc_salary = state.pea_salary;
+        if ($('inc_salary')) $('inc_salary').value = state.pea_salary;
+      }
+      if (state.pea_monthlySavings !== undefined && state.exp_saving !== state.pea_monthlySavings) {
+        state.exp_saving = state.pea_monthlySavings;
+        if ($('exp_saving')) $('exp_saving').value = state.pea_monthlySavings;
+      }
+      renderAll();
       calculateRetirement();
       triggerAutoSave();
     }
@@ -4645,8 +4665,8 @@
     function syncFromFinancialStatement() {
       const totalIncome = state.inc_salary + state.inc_business + state.inc_rent + state.inc_dividend + state.inc_bonus + state.inc_other;
       let totalDebtMonthly = 0;
-      if (state.debts) state.debts.forEach(d => totalDebtMonthly += (d.monthly || 0));
-      const totalExpense = state.exp_housing + state.exp_car + state.exp_home + state.exp_family + state.exp_insurance + state.exp_lifestyle + totalDebtMonthly + state.exp_saving + state.exp_tax;
+      const peaDeductions = (state.exp_pea_tax || 0) + (state.exp_pea_cremation || 0);
+      const totalExpense = peaDeductions + state.exp_housing + state.exp_car + state.exp_home + state.exp_family + state.exp_insurance + state.exp_lifestyle + totalDebtMonthly + state.exp_saving + state.exp_tax;
       const netSavings = totalIncome - totalExpense;
 
       $('pea_salary').value = state.inc_salary;
@@ -6282,7 +6302,6 @@
           exp_family: 3000,
           exp_insurance: 2500,
           exp_lifestyle: 6000,
-          exp_debt: 0,
           exp_saving: 8000,
           exp_tax: 1000,
           exp_pea_tax: 850,
