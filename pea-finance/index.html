@@ -3723,7 +3723,7 @@
         </div>
       </div>
 
-      <!-- Chart 6: Career Salary Progression Trajectory (NEW) -->
+      <!-- Chart 6: Career Salary Progression Trajectory -->
       <div class="card" style="border-radius:14px; margin-bottom:12px;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
           <div>
@@ -3766,12 +3766,12 @@
         </div>
       </div>
 
-      <!-- Chart 5: Lifetime Retirement Projection Trajectory (Enhanced Detailed View) -->
+      <!-- Chart 5: Lifetime Retirement Projection Trajectory (Enhanced Detailed View with Legacy Planning) -->
       <div class="card" style="border-radius:14px; margin-bottom:16px;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
           <div>
             <div style="display:inline-flex; align-items:center; gap:6px;">
-              <b style="font-size:0.92rem; color:var(--text-main);">📈 เส้นทางเงินออมและการทยอยใช้เงินหลังเกษียณ (Lifetime Wealth Trajectory)</b>
+              <b style="font-size:0.92rem; color:var(--text-main);">📈 เส้นทางเงินออมและการทยอยใช้เงินหลังเกษียณ (Lifetime Wealth &amp; Legacy Trajectory)</b>
               <span class="badge badge-gold" id="analyticsTrajectoryBadge">จำลองอายุ 35 ➔ 85 ปี</span>
             </div>
             <div style="font-size:0.72rem; color:var(--text-muted);">
@@ -3801,6 +3801,30 @@
           <div style="text-align:center;">
             <div style="font-size:0.68rem; color:var(--text-muted);">🛡️ เงินคงเหลือ ณ 85 ปี</div>
             <div id="projCardRemain85" class="num-font" style="font-weight:800; color:#10B981; font-size:0.95rem;">0 ฿</div>
+          </div>
+        </div>
+
+        <!-- Interactive Legacy Simulator Bar -->
+        <div style="background:linear-gradient(135deg, rgba(124, 58, 237, 0.08), rgba(245, 158, 11, 0.08)); border:1.5px dashed var(--pea-purple-soft); border-radius:12px; padding:10px 14px; margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
+            <div style="display:inline-flex; align-items:center; gap:6px;">
+              <span style="font-size:1rem;">👨‍👩‍👧‍👦</span>
+              <b style="font-size:0.82rem; color:var(--text-main);">จำลองกรณีจากไปเพื่อส่งต่อมรดกให้ทายาท (Legacy Planning)</b>
+            </div>
+            <div style="display:inline-flex; align-items:center; gap:8px;">
+              <span style="font-size:0.75rem; color:var(--text-muted);">จำลองกรณีจากไป ณ อายุ:</span>
+              <span id="legacyAgeDisplay" class="num-font" style="font-size:0.95rem; font-weight:800; color:#F59E0B; background:rgba(245,158,11,0.15); padding:2px 8px; border-radius:6px;">70 ปี</span>
+            </div>
+          </div>
+          <input type="range" id="legacyAgeSlider" min="35" max="85" value="70" step="1" style="width:100%; accent-color:#F59E0B; cursor:pointer;" oninput="onLegacySliderChange(this.value)">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; flex-wrap:wrap; gap:8px; background:var(--card-bg); padding:8px 12px; border-radius:8px; border:1px solid var(--border);">
+            <div>
+              <div style="font-size:0.68rem; color:var(--text-muted);">🎁 กองทุนมรดกสุทธิส่งมอบทายาท (Estate Transfer)</div>
+              <div id="legacyPayoutTotal" class="num-font" style="font-size:1.1rem; font-weight:800; color:#10B981;">0 ฿</div>
+            </div>
+            <div style="font-size:0.72rem; color:var(--text-muted); text-align:right;" id="legacyPayoutDetails">
+              เงินในพอร์ตคงเหลือ 0 ฿ + สินทรัพย์ปลอดหนี้ 0 ฿
+            </div>
           </div>
         </div>
 
@@ -4759,6 +4783,7 @@
 
     let salaryChartMode = 'yearly';
     let projectionChartMode = 'yearly';
+    let simLegacyAge = 70;
 
     function setSalaryChartMode(mode) {
       salaryChartMode = mode;
@@ -4798,6 +4823,12 @@
         }
       }
       renderAnalyticsDashboard(true);
+    }
+
+    function onLegacySliderChange(val) {
+      simLegacyAge = parseInt(val) || 70;
+      if ($('legacyAgeDisplay')) $('legacyAgeDisplay').textContent = simLegacyAge + ' \u0E1B\u0E35';
+      renderAnalyticsDashboard(false);
     }
 
     function getChartThemeColors() {
@@ -5095,7 +5126,6 @@
           salLabels.push(`\u0E2D\u0E32\u0E22\u0E38 ${age} \u0E1B\u0E35`);
           salMonthlyData.push(sAtAge);
         }
-        // Ensure retirement age is included
         if (salLabels.length > 0 && salLabels[salLabels.length - 1] !== `\u0E2D\u0E32\u0E22\u0E38 ${retAge} \u0E1B\u0E35`) {
           const finalYrs = retAge - curAge;
           const finalS = Math.round(curSal * Math.pow(1 + gRate, finalYrs));
@@ -5165,7 +5195,7 @@
       }
 
       // -------------------------------------------------------------
-      // Chart 5: Lifetime Retirement Projection Trajectory (Enhanced Detailed)
+      // Chart 5: Lifetime Retirement & Legacy Trajectory (Enhanced Detailed)
       // -------------------------------------------------------------
       const ctxProj = $('chartRetirementProjection');
       if (ctxProj) {
@@ -5205,7 +5235,17 @@
         const desiredExpenseToday = num('pea_desiredExpenseToday') || 25000;
         const monthlyCoop = num('pea_coopShareMonthly') || 1000;
         const monthlyPfRate = (num('pea_pfRate') || 5) / 100;
-        const peaMatchRate = monthlyPfRate; // 1:1 PEA match
+        const peaMatchRate = monthlyPfRate;
+
+        // Clamp Legacy Slider
+        if ($('legacyAgeSlider')) {
+          $('legacyAgeSlider').min = curAge;
+          $('legacyAgeSlider').max = maxAge;
+          if (simLegacyAge < curAge) simLegacyAge = curAge;
+          if (simLegacyAge > maxAge) simLegacyAge = maxAge;
+          $('legacyAgeSlider').value = simLegacyAge;
+        }
+        if ($('legacyAgeDisplay')) $('legacyAgeDisplay').textContent = simLegacyAge + ' \u0E1B\u0E35';
 
         const step = projectionChartMode === 'yearly' ? 1 : 5;
         const labels = [];
@@ -5213,33 +5253,26 @@
         const expenseData = [];
         const metaDetails = [];
 
-        // Simulate year-by-year simulation
-        let runPf = pfAcc;
-        let runCoop = coopShares;
-        let runOther = liquidAssets + invAssets;
-        let runWealth = (totalAssets - totalDebtPrincipal);
-        let finalSalary = curSal;
-        let finalSeverance = Math.round((curSal / 30) * 400);
-
         let preRetireValAt59 = 0;
         let peakWealthAt60 = 0;
         let totalExpense60to85 = 0;
         let remainAt85 = 0;
         let depletionAge = null;
 
-        // Run exact 1-year internal simulation to build accurate continuous state
+        // Run exact 1-year continuous simulation
         const yearlySim = {};
         let simPf = pfAcc;
         let simCoop = coopShares;
         let simOther = Math.max(0, (liquidAssets + invAssets) - totalDebtPrincipal);
         let simCumExp = 0;
+        let finalSalary = curSal;
+        let finalSeverance = Math.round((curSal / 30) * 400);
 
         for (let a = curAge; a <= maxAge; a++) {
           const yrs = a - curAge;
           const salThisYr = curSal * Math.pow(1 + gRate, yrs);
 
           if (a < retAge) {
-            // Pre-retirement accumulation
             const annualPfContrib = salThisYr * (monthlyPfRate + peaMatchRate) * 12;
             simPf = (simPf + annualPfContrib) * (1 + pfYieldRate);
             
@@ -5247,10 +5280,11 @@
             simCoop = (simCoop + annualCoopContrib) * (1 + coopDivRate);
             
             const annualOtherContrib = Math.max(0, netSavings) * 12;
-            simOther = (simOther + annualOtherContrib) * 1.025; // mild cash yield
+            simOther = (simOther + annualOtherContrib) * 1.025;
 
             const totalPre = Math.round(simPf + simCoop + simOther + personalAssets);
             yearlySim[a] = {
+              age: a,
               wealth: totalPre,
               cumExpense: 0,
               isRetire: false,
@@ -5258,23 +5292,21 @@
             };
             if (a === retAge - 1) preRetireValAt59 = totalPre;
           } else if (a === retAge) {
-            // Retirement date inflection (Add Severance 400 days)
             finalSalary = salThisYr;
             finalSeverance = Math.round((finalSalary / 30) * 400);
             
             const totalAt60 = Math.round(simPf + simCoop + simOther + finalSeverance + personalAssets);
             peakWealthAt60 = totalAt60;
-            simOther = simOther + finalSeverance; // inject severance into liquid pool
+            simOther = simOther + finalSeverance;
             
             yearlySim[a] = {
+              age: a,
               wealth: totalAt60,
               cumExpense: 0,
               isRetire: true,
-              detail: `\uD83C\uDFC6 \u0E02\u0E38\u0E21\u0E17\u0E23\u0E31\u0E1E\u0E22\u0E4C\u0E2A\u0E39\u0E07\u0E2A\u0E38\u0E14: ${fmt(totalAt60)} \u0E1A\u0E32\u0E17 (\u0E23\u0E27\u0E21\u0E0A\u0E14\u0E40\u0E0A\u0E22 ${fmt(finalSeverance)} \u0E1A\u0E32\u0E17)`
+              detail: `\uD83C\uDFC6 \u0E02\u0E38\u0E21\u0E17\u0E23\u0E31\u0E1E\u0E22\u0E4C\u0E2A\u0E39\u0E07\u0E2A\u0E38\u0E14: ${fmt(totalAt60)} \u0E1A\u0E32\u0E17`
             };
           } else {
-            // Post-retirement drawdown & investment yield
-            const postYrs = a - retAge;
             const expThisYear = (desiredExpenseToday * 12) * Math.pow(1 + inflationRate, yrs);
             simCumExp += expThisYear;
             
@@ -5287,6 +5319,7 @@
             }
 
             yearlySim[a] = {
+              age: a,
               wealth: Math.round(netRemaining),
               cumExpense: Math.round(simCumExp),
               expThisYear: Math.round(expThisYear),
@@ -5300,7 +5333,7 @@
           }
         }
 
-        // Build plot datasets based on step mode
+        // Build plot datasets
         for (let a = curAge; a <= maxAge; a += step) {
           if (yearlySim[a]) {
             labels.push(`\u0E2D\u0E32\u0E22\u0E38 ${a} \u0E1B\u0E35`);
@@ -5309,7 +5342,6 @@
             metaDetails.push(yearlySim[a]);
           }
         }
-        // Ensure maxAge is in labels
         if (labels.length > 0 && labels[labels.length - 1] !== `\u0E2D\u0E32\u0E22\u0E38 ${maxAge} \u0E1B\u0E35`) {
           labels.push(`\u0E2D\u0E32\u0E22\u0E38 ${maxAge} \u0E1B\u0E35`);
           wealthData.push(yearlySim[maxAge].wealth);
@@ -5331,6 +5363,21 @@
           }
         }
 
+        // Update Legacy Simulator Card Box
+        const simLegacyItem = yearlySim[simLegacyAge];
+        const legacyWealthVal = simLegacyItem ? simLegacyItem.wealth : 0;
+        if ($('legacyPayoutTotal')) {
+          $('legacyPayoutTotal').textContent = fmt(legacyWealthVal) + ' \u0E3F';
+          $('legacyPayoutTotal').style.color = legacyWealthVal > 0 ? '#10B981' : '#EF4444';
+        }
+        if ($('legacyPayoutDetails')) {
+          if (legacyWealthVal > 0) {
+            $('legacyPayoutDetails').innerHTML = `\uD83D\uDCDC \u0E01\u0E2D\u0E07\u0E17\u0E38\u0E19\u0E21\u0E23\u0E14\u0E01\u0E2A\u0E38\u0E17\u0E18\u0E34\u0E1E\u0E23\u0E49\u0E2D\u0E21\u0E2A\u0E48\u0E07\u0E21\u0E2D\u0E1A\u0E1C\u0E39\u0E49\u0E23\u0E31\u0E1A\u0E1C\u0E25\u0E1B\u0E23\u0E30\u0E42\u0E22\u0E0A\u0E19\u0E4C (\u0E1B\u0E25\u0E2D\u0E14\u0E20\u0E32\u0E23\u0E30\u0E2B\u0E19\u0E35\u0E49\u0E2A\u0E34\u0E19)`;
+          } else {
+            $('legacyPayoutDetails').innerHTML = `\u26A0\uFE0F \u0E40\u0E07\u0E34\u0E19\u0E2A\u0E14\u0E43\u0E19\u0E1E\u0E2D\u0E23\u0E4C\u0E15\u0E2B\u0E21\u0E14\u0E25\u0E07\u0E41\u0E25\u0E49\u0E27 (\u0E41\u0E19\u0E30\u0E19\u0E33\u0E40\u0E1E\u0E34\u0E48\u0E21\u0E40\u0E07\u0E34\u0E19\u0E2D\u0E2D\u0E21\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E04\u0E27\u0E32\u0E21\u0E21\u0E31\u0E48\u0E19\u0E04\u0E07)`;
+          }
+        }
+
         // Update Verdict Text
         if ($('analyticsTrajectoryVerdict')) {
           if (remainAt85 > 0) {
@@ -5340,23 +5387,31 @@
           }
         }
 
+        // Dynamic Point Highlights
+        const targetLegacyLabel = `\u0E2D\u0E32\u0E22\u0E38 ${simLegacyAge} \u0E1B\u0E35`;
+        const radiusArr = labels.map(l => (l === targetLegacyLabel ? 8 : (projectionChartMode === 'yearly' ? 2 : 4)));
+        const pointBgArr = labels.map(l => (l === targetLegacyLabel ? '#F59E0B' : '#7C3AED'));
+        const pointBorderArr = labels.map(l => (l === targetLegacyLabel ? '#FFFFFF' : '#7C3AED'));
+        const pointBorderWidthArr = labels.map(l => (l === targetLegacyLabel ? 3 : 1));
+
         globalCharts.projection = new Chart(ctxProj, {
           type: 'line',
           data: {
             labels: labels,
             datasets: [
               {
-                label: '\u0E01\u0E2D\u0E07\u0E17\u0E38\u0E19\u0E04\u0E27\u0E32\u0E21\u0E21\u0E31\u0E48\u0E07\u0E04\u0E31\u0E48\u0E07\u0E2A\u0E30\u0E2a\u0E21 (\u0E1A\u0E32\u0E17)',
+                label: '\u0E01\u0E2D\u0E07\u0E17\u0E38\u0E19\u0E04\u0E27\u0E32\u0E21\u0E21\u0E31\u0E48\u0E07\u0E04\u0E31\u0E48\u0E07/\u0E21\u0E23\u0E14\u0E01 (\u0E1A\u0E32\u0E17)',
                 data: wealthData,
                 borderColor: '#7C3AED',
                 backgroundColor: 'rgba(124, 58, 237, 0.16)',
                 fill: true,
                 tension: 0.3,
                 borderWidth: 3,
-                pointRadius: projectionChartMode === 'yearly' ? 2 : 4,
-                pointHoverRadius: 6,
-                pointBackgroundColor: '#7C3AED',
-                pointBorderColor: '#FFFFFF'
+                pointRadius: radiusArr,
+                pointHoverRadius: 8,
+                pointBackgroundColor: pointBgArr,
+                pointBorderColor: pointBorderArr,
+                pointBorderWidth: pointBorderWidthArr
               },
               {
                 label: '\u0E23\u0E32\u0E22\u0E08\u0E48\u0E32\u0E22\u0E2A\u0E30\u0E2a\u0E21\u0E2B\u0E25\u0E31\u0E07\u0E40\u0E01\u0E29\u0E35\u0E22\u0E13 (\u0E1A\u0E32\u0E17)',
@@ -5385,19 +5440,28 @@
                     if (!meta) return ` ${ctx.dataset.label}: ${fmt(ctx.raw)} \u0E3F`;
                     
                     if (ctx.datasetIndex === 0) {
+                      const ageNum = meta.age;
+                      const isSimLegacy = (ageNum === simLegacyAge);
+                      const legacyBadge = isSimLegacy ? ' 📍 [จำลองส่งต่อมรดก]' : '';
+
                       if (meta.isRetire) {
                         return [
-                          ` \uD83C\uDFC6 \u0E02\u0E38\u0E21\u0E17\u0E23\u0E31\u0E1E\u0E22\u0E4C\u0E2A\u0E39\u0E07\u0E2A\u0E38\u0E14 (Peak \u0E13 60 \u0E1B\u0E35): ${fmt(ctx.raw)} \u0E1A\u0E32\u0E17`,
-                          ` \u2022 \u0E23\u0E27\u0E21\u0E0A\u0E14\u0E40\u0E0A\u0E22 400 \u0E27\u0E31\u0E19: +${fmt(finalSeverance)} \u0E1A\u0E32\u0E17`
+                          ` \uD83C\uDFC6 \u0E02\u0E38\u0E21\u0E17\u0E23\u0E31\u0E1E\u0E22\u0E4C\u0E2A\u0E39\u0E07\u0E2A\u0E38\u0E14 (Peak \u0E13 60 \u0E1B\u0E35): ${fmt(ctx.raw)} \u0E1A\u0E32\u0E17${legacyBadge}`,
+                          ` \u2022 \u0E23\u0E27\u0E21\u0E0A\u0E14\u0E40\u0E0A\u0E22 400 \u0E27\u0E31\u0E19: +${fmt(finalSeverance)} \u0E1A\u0E32\u0E17`,
+                          ` \uD83C\uDF81 \u0E2B\u0E32\u0E01\u0E08\u0E32\u0E01\u0E44\u0E1B\u0E1B\u0E35\u0E19\u0E35\u0E49 \u0E17\u0E32\u0E22\u0E32\u0E17\u0E23\u0E31\u0E1A\u0E21\u0E23\u0E14\u0E01: ${fmt(ctx.raw)} \u0E1A\u0E32\u0E17`
                         ];
                       } else if (meta.isPost) {
                         return [
-                          ` \u0E01\u0E2D\u0E07\u0E17\u0E38\u0E19\u0E04\u0E07\u0E40\u0E2B\u0E25\u0E37\u0E2D: ${fmt(ctx.raw)} \u0E1A\u0E32\u0E17`,
+                          ` \u0E01\u0E2D\u0E07\u0E17\u0E38\u0E19\u0E04\u0E07\u0E40\u0E2B\u0E25\u0E37\u0E2D: ${fmt(ctx.raw)} \u0E1A\u0E32\u0E17${legacyBadge}`,
+                          ` \uD83C\uDF81 \u0E2B\u0E32\u0E01\u0E08\u0E32\u0E01\u0E44\u0E1B\u0E1B\u0E35\u0E19\u0E35\u0E49 \u0E17\u0E32\u0E22\u0E32\u0E17\u0E23\u0E31\u0E1A\u0E21\u0E23\u0E14\u0E01: ${fmt(ctx.raw)} \u0E1A\u0E32\u0E17`,
                           ` \u2022 \u0E04\u0E48\u0E32\u0E04\u0E23\u0E2D\u0E07\u0E0A\u0E35\u0E1E\u0E1B\u0E35\u0E19\u0E35\u0E49: -${fmt(meta.expThisYear)} \u0E1A\u0E32\u0E17/\u0E1B\u0E35`,
                           ` \u2022 \u0E1C\u0E25\u0E15\u0E2D\u0E1A\u0E41\u0E17\u0E19\u0E1B\u0E35\u0E19\u0E35\u0E49: +${fmt(meta.gainThisYear)} \u0E1A\u0E32\u0E17/\u0E1B\u0E35`
                         ];
                       } else {
-                        return ` \u0E2A\u0E34\u0E19\u0E17\u0E23\u0E31\u0E1E\u0E22\u0E4C\u0E2A\u0E30\u0E2A\u0E21: ${fmt(ctx.raw)} \u0E1A\u0E32\u0E17`;
+                        return [
+                          ` \u0E2A\u0E34\u0E19\u0E17\u0E23\u0E31\u0E1E\u0E22\u0E4C\u0E2A\u0E30\u0E2A\u0E21: ${fmt(ctx.raw)} \u0E1A\u0E32\u0E17${legacyBadge}`,
+                          ` \uD83C\uDF81 \u0E2B\u0E32\u0E01\u0E08\u0E32\u0E01\u0E44\u0E1B\u0E1B\u0E35\u0E19\u0E35\u0E49 \u0E17\u0E32\u0E22\u0E32\u0E17\u0E23\u0E31\u0E1A\u0E21\u0E23\u0E14\u0E01: ${fmt(ctx.raw)} \u0E1A\u0E32\u0E17`
+                        ];
                       }
                     } else {
                       return meta.cumExpense > 0 ? ` \u0E23\u0E32\u0E22\u0E08\u0E48\u0E32\u0E22\u0E2A\u0E30\u0E2A\u0E21\u0E2B\u0E25\u0E31\u0E07\u0E40\u0E01\u0E29\u0E35\u0E22\u0E13: ${fmt(ctx.raw)} \u0E1A\u0E32\u0E17` : null;
