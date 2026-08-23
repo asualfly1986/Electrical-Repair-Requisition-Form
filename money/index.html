@@ -1660,60 +1660,55 @@
     <!-- ==================== TAB 1: ภาพรวม (DASHBOARD) ==================== -->
     <div class="tab-panel active" id="tab-dashboard">
       
-      <!-- Hero Welcome & Financial Vision Graphic Banner -->
-      <div class="card" style="padding:14px 16px; margin-bottom:12px; background:linear-gradient(135deg, #2A1054 0%, #4B1A7A 60%, #6B21A8 100%); color:#FFFFFF; border:none; position:relative; overflow:hidden; border-radius:14px; box-shadow:0 8px 24px rgba(75,26,122,0.25);">
-        <!-- Decorative Background Circles SVG -->
-        <svg style="position:absolute; right:-15px; top:-15px; width:150px; height:150px; opacity:0.12; pointer-events:none;" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="45" fill="none" stroke="#F6AD55" stroke-width="5"/>
-          <circle cx="50" cy="50" r="30" fill="none" stroke="#FFFFFF" stroke-width="3"/>
-          <path d="M50 10 L50 90 M10 50 L90 50" stroke="#F6AD55" stroke-width="2"/>
+      <!-- Unified Executive Profile & Welcome Hero Banner -->
+      <div class="card" style="padding:14px 16px; margin-bottom:12px; background:linear-gradient(135deg, #1E0B38 0%, #3D1F6E 50%, #6B21A8 100%); color:#FFFFFF; border:none; border-radius:14px; position:relative; overflow:hidden; box-shadow:0 8px 24px rgba(61,31,110,0.25);">
+        <!-- Decorative Background Elements SVG -->
+        <svg style="position:absolute; right:-20px; top:-20px; width:160px; height:160px; opacity:0.12; pointer-events:none;" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" fill="none" stroke="#FDE047" stroke-width="4"/>
+          <circle cx="50" cy="50" r="30" fill="none" stroke="#FFFFFF" stroke-width="2.5"/>
+          <path d="M50 10 L50 90 M10 50 L90 50" stroke="#FDE047" stroke-width="2"/>
         </svg>
-        
+
         <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; position:relative; z-index:1; flex-wrap:wrap;">
-          <div style="flex:1; min-width:200px;">
-            <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.15); padding:3px 10px; border-radius:20px; font-size:0.72rem; font-weight:700; color:#FDE047; margin-bottom:6px;">
-              <span>⚡ PEA SMART WEALTH</span>
-              <span>·</span>
-              <span>แผนการเงินพนักงาน กฟภ.</span>
-            </div>
-            <div style="font-size:1.15rem; font-weight:800; line-height:1.3; margin-bottom:4px; text-shadow:0 2px 4px rgba(0,0,0,0.3);">
-              วางแผนการเงินเพื่อความมั่นคงและวัยเกษียณสุขใจ 🏖️
-            </div>
-            <div style="font-size:0.76rem; opacity:0.92; line-height:1.4;">
-              คำนวณสินทรัพย์ กสช. สหกรณ์ ชดเชย 400 วัน และแผนปลอดหนี้แบบครบวงจร
-            </div>
-          </div>
-
-          <!-- Vector Graphic Visual Icon -->
-          <div style="display:flex; align-items:center; justify-content:center; width:58px; height:58px; background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(251,191,36,0.15)); border:2px solid rgba(251,191,36,0.5); border-radius:16px; flex-shrink:0;">
-            <svg style="width:34px; height:34px;" viewBox="0 0 24 24" fill="none" stroke="#FDE047" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <!-- Personal Profile Summary Card (Real-Time Display) -->
-      <div class="card" style="margin-bottom:12px; padding:12px 14px; background:linear-gradient(135deg, var(--card-bg), var(--pea-purple-bg)); border:1.5px solid var(--pea-purple-soft); border-radius:14px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
-          <div style="display:flex; align-items:center; gap:12px;">
-            <div style="position:relative; cursor:pointer;" onclick="openProfileModal()" title="เธเธฅเธดเธเน€เธเธทเนเธญเนเธเนเนเธเนเธเธฃเนเธเธฅเน">
-              <div style="width:56px; height:56px; border-radius:50%; padding:2.5px; background:linear-gradient(135deg, #7C3AED, #F59E0B, #A855F7); box-shadow:0 4px 12px rgba(124,58,237,0.25);">
-                <img id="dashUserAvatar" src="" alt="Profile" style="width:100%; height:100%; object-fit:cover; border-radius:50%; background:#fff; display:block;">
+          <!-- Left: User Profile & Details -->
+          <div style="display:flex; align-items:center; gap:12px; min-width:240px; flex:1;">
+            <div style="position:relative; cursor:pointer;" onclick="openProfileModal()" title="คลิกเพื่อแก้ไขโปรไฟล์">
+              <div style="width:58px; height:58px; border-radius:50%; padding:2.5px; background:linear-gradient(135deg, #7C3AED, #F59E0B, #A855F7); box-shadow:0 4px 12px rgba(124,58,237,0.3);">
+                <img id="dashUserAvatar" src="" alt="Profile" style="width:100%; height:100%; object-fit:cover; border-radius:50%; background:#FFF; display:block;">
               </div>
-              <span style="position:absolute; bottom:-2px; right:-2px; background:#10B981; color:#fff; border-radius:50%; width:18px; height:18px; display:flex; align-items:center; justify-content:center; font-size:0.55rem; border:2px solid var(--card-bg);" title="กฟภ.">⚡</span>
+              <span style="position:absolute; bottom:-2px; right:-2px; background:#10B981; color:#FFF; border-radius:50%; width:18px; height:18px; display:flex; align-items:center; justify-content:center; font-size:0.55rem; border:2px solid var(--card-bg);" title="กฟภ.">⚡</span>
             </div>
             <div>
-              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:2px;">
-                <b id="dashUserName" style="font-size:0.98rem; color:var(--text-main);">นายอภิชาติ ยุพิน</b>
-                <span class="badge badge-gold" id="dashUserEmpId" style="font-size:0.68rem;">รหัส 504195</span>
+              <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.15); padding:2px 8px; border-radius:12px; font-size:0.68rem; font-weight:700; color:#FDE047; margin-bottom:3px;">
+                <span>⚡ PEA SMART WEALTH</span>
+                <span>·</span>
+                <span id="dashUserEmpId">รหัส 504195</span>
               </div>
-              <div id="dashUserPosition" style="font-size:0.78rem; color:var(--text-muted); line-height:1.3;">
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <b id="dashUserName" style="font-size:1.05rem; font-weight:800; text-shadow:0 2px 4px rgba(0,0,0,0.3);">นายอภิชาติ ยุพิน</b>
+              </div>
+              <div id="dashUserPosition" style="font-size:0.75rem; opacity:0.92; line-height:1.3; margin-top:1px;">
                 พนักงานช่าง (ปฏิบัติการระบบไฟฟ้า) ระดับ 6
               </div>
-              <div id="dashUserDept" style="font-size:0.72rem; color:var(--pea-purple-light); font-weight:600; margin-top:2px;">
+              <div id="dashUserDept" style="font-size:0.7rem; color:#FDE047; font-weight:600; margin-top:2px;">
                 ผปบ./กฟส.ขก.2/กฟจ.ขก./กฟฉ.1/สายงาน (ฉ)
               </div>
+            </div>
+          </div>
+
+          <!-- Right: Action Buttons & Last Saved -->
+          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
+            <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.12); padding:4px 10px; border-radius:8px; font-size:0.72rem; color:#E9D5FF;">
+              <span>🕒 บันทึกล่าสุด:</span>
+              <b id="dashLastSavedFullText" style="color:#FFFFFF;">-</b>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <button type="button" class="btn btn-gold" style="padding:4px 10px; font-size:0.74rem; width:auto; border-radius:6px;" onclick="openProfileModal()">
+                <span>✏️ แก้ไขโปรไฟล์</span>
+              </button>
+              <button type="button" class="btn btn-outline" style="padding:4px 10px; font-size:0.74rem; width:auto; border-radius:6px; background:rgba(255,255,255,0.15); color:#FFFFFF; border-color:rgba(255,255,255,0.3);" onclick="switchTab('settings')">
+                <span>⚙️ ตั้งค่า</span>
+              </button>
             </div>
           </div>
         </div>
@@ -1731,21 +1726,13 @@
         <span class="badge badge-gold" id="dashMilestoneTag">ยอดเยี่ยม</span>
       </div>
 
-      <!-- Last Saved Date & Time Banner -->
-      <div class="card" id="dashLastSavedCard" style="padding:10px 14px; margin-bottom:12px; background:linear-gradient(135deg, var(--card-bg), var(--pea-purple-bg)); border:1.5px solid var(--border-focus); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <span style="font-size:1.2rem;">🕒</span>
-          <div>
-            <div style="font-size:0.84rem; font-weight:700; color:var(--text-main);">
-              ข้อมูลล่าสุด: <span id="dashLastSavedFullText" style="color:var(--pea-purple-light); font-weight:700;">-</span>
-            </div>
-            <div style="font-size:0.72rem; color:var(--text-muted);" id="dashLastSavedSubText">บันทึกข้อมูลอัตโนมัติลงในเบราว์เซอร์ของอุปกรณ์นี้</div>
-          </div>
-        </div>
+      <!-- Hidden Last Saved Card Placeholder to maintain DOM ID compatibility -->
+      <div id="dashLastSavedCard" style="display:none;">
+        <span id="dashLastSavedSubText">บันทึกข้อมูลอัตโนมัติ</span>
       </div>
 
-      <!-- Cashflow Deficit Alert (Shown if Net Cashflow < 0) -->
-      <div id="dashCashflowDeficitAlert" style="display:none; background:linear-gradient(135deg, #FEF2F2, #FEE2E2); border:1.5px solid #EF4444; border-radius:12px; padding:12px 14px; margin-bottom:14px; font-size:0.82rem; line-height:1.5;">
+      <!-- Single Cashflow Deficit Alert (Shown if Net Cashflow < 0) -->
+      <div id="dashCashflowDeficitAlert" style="display:none; background:linear-gradient(135deg, #FEF2F2, #FEE2E2); border:1.5px solid #EF4444; border-radius:12px; padding:12px 14px; margin-bottom:12px; font-size:0.82rem; line-height:1.5;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; flex-wrap:wrap; gap:6px;">
           <b style="color:#B91C1C; font-size:0.9rem;">⚠️ เตือนกระแสเงินสดติดลบ (<span id="dashDeficitAmount" class="num-font">0</span> ฿/ด.)</b>
           <div style="display:flex; align-items:center; gap:6px;">
@@ -1759,27 +1746,73 @@
         </div>
       </div>
 
-      <!-- Net Worth Hero Card -->
-      <div class="hero-stat-card">
-        <div class="hero-stat-label">
-          <span>มูลค่าความมั่งคั่งสุทธิ (Net Worth)</span>
-          <span class="badge badge-gold" id="dashHealthBadge">มั่นคง</span>
-        </div>
-        <div class="hero-stat-value num-font" id="dashNetWorth">0 บาท</div>
-        <div class="hero-stat-sub">
-          <span>สินทรัพย์รวม <b class="num-font" id="dashTotalAssets">0</b></span>
-          <span>·</span>
-          <span>หนี้สินรวม <b class="num-font" id="dashTotalLiabilities">0</b></span>
+      <!-- 4 Executive KPI Metric Cards -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; margin-bottom:12px;">
+        <!-- Card 1: Net Worth -->
+        <div class="card" style="padding:12px 14px; border:1px solid var(--border); border-radius:12px; cursor:pointer;" onclick="switchTab('networth')" title="คลิกเพื่อดูสินทรัพย์และหนี้สิน">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span style="font-size:0.72rem; color:var(--text-muted);">🏛️ ความมั่งคั่งสุทธิ</span>
+            <span class="badge badge-gold" id="dashHealthBadge" style="font-size:0.62rem;">มั่นคง</span>
+          </div>
+          <div class="num-font" id="dashNetWorth" style="font-size:1.15rem; font-weight:800; color:var(--pea-purple-light); margin-bottom:2px;">0 บาท</div>
+          <div style="font-size:0.65rem; color:var(--text-muted); line-height:1.2;">
+            สินทรัพย์ <b class="num-font" id="dashTotalAssets">0</b> | หนี้ <b class="num-font" id="dashTotalLiabilities">0</b>
+          </div>
         </div>
 
-        <!-- Interactive Asset Breakdown Bar with Liquid vs Personal separation -->
-        <div style="margin-top:14px; background:rgba(0,0,0,0.18); border-radius:10px; padding:10px 12px; border:1px solid rgba(255,255,255,0.12);">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; font-size:0.75rem;">
-            <span style="color:var(--pea-gold-light); font-weight:600;">📊 สัดส่วนสินทรัพย์ของคุณ (Asset Breakdown):</span>
-            <span style="opacity:0.9; font-size:0.72rem;">💎 เพื่อเกษียณ: <b id="nwLiquidPct" class="num-font">0%</b></span>
+        <!-- Card 2: Net Cashflow -->
+        <div class="card" style="padding:12px 14px; border:1px solid var(--border); border-radius:12px; cursor:pointer;" onclick="switchTab('cashflow')" title="คลิกเพื่อดูงบกระแสเงินสด">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span style="font-size:0.72rem; color:var(--text-muted);">💰 กระแสเงินสดสุทธิ/ด.</span>
+            <span class="badge badge-green" style="font-size:0.62rem;">Cashflow</span>
           </div>
-          
-          <div class="comp-track" style="height:12px; border-radius:6px; overflow:hidden; display:flex; background:rgba(255,255,255,0.15); margin-bottom:8px;">
+          <div class="num-font" id="dashNetCashflow" style="font-size:1.15rem; font-weight:800; color:#10B981; margin-bottom:2px;">0 ฿</div>
+          <div style="font-size:0.65rem; color:var(--text-muted); line-height:1.2;">
+            อัตราการออม <b id="dashSavingsRate" class="num-font">0%</b>
+          </div>
+        </div>
+
+        <!-- Card 3: Emergency Fund -->
+        <div class="card" style="padding:12px 14px; border:1px solid var(--border); border-radius:12px; cursor:pointer;" onclick="jumpToEmergencyPlanner()" title="คลิกเพื่อวางแผนเงินสำรองฉุกเฉิน">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span style="font-size:0.72rem; color:var(--text-muted);">🛡️ เงินสำรองฉุกเฉิน</span>
+            <span style="font-size:0.65rem; color:var(--pea-purple-light); font-weight:700;">วางแผน →</span>
+          </div>
+          <div class="num-font" id="dashEmergencyMonths" style="font-size:1.15rem; font-weight:800; color:#3B82F6; margin-bottom:2px;">0.0 เดือน</div>
+          <div style="font-size:0.65rem; color:var(--text-muted); line-height:1.2;" id="dashEmergencySub">
+            เป้าหมาย 3-6 เดือน
+          </div>
+        </div>
+
+        <!-- Card 4: Retirement Readiness -->
+        <div class="card" style="padding:12px 14px; border:1px solid var(--border); border-radius:12px; cursor:pointer;" onclick="switchTab('retirement')" title="คลิกเพื่อดูแผนเกษียณ กฟภ.">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span style="font-size:0.72rem; color:var(--text-muted);">🏖️ ความพร้อมเกษียณ</span>
+            <span class="badge badge-purple" style="font-size:0.62rem;">กฟภ.</span>
+          </div>
+          <div class="num-font" id="dashReadoutBadgeText" style="font-size:1.15rem; font-weight:800; color:#EC4899; margin-bottom:2px;">
+            <span id="dashGaugeReadoutSync">0%</span>
+          </div>
+          <div style="font-size:0.65rem; color:var(--text-muted); line-height:1.2;">
+            เป้าหมายความพร้อม 100%
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2: Asset Breakdown & Retirement Countdown (Dual Panel Grid) -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px; margin-bottom:12px;">
+        
+        <!-- Column 1: Asset Breakdown Card -->
+        <div class="card" style="border-radius:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <div style="display:inline-flex; align-items:center; gap:6px;">
+              <span style="font-size:1rem;">📊</span>
+              <b style="font-size:0.88rem; color:var(--text-main);">สัดส่วนโครงสร้างสินทรัพย์ (Asset Breakdown)</b>
+            </div>
+            <span style="font-size:0.72rem; color:var(--pea-purple-light); font-weight:700;">💎 เพื่อเกษียณ: <b id="nwLiquidPct" class="num-font">0%</b></span>
+          </div>
+
+          <div class="comp-track" style="height:12px; border-radius:6px; overflow:hidden; display:flex; background:var(--bg-main); border:1px solid var(--border); margin-bottom:8px;">
             <div id="nwSegCash" style="background:#38BDF8; width:20%; height:100%; transition:width 0.4s ease;" title="เงินสด/เงินฝาก"></div>
             <div id="nwSegPF" style="background:var(--pea-gold); width:40%; height:100%; transition:width 0.4s ease;" title="กสช. กฟภ."></div>
             <div id="nwSegCoop" style="background:#2DD4BF; width:20%; height:100%; transition:width 0.4s ease;" title="หุ้นสหกรณ์"></div>
@@ -1787,140 +1820,182 @@
             <div id="nwSegReal" style="background:#FB923C; width:10%; height:100%; transition:width 0.4s ease;" title="อสังหาฯ/ของใช้ส่วนตัว"></div>
           </div>
 
-          <div style="display:flex; flex-wrap:wrap; gap:6px 10px; font-size:0.72rem;">
+          <div style="display:flex; flex-wrap:wrap; gap:6px 10px; font-size:0.72rem; margin-bottom:8px;">
             <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:7px; height:7px; border-radius:50%; background:#38BDF8;"></span>เงินสด <b id="nwValCash">0฿</b></span>
             <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:7px; height:7px; border-radius:50%; background:var(--pea-gold);"></span>กสช. <b id="nwValPF">0฿</b></span>
             <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:7px; height:7px; border-radius:50%; background:#2DD4BF;"></span>สหกรณ์ <b id="nwValCoop">0฿</b></span>
             <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:7px; height:7px; border-radius:50%; background:#A78BFA;"></span>ลงทุน <b id="nwValInvest">0฿</b></span>
-            <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:7px; height:7px; border-radius:50%; background:#FB923C;"></span>อสังหา/ส่วนตัว <b id="nwValReal">0฿</b></span>
+            <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:7px; height:7px; border-radius:50%; background:#FB923C;"></span>ส่วนตัว <b id="nwValReal">0฿</b></span>
           </div>
 
-          <div style="margin-top:8px; padding-top:6px; border-top:1px dashed rgba(255,255,255,0.15); display:flex; justify-content:space-between; font-size:0.72rem; opacity:0.92; flex-wrap:wrap; gap:4px;">
-            <span>💎 <b>สินทรัพย์เพื่อเกษียณ (Liquid):</b> <span id="nwLiquidTotalVal" class="num-font">-</span></span>
-            <span>🏠 <b>สินทรัพย์ส่วนตัว (Personal):</b> <span id="nwPersonalTotalVal" class="num-font">-</span></span>
+          <div style="padding-top:6px; border-top:1px dashed var(--border); display:flex; justify-content:space-between; font-size:0.72rem; color:var(--text-muted); flex-wrap:wrap; gap:4px;">
+            <span>💎 <b>เพื่อเกษียณ (Liquid):</b> <span id="nwLiquidTotalVal" class="num-font" style="color:var(--text-main); font-weight:700;">-</span></span>
+            <span>🏠 <b>ส่วนบุคคล (Personal):</b> <span id="nwPersonalTotalVal" class="num-font" style="color:var(--text-main); font-weight:700;">-</span></span>
           </div>
         </div>
-      </div>
 
-      <!-- Financial Health Scorecard (5-Dimensions) -->
-      <div class="score-card">
-        <div class="score-circle" id="scoreCircle">
-          <div class="score-circle-inner">
-            <span class="score-number num-font" id="scoreNumber">0</span>
-            <span class="score-max">/100</span>
+        <!-- Column 2: Retirement Countdown Card -->
+        <div class="card" style="border-radius:14px; background:linear-gradient(135deg, var(--card-bg), var(--pea-purple-bg)); border:1.5px solid var(--pea-purple-soft); display:flex; flex-direction:column; justify-content:space-between;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <div style="display:inline-flex; align-items:center; gap:6px;">
+              <span style="font-size:1.1rem;">⏳</span>
+              <b style="font-size:0.88rem; color:var(--text-main);">นับถอยหลังสู่วันเกษียณอายุ (Retirement Countdown)</b>
+            </div>
+            <span class="badge badge-purple" style="font-size:0.65rem;">อายุ 60 ปี</span>
+          </div>
+
+          <div style="text-align:center; padding:10px 0;">
+            <div style="font-size:0.74rem; color:var(--text-muted); margin-bottom:2px;">เหลือระยะเวลาทำงานและสะสมความมั่งคั่งอีก</div>
+            <div class="countdown-num num-font" id="dashCountdownText" style="font-size:1.5rem; font-weight:800; color:var(--pea-purple-light); text-shadow:0 2px 4px rgba(124,58,237,0.15);">0 ปี 0 ด.</div>
+          </div>
+
+          <div style="background:var(--card-bg); border-radius:8px; padding:6px 10px; border:1px solid var(--border); font-size:0.72rem; color:var(--text-muted); display:flex; justify-content:space-between; align-items:center;">
+            <span>💡 ทุกปีที่ทำงาน = สิทธิเงินชดเชย + กสช. + เงินเดือนที่เพิ่มขึ้น</span>
+            <button type="button" class="btn btn-sm" style="padding:2px 8px; font-size:0.68rem; background:var(--pea-purple); color:#FFF; border:none; border-radius:4px; cursor:pointer;" onclick="switchTab('analytics')">ดูกราฟเงินเดือน →</button>
           </div>
         </div>
-        <div class="score-details">
-          <div class="score-title" id="scoreTitle">คะแนนสุขภาพการเงิน</div>
-          <div class="score-desc" id="scoreDesc">ประเมินจาก 5 มิติ: เงินออม, ภาระหนี้, สภาพคล่อง, หนี้สินต่อสินทรัพย์ และความพร้อมวัยเกษียณ</div>
-        </div>
+
       </div>
 
-      <!-- Retirement Countdown Banner -->
-      <div class="countdown-banner">
-        <div class="countdown-text">
-          <span>⏳ นับถอยหลังสู่วันเกษียณอายุ:</span><br>
-          <span style="font-size:0.75rem; color:var(--text-muted);">เหลือเวลาสร้างความมั่นคง</span>
-        </div>
-        <div class="countdown-num num-font" id="dashCountdownText">0 ปี 0 ด.</div>
-      </div>
-
-      <!-- Quick Metrics Grid -->
-      <div class="stat-grid-2">
-        <div class="mini-stat">
-          <span class="mini-label">กระแสเงินสดสุทธิ / เดือน</span>
-          <div class="mini-value num-font" id="dashNetCashflow">0 ฿</div>
-          <div class="mini-sub">อัตราการออม <b id="dashSavingsRate">0%</b></div>
-        </div>
-        <div class="mini-stat" style="cursor:pointer;" onclick="jumpToEmergencyPlanner()" title="คลิกเพื่อวางแผนสะสมเงินสำรองฉุกเฉิน">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span class="mini-label">เงินสำรองฉุกเฉิน</span>
-            <span style="font-size:0.68rem; color:var(--pea-purple-light); font-weight:700;">วางแผน →</span>
+      <!-- Row 3: Retirement Readiness Gauge & 5-Dimension Scorecard Grid -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px; margin-bottom:12px;">
+        
+        <!-- Column 1: Retirement Readiness Gauge Card -->
+        <div class="card" style="border-radius:14px;">
+          <div class="card-header" style="margin-bottom:6px;">
+            <div class="card-title">
+              <span class="icon">⚡</span>
+              <span>ความพร้อมแผนเกษียณ กฟภ.</span>
+            </div>
+            <button type="button" class="badge badge-purple" style="cursor:pointer;" onclick="switchTab('retirement')">ดูแผนละเอียด →</button>
           </div>
-          <div class="mini-value num-font" id="dashEmergencyMonths">0.0 เดือน</div>
-          <div class="mini-sub" id="dashEmergencySub">เป้าหมาย 3-6 เดือน</div>
-        </div>
-      </div>
 
-      <!-- Warning Banner: Negative Cashflow in Dashboard -->
-      <div id="dashCashflowDeficitAlert" style="display:none; background:#FEF2F2; border:1.5px solid #F87171; border-radius:10px; padding:10px 14px; margin-bottom:12px; font-size:0.84rem; color:#991B1B;">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <div class="gauge-card" style="border:none; padding:0; box-shadow:none; margin-bottom:6px;">
+            <svg class="gauge-svg" viewBox="0 0 300 160" aria-hidden="true">
+              <path d="M30,140 A110,110 0 0 1 270,140" fill="none" stroke="var(--border)" stroke-width="20" stroke-linecap="round" pathLength="100"/>
+              <path id="dashGaugeProgress" d="M30,140 A110,110 0 0 1 270,140" fill="none" stroke="#EF4444" stroke-width="20" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/>
+              <g id="dashGaugeNeedle" transform="rotate(-90 150 140)">
+                <line x1="150" y1="140" x2="150" y2="40" stroke="var(--text-main)" stroke-width="4" stroke-linecap="round"/>
+              </g>
+              <circle cx="150" cy="140" r="8" fill="var(--text-main)"/>
+              <text x="26" y="156" font-size="11" fill="var(--text-muted)" font-family="Prompt">0%</text>
+              <text x="232" y="156" font-size="11" fill="var(--text-muted)" font-family="Prompt">150%</text>
+            </svg>
+            <div class="gauge-readout num-font" id="dashGaugeReadout">0%</div>
+          </div>
+
+          <div class="verdict-box" id="dashVerdictBox">
+            <h4 id="dashVerdictTitle">กำลังประเมินแผนเกษียณ</h4>
+            <p id="dashVerdictDesc">กรอกข้อมูลเงินเดือนและเงินออมของคุณเพื่อเริ่มประเมินความพร้อม</p>
+            <div id="dashGapActionWrap" style="margin-top:10px; display:none;">
+              <button type="button" class="solution-btn" style="background:#D97706; padding:8px 14px; font-size:0.82rem;" onclick="goToSmartGap()">⚡ ดูทางเลือกปิด Gap <span id="dashGapAmount">-</span> บาท →</button>
+            </div>
+          </div>
+
+          <!-- Celebration Box -->
+          <div id="dashCelebrationBox" class="celebration-box" style="display:none; margin-top:10px;">
+            <div class="celebration-icon">🎉</div>
+            <div>
+              <b style="color:#065F46; font-size:0.88rem;">ยินดีด้วยครับ! แผนเกษียณของคุณมีความพร้อม 100% แล้ว</b>
+              <div style="font-size:0.75rem; color:#047857; margin-top:2px;">เงินทุนสะสม ณ วันเกษียณเพียงพอต่อค่าใช้จ่ายตลอดอายุขัยอย่างมั่นคง</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 2: Financial Health Scorecard (5-Dimensions) -->
+        <div class="card" style="border-radius:14px; display:flex; flex-direction:column; justify-content:space-between;">
           <div>
-            <b>⚠️ คำเตือน: กระแสเงินสดรายเดือนปัจจุบันติดลบ <span id="dashDeficitAmount" class="num-font" style="font-weight:700;">0</span> บาท/เดือน</b>
-            <div style="font-size:0.75rem; color:#B91C1C; margin-top:2px;">รายจ่ายมากกว่ารายรับ เงินออมสะสมจะถูกดึงมาชดเชยขาดดุลรายเดือน</div>
+            <div class="card-header" style="margin-bottom:8px;">
+              <div class="card-title">
+                <span class="icon">🏆</span>
+                <span>สุขภาพการเงิน 5 มิติ (Financial Health)</span>
+              </div>
+              <button type="button" class="badge badge-green" style="cursor:pointer;" onclick="switchTab('analytics')">ดูเรดาร์ 360° →</button>
+            </div>
+
+            <div class="score-card" style="margin-bottom:12px; background:var(--pea-purple-bg); border:1px solid var(--pea-purple-soft); border-radius:12px; padding:12px 14px;">
+              <div class="score-circle" id="scoreCircle">
+                <div class="score-circle-inner">
+                  <span class="score-number num-font" id="scoreNumber">0</span>
+                  <span class="score-max">/100</span>
+                </div>
+              </div>
+              <div class="score-details">
+                <div class="score-title" id="scoreTitle">คะแนนสุขภาพการเงิน</div>
+                <div class="score-desc" id="scoreDesc">ประเมินจาก 5 มิติ: เงินออม, ภาระหนี้, สภาพคล่อง, หนี้สินต่อสินทรัพย์ และความพร้อมวัยเกษียณ</div>
+              </div>
+            </div>
           </div>
-          <button type="button" class="btn btn-outline" style="padding:5px 12px; font-size:0.78rem; background:#fff; color:#DC2626; border-color:#FCA5A5; cursor:pointer;" onclick="jumpToCashflow()">✏️ แก้ไขงบรายรับ-รายจ่ายทันที →</button>
+
+          <div style="background:var(--card-sub); border-radius:10px; padding:10px 12px; font-size:0.76rem; border:1px solid var(--border);">
+            <div style="font-weight:700; color:var(--text-main); margin-bottom:4px;">5 มิติสุขภาพการเงิน กฟภ.:</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px; color:var(--text-muted);">
+              <div>• 💧 สภาพคล่องฉุกเฉิน</div>
+              <div>• 💳 การควบคุมภาระหนี้ (DSR)</div>
+              <div>• 💰 วินัยการออมสุทธิ</div>
+              <div>• 🏛️ ความมั่งคั่งสุทธิ</div>
+              <div style="grid-column:span 2;">• ⚡ ความพร้อมกองทุนเกษียณ กฟภ.</div>
+            </div>
+          </div>
         </div>
+
       </div>
 
-      <!-- Retirement Readiness Card -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <span class="icon">⚡</span>
-            <span>ความพร้อมแผนเกษียณ กฟภ.</span>
-          </div>
-          <button type="button" class="badge badge-purple" onclick="switchTab('retirement')">ดูแผนละเอียด →</button>
-        </div>
-
-        <div class="gauge-card" style="border:none; padding: 0; box-shadow:none; margin-bottom: 8px;">
-          <svg class="gauge-svg" viewBox="0 0 300 160" aria-hidden="true">
-            <path d="M30,140 A110,110 0 0 1 270,140" fill="none" stroke="var(--border)" stroke-width="20" stroke-linecap="round" pathLength="100"/>
-            <path id="dashGaugeProgress" d="M30,140 A110,110 0 0 1 270,140" fill="none" stroke="#EF4444" stroke-width="20" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/>
-            <g id="dashGaugeNeedle" transform="rotate(-90 150 140)">
-              <line x1="150" y1="140" x2="150" y2="40" stroke="var(--text-main)" stroke-width="4" stroke-linecap="round"/>
-            </g>
-            <circle cx="150" cy="140" r="8" fill="var(--text-main)"/>
-            <text x="26" y="156" font-size="11" fill="var(--text-muted)" font-family="Prompt">0%</text>
-            <text x="232" y="156" font-size="11" fill="var(--text-muted)" font-family="Prompt">150%</text>
-          </svg>
-          <div class="gauge-readout num-font" id="dashGaugeReadout">0%</div>
-        </div>
-
-        <div class="verdict-box" id="dashVerdictBox">
-          <h4 id="dashVerdictTitle">กำลังประเมินแผนเกษียณ</h4>
-          <p id="dashVerdictDesc">กรอกข้อมูลเงินเดือนและเงินออมของคุณเพื่อเริ่มประเมินความพร้อม</p>
-          <div id="dashGapActionWrap" style="margin-top:10px; display:none;">
-            <button type="button" class="solution-btn" style="background:#D97706; padding:8px 14px; font-size:0.82rem;" onclick="goToSmartGap()">⚡ ดูทางเลือกปิด Gap <span id="dashGapAmount">-</span> บาท →</button>
-          </div>
-        </div>
-
-        <!-- Dashboard Celebration Box -->
-        <div id="dashCelebrationBox" class="celebration-box" style="display:none; margin-top:12px;">
-          <div class="celebration-icon">🎉</div>
-          <div>
-            <b style="color:#065F46; font-size:0.88rem;">ยินดีด้วยครับ! แผนเกษียณของคุณมีความพร้อม 100% แล้ว</b>
-            <div style="font-size:0.75rem; color:#047857; margin-top:2px;">เงินทุนสะสม ณ วันเกษียณเพียงพอต่อค่าใช้จ่ายตลอดอายุขัยอย่างมั่นคง</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Action Menu -->
-      <div class="card">
-        <div class="card-header">
+      <!-- Quick Action Menu / Navigation Hub -->
+      <div class="card" style="border-radius:14px; margin-bottom:14px;">
+        <div class="card-header" style="margin-bottom:10px;">
           <div class="card-title">
             <span class="icon">🚀</span>
-            <span>เครื่องมือและการวางแผนด่วน</span>
+            <span>ฮับเครื่องมือและการวางแผนด่วน (Quick Navigation Hub)</span>
           </div>
         </div>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:8px;">
-          <button class="btn btn-outline" style="text-align:left; justify-content:flex-start;" onclick="jumpToEmergencyPlanner()">
-            <span>🛡️ วางแผนเงินสำรองฉุกเฉิน (3-6 ด.)</span>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:10px;">
+          <button type="button" class="btn btn-outline" style="text-align:left; justify-content:flex-start; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:var(--card-bg);" onclick="switchTab('cashflow')">
+            <span style="font-size:1.2rem; margin-right:6px;">💰</span>
+            <div>
+              <b style="font-size:0.84rem; color:var(--text-main); display:block;">บันทึกกระแสเงินสด</b>
+              <span style="font-size:0.7rem; color:var(--text-muted);">จัดการรายรับและรายจ่ายประจำเดือน</span>
+            </div>
           </button>
-          <button class="btn btn-outline" style="text-align:left; justify-content:flex-start;" onclick="jumpToDebtPrepay()">
-            <span>⚡ จำลองการโปะหนี้ & ประหยัดดอกเบี้ย</span>
+
+          <button type="button" class="btn btn-outline" style="text-align:left; justify-content:flex-start; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:var(--card-bg);" onclick="switchTab('networth')">
+            <span style="font-size:1.2rem; margin-right:6px;">🏦</span>
+            <div>
+              <b style="font-size:0.84rem; color:var(--text-main); display:block;">สินทรัพย์ & หนี้สิน</b>
+              <span style="font-size:0.7rem; color:var(--text-muted);">ตรวจสอบงบดุลและภาระผ่อน DSR</span>
+            </div>
           </button>
-          <button class="btn btn-outline" style="text-align:left; justify-content:flex-start;" onclick="jumpToGapOptimizer()">
-            <span>🎯 คำนวณปิดช่องว่างเกษียณ</span>
+
+          <button type="button" class="btn btn-outline" style="text-align:left; justify-content:flex-start; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:var(--card-bg);" onclick="switchTab('retirement')">
+            <span style="font-size:1.2rem; margin-right:6px;">⚡</span>
+            <div>
+              <b style="font-size:0.84rem; color:var(--text-main); display:block;">คำนวณแผนเกษียณ กฟภ.</b>
+              <span style="font-size:0.7rem; color:var(--text-muted);">กสช. สหกรณ์ ชดเชย 400 วัน</span>
+            </div>
           </button>
-          <button class="btn btn-outline" style="text-align:left; justify-content:flex-start;" onclick="switchTab('cashflow')">
-            <span>💰 บันทึกรายรับ - รายจ่ายรายเดือน</span>
+
+          <button type="button" class="btn btn-outline" style="text-align:left; justify-content:flex-start; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:var(--card-bg);" onclick="switchTab('analytics')">
+            <span style="font-size:1.2rem; margin-right:6px;">📈</span>
+            <div>
+              <b style="font-size:0.84rem; color:var(--text-main); display:block;">กราฟวิเคราะห์ & สถิติ</b>
+              <span style="font-size:0.7rem; color:var(--text-muted);">แดชบอร์ด 7 กราฟวิเคราะห์ครบวงจร</span>
+            </div>
           </button>
-          <button class="btn btn-outline" style="text-align:left; justify-content:flex-start;" onclick="switchTab('networth')">
-            <span>🏦 จัดการสินทรัพย์และหนี้สิน</span>
+
+          <button type="button" class="btn btn-outline" style="text-align:left; justify-content:flex-start; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:var(--card-bg);" onclick="jumpToEmergencyPlanner()">
+            <span style="font-size:1.2rem; margin-right:6px;">🛡️</span>
+            <div>
+              <b style="font-size:0.84rem; color:var(--text-main); display:block;">วางแผนเงินสำรองฉุกเฉิน</b>
+              <span style="font-size:0.7rem; color:var(--text-muted);">สำรอง 3-6 เท่าของรายจ่าย</span>
+            </div>
           </button>
-          <button class="btn btn-primary" style="text-align:left; justify-content:flex-start;" onclick="switchTab('retirement')">
-            <span>⚡ คำนวณแผนเกษียณ กฟภ. ฉบับเต็ม</span>
+
+          <button type="button" class="btn btn-outline" style="text-align:left; justify-content:flex-start; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:var(--card-bg);" onclick="jumpToDebtPrepay()">
+            <span style="font-size:1.2rem; margin-right:6px;">🎯</span>
+            <div>
+              <b style="font-size:0.84rem; color:var(--text-main); display:block;">จำลองการโปะหนี้ & ปิด Gap</b>
+              <span style="font-size:0.7rem; color:var(--text-muted);">ปลดหนี้ไว & เพิ่มเงินเกษียณ</span>
+            </div>
           </button>
         </div>
       </div>
