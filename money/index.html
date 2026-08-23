@@ -4372,6 +4372,16 @@
       renderDebtStrategy();
     }
 
+    function autoFillDebtTerms(id, months) {
+      const debt = (state.debts || []).find(d => d.id === id);
+      if (debt) {
+        debt.total_terms = months;
+        debt.remaining_terms = months;
+        renderDebtLists();
+        onDataChanged();
+      }
+    }
+
     function renderDebtLists() {
       const categories = ['secured', 'welfare', 'unsecured', 'other'];
       if (!state.debts) state.debts = [];
@@ -4391,6 +4401,38 @@
             const yearsRem = Math.floor(remT / 12);
             const mosRem = remT % 12;
 
+            // Calculate Amortization Duration & Total Interest for this loan
+            const p = d.principal || 0;
+            const m = d.monthly || 0;
+            const rate = d.rate || 0;
+            const r = (rate / 100) / 12;
+            
+            let estMonths = 0;
+            let estInterest = 0;
+            let estStatus = '';
+
+            if (p > 0 && m > 0) {
+              if (m <= p * r) {
+                estStatus = '<span style="color:#DC2626; font-weight:600;">⚠️ ค่างวดต่ำเกินไป (ไม่พอจ่ายดอกเบี้ย หนี้จะไม่หมด)</span>';
+              } else {
+                const n = Math.log(m / (m - p * r)) / Math.log(1 + r);
+                estMonths = Math.ceil(n);
+                
+                // Calculate interest sum
+                let b = p;
+                for (let i = 0; i < estMonths; i++) {
+                  const intVal = b * r;
+                  estInterest += intVal;
+                  const prinVal = Math.min(b, m - intVal);
+                  b -= prinVal;
+                  if (b <= 0) break;
+                }
+                const estY = Math.floor(estMonths / 12);
+                const estM = estMonths % 12;
+                estStatus = `⏳ Amortization จริง: จะหมดหนี้ใน <b style="color:var(--pea-purple-light);">${estY > 0 ? estY + ' ปี ' : ''}${estM} ด. (${estMonths} งวด)</b> · ดอกเบี้ยรวม <b style="color:#D97706;">~${fmt(Math.round(estInterest))} ฿</b>`;
+              }
+            }
+
             return `
             <div class="debt-item-card" id="${d.id}" style="margin-bottom:10px; padding:10px; border-radius:10px; border:1px solid var(--border); background:var(--card-bg);">
               <div class="debt-header-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px;">
@@ -4399,7 +4441,7 @@
               </div>
 
               <!-- Main Loan Metrics -->
-              <div class="debt-grid-3" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:8px;">
+              <div class="debt-grid-3" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:6px;">
                 <div>
                   <span style="font-size:0.68rem; color:var(--text-muted); display:block;">ยอดหนี้คงเหลือ</span>
                   <div class="input-wrap">
@@ -4422,6 +4464,14 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Live Amortization Real Payoff Calculation Banner -->
+              ${estStatus ? `
+              <div style="background:var(--card-sub); border-radius:6px; padding:5px 8px; margin-bottom:6px; font-size:0.72rem; border:1px dashed var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px;">
+                <div>${estStatus}</div>
+                ${estMonths > 0 && (!totalT || totalT === 0 || totalT !== estMonths) ? `<button type="button" class="btn btn-outline" style="padding:2px 6px; font-size:0.66rem; width:auto; border-color:var(--pea-purple-soft); color:var(--pea-purple-light); cursor:pointer;" onclick="autoFillDebtTerms('${d.id}', ${estMonths})" title="นำจำนวนงวดคำนวณจริงไปใส่ในช่องงวด">⚡ ใส่งวด ${estMonths} งวด</button>` : ''}
+              </div>
+              ` : ''}
 
               <!-- Term Tracking & Contract Details -->
               <div style="background:var(--pea-purple-bg); border-radius:8px; padding:8px; margin-bottom:6px; border:1px solid var(--border-focus);">
