@@ -4687,15 +4687,15 @@
     let state = {
       // Personal User Profile
       user_profile: {
-        name: 'นายอภิชาติ ยุพิน',
-        emp_id: '504195',
-        position: 'พนักงานช่าง (ปฏิบัติการระบบไฟฟ้า) ระดับ 6',
-        department: 'ผปบ./กฟส.ขก.2/กฟจ.ขก./กฟฉ.1/สายงาน (ฉ)',
-        bio: 'มุ่งมั่นสร้างความมั่นคงทางการเงินและเกษียณสุขใจ ⚡',
+        name: '',
+        emp_id: '',
+        position: '',
+        department: '',
+        bio: '',
         avatar: ''
       },
       // Cash flow Income
-      inc_salary: 35000,
+      inc_salary: 0,
       inc_pea_electric: 0,
       inc_pea_shift: 0,
       inc_pea_hazard: 0,
@@ -4707,65 +4707,51 @@
       // Cash flow Expenses
       exp_housing: 0,
       exp_car: 0,
-      exp_home: 12000,
+      exp_home: 0,
       exp_family: 0,
-      exp_insurance: 1500,
-      exp_lifestyle: 5000,
-      exp_saving: 3000,
+      exp_insurance: 0,
+      exp_lifestyle: 0,
+      exp_saving: 0,
       exp_tax: 0,
       // PEA Payroll Deductions (รายการหักสลิปเงินเดือน กฟภ.)
       exp_pea_tax: 0,
-      exp_pea_cremation: 300,
+      exp_pea_cremation: 0,
       // Net Worth Assets (Dynamic list + legacy fallback)
-      assets: [
-        { id: 'a_cash', category: 'cash', isLiquid: true, name: 'เงินสด & บัญชีเงินฝากออมทรัพย์', amount: 100000 },
-        { id: 'a_fixed', category: 'fixed', isLiquid: true, name: 'เงินฝากประจำ / สลากออมทรัพย์', amount: 0 },
-        { id: 'a_coop', category: 'pea_coop', isLiquid: true, name: 'หุ้นสะสมสหกรณ์ออมทรัพย์ กฟภ.', amount: 50000 },
-        { id: 'a_pf', category: 'provident', isLiquid: true, name: 'กองทุนสำรองเลี้ยงชีพ (กสช.) กฟภ.', amount: 515000 },
-        { id: 'a_inv', category: 'investment', isLiquid: true, name: 'พอร์ตหุ้นไทย / กองทุนรวม', amount: 50000 },
-        { id: 'a_re', category: 'realestate', isLiquid: false, name: 'บ้านเดี่ยว / คอนโดที่อยู่อาศัย', amount: 0 },
-        { id: 'a_car', category: 'personal', isLiquid: false, name: 'รถยนต์ / ทรัพย์สินส่วนตัว', amount: 0 },
-        { id: 'a_biz', category: 'business', isLiquid: false, name: 'มูลค่าธุรกิจส่วนตัว', amount: 0 },
-        { id: 'a_oth', category: 'other', isLiquid: false, name: 'สินทรัพย์อื่นๆ', amount: 0 }
-      ],
-      ast_cash: 100000,
+      assets: [],
+      ast_cash: 0,
       ast_fixed: 0,
-      ast_investment: 50000,
-      ast_provident: 515000,
+      ast_investment: 0,
+      ast_provident: 0,
       ast_realestate: 0,
       ast_personal: 0,
       ast_business: 0,
       ast_other: 0,
       // Net Worth Liabilities (Dynamic list + legacy fallback)
       debtStrategy: 'avalanche',
-      debts: [
-        { id: 'd_home', category: 'secured', name: 'สินเชื่อบ้าน/คอนโด', principal: 1200000, monthly: 8500, rate: 3.8, total_terms: 240, remaining_terms: 180, start_date: '2021-01-01', end_date: '2041-01-01' },
-        { id: 'd_coop', category: 'welfare', name: 'เงินกู้สามัญสหกรณ์ กฟภ.', principal: 300000, monthly: 5500, rate: 4.75, total_terms: 84, remaining_terms: 55, start_date: '2023-08-01', end_date: '2030-08-01' },
-        { id: 'd_card', category: 'unsecured', name: 'บัตรเครดิต KTC', principal: 25000, monthly: 2500, rate: 16.0, total_terms: 12, remaining_terms: 10, start_date: '2026-01-01', end_date: '2027-01-01' }
-      ],
-      lia_home: 1200000,
+      debts: [],
+      lia_home: 0,
       lia_car: 0,
-      lia_card: 25000,
+      lia_card: 0,
       lia_personal: 0,
       lia_edu: 0,
       lia_other: 0,
       // Retirement inputs
       pea_currentAge: 35,
       pea_retireAge: 60,
-      pea_serviceYears: 10,
+      pea_serviceYears: 0,
       pea_lifeExpectancy: 85,
       pea_salaryGrowth: 3,
-      pea_salary: 35000,
-      pea_desiredExpenseToday: 20000,
+      pea_salary: 0,
+      pea_desiredExpenseToday: 0,
       pea_healthBufferMonthly: 0,
       pea_withdrawalStrategy: 'depletion',
       pea_inflation: 3,
       pea_postRetireReturn: 4.0,
-      pea_monthlySavings: 3000,
-      pea_initialSavings: 100000,
+      pea_monthlySavings: 0,
+      pea_initialSavings: 0,
       pea_preRetireReturn: 5,
-      pea_coopSharePerMonth: 1000,
-      pea_coopShareCurrent: 50000,
+      pea_coopSharePerMonth: 0,
+      pea_coopShareCurrent: 0,
       pea_coopReturn: 4.5,
       pea_coopDividendOption: 'reinvest',
       pea_useStepEmployerRate: true,
@@ -4773,10 +4759,10 @@
       pea_employeeRate: 3,
       pea_employerRate: 10,
       pea_pfReturn: 5,
-      pea_pfAccumulated: 200000,
-      pea_pfContributed: 250000,
-      pea_pfAccumulatedGain: 30000,
-      pea_pfContributedGain: 35000
+      pea_pfAccumulated: 0,
+      pea_pfContributed: 0,
+      pea_pfAccumulatedGain: 0,
+      pea_pfContributedGain: 0
     };
 
     let baseRetirementInputs = null;
@@ -6763,11 +6749,11 @@
 
       if (!state.user_profile) {
         state.user_profile = {
-          name: 'นายอภิชาติ ยุพิน',
-          emp_id: '504195',
-          position: 'พนักงานช่าง (ปฏิบัติการระบบไฟฟ้า) ระดับ 6',
-          department: 'ผปบ./กฟส.ขก.2/กฟจ.ขก./กฟฉ.1/สายงาน (ฉ)',
-          bio: 'มุ่งมั่นสร้างความมั่นคงทางการเงินและเกษียณสุขใจ ⚡',
+          name: '',
+          emp_id: '',
+          position: '',
+          department: '',
+          bio: '',
           avatar: ''
         };
       }
@@ -8884,11 +8870,11 @@
 
     function renderUserProfile() {
       const prof = (state && state.user_profile) ? state.user_profile : {
-        name: 'นายอภิชาติ ยุพิน',
-        emp_id: '504195',
-        position: 'พนักงานช่าง (ปฏิบัติการระบบไฟฟ้า) ระดับ 6',
-        department: 'ผปบ./กฟส.ขก.2/กฟจ.ขก./กฟฉ.1/สายงาน (ฉ)',
-        bio: 'มุ่งมั่นสร้างความมั่นคงทางการเงินและเกษียณสุขใจ ⚡',
+        name: '',
+        emp_id: '',
+        position: '',
+        department: '',
+        bio: '',
         avatar: ''
       };
 
