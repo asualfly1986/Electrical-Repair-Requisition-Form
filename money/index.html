@@ -2045,7 +2045,7 @@
           <div class="input-group">
             <label class="input-label"><span>เงินเดือนพื้นฐาน (บาท/เดือน)</span><span class="input-hint">ตามระดับตำแหน่ง</span></label>
             <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="inc_salary" value="35000" oninput="onDataChanged()">
+              <input type="number" inputmode="decimal" class="form-input" id="inc_salary" value="0" oninput="onDataChanged()">
               <span class="input-unit">บาท</span>
             </div>
             <div class="chips-row">
@@ -2198,7 +2198,7 @@
               <span>🤝 เงินสงเคราะห์ / สมาคมฌาปนกิจสงเคราะห์ (กฟภ. / สหกรณ์)</span>
             </label>
             <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="exp_pea_cremation" value="300" oninput="onDataChanged()">
+              <input type="number" inputmode="decimal" class="form-input" id="exp_pea_cremation" value="0" oninput="onDataChanged()">
               <span class="input-unit">บาท/ด.</span>
             </div>
             <div class="chips-row">
@@ -2270,7 +2270,7 @@
               <span>🏥 เบี้ยประกันภัย (สุขภาพ/ชีวิต/รถ เฉลี่ยต่อเดือน)</span>
             </label>
             <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="exp_insurance" value="1500" oninput="onDataChanged()">
+              <input type="number" inputmode="decimal" class="form-input" id="exp_insurance" value="0" oninput="onDataChanged()">
               <span class="input-unit">บาท/ด.</span>
             </div>
             <div class="chips-row">
@@ -2303,7 +2303,7 @@
           <div class="input-group">
             <label class="input-label"><span>🛒 ค่าใช้จ่ายในบ้าน (อาหาร / ค่าน้ำ-ไฟ / ของใช้)</span></label>
             <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="exp_home" value="12000" oninput="onDataChanged()">
+              <input type="number" inputmode="decimal" class="form-input" id="exp_home" value="0" oninput="onDataChanged()">
               <span class="input-unit">บาท/ด.</span>
             </div>
             <div class="chips-row">
@@ -2332,7 +2332,7 @@
           <div class="input-group">
             <label class="input-label"><span>☕ ค่าใช้จ่ายส่วนตัว / ท่องเที่ยว / ไลฟ์สไตล์</span></label>
             <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="exp_lifestyle" value="5000" oninput="onDataChanged()">
+              <input type="number" inputmode="decimal" class="form-input" id="exp_lifestyle" value="0" oninput="onDataChanged()">
               <span class="input-unit">บาท/ด.</span>
             </div>
             <div class="chips-row">
@@ -2349,7 +2349,7 @@
               <span class="input-hint">ออมเพิ่ม</span>
             </label>
             <div class="input-wrap">
-              <input type="number" inputmode="decimal" class="form-input" id="exp_saving" value="3000" oninput="onDataChanged()">
+              <input type="number" inputmode="decimal" class="form-input" id="exp_saving" value="0" oninput="onDataChanged()">
               <span class="input-unit">บาท/ด.</span>
             </div>
             <div class="chips-row">
@@ -3120,7 +3120,7 @@
                   <span>⚡ อายุงาน กฟภ. ปัจจุบัน <span class="tooltip-tag" data-tip="อายุงานสะสมที่ กฟภ. ใช้นับสเต็ปสมทบ กสช. (9%/10%/11%) และสิทธิชดเชยเกษียณ 400 วัน">ℹ</span></span>
                 </label>
                 <div class="input-wrap">
-                  <input type="number" class="form-input" id="pea_serviceYears" value="10" min="0" max="50" required oninput="onRetirementInput()">
+                  <input type="number" class="form-input" id="pea_serviceYears" value="0" min="0" max="50" required oninput="onRetirementInput()">
                   <span class="input-unit">ปี</span>
                 </div>
               </div>
@@ -3141,7 +3141,7 @@
                   <span>💼 เงินเดือนปัจจุบัน <span class="tooltip-tag" data-tip="เงินเดือนประจำไม่รวมค่าเวร/ค่าเสี่ยงภัย เป็นฐานคิด กสช. และเงินชดเชย 400 วัน">ℹ</span></span>
                 </label>
                 <div class="input-wrap">
-                  <input type="number" class="form-input" id="pea_salary" value="35000" min="0" required oninput="onRetirementInput()">
+                  <input type="number" class="form-input" id="pea_salary" value="0" min="0" required oninput="onRetirementInput()">
                   <span class="input-unit">บาท</span>
                 </div>
               </div>
@@ -3196,7 +3196,7 @@
               <div class="input-group">
                 <label class="input-label"><span>🛒 ค่าใช้จ่ายพื้นฐานหลังเกษียณ</span></label>
                 <div class="input-wrap">
-                  <input type="number" class="form-input" id="pea_desiredExpenseToday" value="20000" min="0" required oninput="onRetirementInput()">
+                  <input type="number" class="form-input" id="pea_desiredExpenseToday" value="0" min="0" required oninput="onRetirementInput()">
                   <span class="input-unit">บาท/ด.</span>
                 </div>
               </div>
@@ -3260,7 +3260,7 @@
             <div class="input-group">
               <label class="input-label"><span>💰 เงินออมอื่นๆ ต่อเดือน (นอกเหนือกสช.+หุ้นสหกรณ์)</span></label>
               <div class="input-wrap">
-                <input type="number" class="form-input" id="pea_monthlySavings" value="3000" min="0" required oninput="onRetirementInput()">
+                <input type="number" class="form-input" id="pea_monthlySavings" value="0" min="0" required oninput="onRetirementInput()">
                 <span class="input-unit">บาท/ด.</span>
               </div>
             </div>
@@ -3269,7 +3269,7 @@
               <div class="input-group">
                 <label class="input-label"><span>🏦 เงินออมตั้งต้นที่มีอยู่</span></label>
                 <div class="input-wrap">
-                  <input type="number" class="form-input" id="pea_initialSavings" value="100000" min="0" required oninput="onRetirementInput()">
+                  <input type="number" class="form-input" id="pea_initialSavings" value="0" min="0" required oninput="onRetirementInput()">
                   <span class="input-unit">บาท</span>
                 </div>
               </div>
@@ -3286,14 +3286,14 @@
               <div class="input-group">
                 <label class="input-label"><span>🪙 สะสมหุ้น/เดือน</span></label>
                 <div class="input-wrap">
-                  <input type="number" class="form-input" id="pea_coopSharePerMonth" value="1000" min="0" required oninput="onRetirementInput()">
+                  <input type="number" class="form-input" id="pea_coopSharePerMonth" value="0" min="0" required oninput="onRetirementInput()">
                   <span class="input-unit">บาท/ด.</span>
                 </div>
               </div>
               <div class="input-group">
                 <label class="input-label"><span>🪙 มูลค่าหุ้นปัจจุบัน</span></label>
                 <div class="input-wrap">
-                  <input type="number" class="form-input" id="pea_coopShareCurrent" value="50000" min="0" required oninput="onRetirementInput()">
+                  <input type="number" class="form-input" id="pea_coopShareCurrent" value="0" min="0" required oninput="onRetirementInput()">
                   <span class="input-unit">บาท</span>
                 </div>
               </div>
@@ -3386,14 +3386,14 @@
               <div class="input-group">
                 <label class="input-label"><span>💵 เงินสะสม ล่าสุด</span></label>
                 <div class="input-wrap">
-                  <input type="number" class="form-input" id="pea_pfAccumulated" value="200000" min="0" required oninput="onRetirementInput()">
+                  <input type="number" class="form-input" id="pea_pfAccumulated" value="0" min="0" required oninput="onRetirementInput()">
                   <span class="input-unit">บาท</span>
                 </div>
               </div>
               <div class="input-group">
                 <label class="input-label"><span>💼 เงินสมทบ ล่าสุด</span></label>
                 <div class="input-wrap">
-                  <input type="number" class="form-input" id="pea_pfContributed" value="250000" min="0" required oninput="onRetirementInput()">
+                  <input type="number" class="form-input" id="pea_pfContributed" value="0" min="0" required oninput="onRetirementInput()">
                   <span class="input-unit">บาท</span>
                 </div>
               </div>
@@ -3403,14 +3403,14 @@
               <div class="input-group">
                 <label class="input-label"><span>📈 ผลประโยชน์สะสม</span></label>
                 <div class="input-wrap">
-                  <input type="number" class="form-input" id="pea_pfAccumulatedGain" value="30000" min="0" required oninput="onRetirementInput()">
+                  <input type="number" class="form-input" id="pea_pfAccumulatedGain" value="0" min="0" required oninput="onRetirementInput()">
                   <span class="input-unit">บาท</span>
                 </div>
               </div>
               <div class="input-group">
                 <label class="input-label"><span>📈 ผลประโยชน์สมทบ</span></label>
                 <div class="input-wrap">
-                  <input type="number" class="form-input" id="pea_pfContributedGain" value="35000" min="0" required oninput="onRetirementInput()">
+                  <input type="number" class="form-input" id="pea_pfContributedGain" value="0" min="0" required oninput="onRetirementInput()">
                   <span class="input-unit">บาท</span>
                 </div>
               </div>
@@ -4676,7 +4676,7 @@
 
   <!-- ==================== JAVASCRIPT LOGIC ==================== -->
   <script>
-    const STORAGE_KEY = 'pea_finance_app_data_v2';
+    const STORAGE_KEY = 'pea_finance_app_data_v3';
     const THEME_KEY = 'pea_finance_theme';
     const $ = id => document.getElementById(id);
     const num = id => { const el = $(id); return el ? (parseFloat(el.value) || 0) : 0; };
