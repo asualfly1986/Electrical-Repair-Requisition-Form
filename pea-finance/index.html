@@ -2352,10 +2352,37 @@
                 <span>แผนผ่อนชำระเดิม (ขั้นต่ำ):</span>
                 <b id="prepayOriginalSummary">-</b>
               </div>
-              <div style="display:flex; justify-content:space-between; color:var(--success); font-weight:700;">
+              <div style="display:flex; justify-content:space-between; border-bottom:1px dashed var(--border); padding-bottom:4px; margin-bottom:4px; color:var(--success); font-weight:700;">
                 <span>แผนผ่อนชำระใหม่ (เร่งโปะ):</span>
                 <span id="prepayNewSummary">-</span>
               </div>
+              <div style="display:flex; justify-content:space-between; font-size:0.76rem; color:var(--pea-purple-light); font-weight:600;">
+                <span>🎯 คาดการณ์วันหมดหนี้:</span>
+                <span id="prepayPayoffDateBadge">-</span>
+              </div>
+            </div>
+
+            <!-- Toggle Amortization Schedule -->
+            <div style="margin-top:10px; text-align:center;">
+              <button type="button" class="btn btn-outline" id="btnToggleAmortSchedule" onclick="toggleAmortSchedule()" style="width:100%; font-size:0.8rem; padding:6px 12px;">
+                📊 ดูตารางตัดเงินต้นและดอกเบี้ยรายปี (Amortization Schedule) ▼
+              </button>
+            </div>
+
+            <div id="prepayAmortScheduleWrap" style="display:none; margin-top:10px; overflow-x:auto;">
+              <table style="width:100%; font-size:0.75rem; border-collapse:collapse; text-align:right;">
+                <thead>
+                  <tr style="background:var(--pea-purple-bg); color:var(--pea-purple-light); border-bottom:1.5px solid var(--border);">
+                    <th style="padding:6px; text-align:left;">ปีที่ / งวด</th>
+                    <th style="padding:6px;">เงินต้นที่ตัด (฿)</th>
+                    <th style="padding:6px;">ดอกเบี้ยจ่าย (฿)</th>
+                    <th style="padding:6px;">หนี้คงเหลือ (฿)</th>
+                  </tr>
+                </thead>
+                <tbody id="prepayAmortizationTableBody">
+                  <!-- Dynamically populated rows -->
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -3634,9 +3661,9 @@
       // Net Worth Liabilities (Dynamic list + legacy fallback)
       debtStrategy: 'avalanche',
       debts: [
-        { id: 'd_home', category: 'secured', name: 'สินเชื่อบ้าน/คอนโด', principal: 1200000, monthly: 8500, rate: 3.8 },
-        { id: 'd_coop', category: 'welfare', name: 'เงินกู้สามัญสหกรณ์ กฟภ.', principal: 300000, monthly: 5500, rate: 4.75 },
-        { id: 'd_card', category: 'unsecured', name: 'บัตรเครดิต KTC', principal: 25000, monthly: 2500, rate: 16.0 }
+        { id: 'd_home', category: 'secured', name: 'สินเชื่อบ้าน/คอนโด', principal: 1200000, monthly: 8500, rate: 3.8, total_terms: 240, remaining_terms: 180, start_date: '2021-01-01', end_date: '2041-01-01' },
+        { id: 'd_coop', category: 'welfare', name: 'เงินกู้สามัญสหกรณ์ กฟภ.', principal: 300000, monthly: 5500, rate: 4.75, total_terms: 84, remaining_terms: 55, start_date: '2023-08-01', end_date: '2030-08-01' },
+        { id: 'd_card', category: 'unsecured', name: 'บัตรเครดิต KTC', principal: 25000, monthly: 2500, rate: 16.0, total_terms: 12, remaining_terms: 10, start_date: '2026-01-01', end_date: '2027-01-01' }
       ],
       lia_home: 1200000,
       lia_car: 0,
@@ -4236,13 +4263,23 @@
         'unsecured': 16.0,
         'other': 1.0
       };
+      const defaultTerms = {
+        'secured': 240,
+        'welfare': 84,
+        'unsecured': 24,
+        'other': 60
+      };
       const newDebt = {
         id: 'debt_' + Date.now(),
         category: category,
         name: defaultNames[category] || 'รายการหนี้สินใหม่',
         principal: 0,
         monthly: 0,
-        rate: defaultRates[category] || 5.0
+        rate: defaultRates[category] || 5.0,
+        total_terms: defaultTerms[category] || 60,
+        remaining_terms: defaultTerms[category] || 60,
+        start_date: '',
+        end_date: ''
       };
       if (!state.debts) state.debts = [];
       state.debts.push(newDebt);
@@ -4261,8 +4298,16 @@
       if (!state.debts) return;
       const debt = state.debts.find(d => d.id === id);
       if (debt) {
-        if (field === 'name') debt.name = val;
-        else debt[field] = parseFloat(val) || 0;
+        if (field === 'name' || field === 'start_date' || field === 'end_date') {
+          debt[field] = val;
+        } else {
+          debt[field] = parseFloat(val) || 0;
+        }
+
+        if (field === 'total_terms' && (!debt.remaining_terms || debt.remaining_terms > debt.total_terms)) {
+          debt.remaining_terms = debt.total_terms;
+        }
+
         onDataChanged();
       }
     }
@@ -4290,13 +4335,23 @@
         if (items.length === 0) {
           container.innerHTML = `<div style="text-align:center; padding:10px; font-size:0.76rem; color:var(--text-muted); border:1px dashed var(--border); border-radius:8px; margin-bottom:8px;">ยังไม่มีรายการหนี้ในกลุ่มนี้ (กดปุ่มด้านล่างเพื่อเพิ่ม)</div>`;
         } else {
-          container.innerHTML = items.map(d => `
-            <div class="debt-item-card" id="${d.id}">
-              <div class="debt-header-row">
-                <input type="text" class="form-input" style="font-weight:600; font-size:0.85rem; padding:4px 8px; flex:1;" value="${d.name || ''}" placeholder="ชื่อรายการหนี้" oninput="updateDebtField('${d.id}', 'name', this.value)">
-                <button type="button" class="debt-delete-btn" onclick="removeDebt('${d.id}')" title="ลบรายการนี้">🗑️</button>
+          container.innerHTML = items.map(d => {
+            const totalT = d.total_terms || 0;
+            const remT = d.remaining_terms !== undefined ? d.remaining_terms : totalT;
+            const paidT = Math.max(0, totalT - remT);
+            const pctPaid = totalT > 0 ? Math.min(100, Math.round(paidT / totalT * 100)) : 0;
+            const yearsRem = Math.floor(remT / 12);
+            const mosRem = remT % 12;
+
+            return `
+            <div class="debt-item-card" id="${d.id}" style="margin-bottom:10px; padding:10px; border-radius:10px; border:1px solid var(--border); background:var(--card-bg);">
+              <div class="debt-header-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px;">
+                <input type="text" class="form-input" style="font-weight:700; font-size:0.88rem; padding:4px 8px; flex:1;" value="${d.name || ''}" placeholder="ชื่อรายการหนี้ / สัญญา" oninput="updateDebtField('${d.id}', 'name', this.value)">
+                <button type="button" class="debt-delete-btn" onclick="removeDebt('${d.id}')" title="ลบรายการนี้" style="background:none; border:none; cursor:pointer; font-size:1.05rem;">🗑️</button>
               </div>
-              <div class="debt-grid-3">
+
+              <!-- Main Loan Metrics -->
+              <div class="debt-grid-3" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:8px;">
                 <div>
                   <span style="font-size:0.68rem; color:var(--text-muted); display:block;">ยอดหนี้คงเหลือ</span>
                   <div class="input-wrap">
@@ -4319,8 +4374,51 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Term Tracking & Contract Details -->
+              <div style="background:var(--pea-purple-bg); border-radius:8px; padding:8px; margin-bottom:6px; border:1px solid var(--border-focus);">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:6px;">
+                  <div>
+                    <span style="font-size:0.68rem; color:var(--pea-purple-light); font-weight:600; display:block;">จำนวนงวดทั้งหมด (งวด)</span>
+                    <div class="input-wrap">
+                      <input type="number" inputmode="numeric" class="form-input num-font" style="font-size:0.8rem; padding:3px 6px;" value="${totalT}" oninput="updateDebtField('${d.id}', 'total_terms', this.value)" placeholder="เช่น 84">
+                      <span class="input-unit" style="font-size:0.68rem;">งวด</span>
+                    </div>
+                  </div>
+                  <div>
+                    <span style="font-size:0.68rem; color:var(--pea-purple-light); font-weight:600; display:block;">งวดคงเหลือ (งวด)</span>
+                    <div class="input-wrap">
+                      <input type="number" inputmode="numeric" class="form-input num-font" style="font-size:0.8rem; padding:3px 6px;" value="${remT}" oninput="updateDebtField('${d.id}', 'remaining_terms', this.value)" placeholder="เช่น 60">
+                      <span class="input-unit" style="font-size:0.68rem;">งวด</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:6px;">
+                  <div>
+                    <span style="font-size:0.66rem; color:var(--text-muted); display:block;">วันเริ่มสัญญา</span>
+                    <input type="date" class="form-input" style="font-size:0.75rem; padding:2px 4px;" value="${d.start_date || ''}" onchange="updateDebtField('${d.id}', 'start_date', this.value)">
+                  </div>
+                  <div>
+                    <span style="font-size:0.66rem; color:var(--text-muted); display:block;">งวดสิ้นสุดสัญญา</span>
+                    <input type="date" class="form-input" style="font-size:0.75rem; padding:2px 4px;" value="${d.end_date || ''}" onchange="updateDebtField('${d.id}', 'end_date', this.value)">
+                  </div>
+                </div>
+
+                <!-- Term Progress Bar -->
+                <div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; margin-bottom:3px;">
+                    <span style="color:var(--text-main); font-weight:600;">ผ่อนแล้ว ${paidT}/${totalT || '-'} งวด (${pctPaid}%)</span>
+                    <span style="color:var(--pea-purple-light); font-weight:700;">เหลืออีก ${remT} งวด (${yearsRem > 0 ? yearsRem + ' ปี ' : ''}${mosRem} ด.)</span>
+                  </div>
+                  <div style="height:6px; width:100%; background:var(--border); border-radius:3px; overflow:hidden;">
+                    <div style="height:100%; width:${pctPaid}%; background:linear-gradient(90deg, #10B981, #059669); transition:width 0.3s ease;"></div>
+                  </div>
+                </div>
+              </div>
             </div>
-          `).join('');
+            `;
+          }).join('');
         }
       });
     }
@@ -5398,7 +5496,7 @@
         return;
       }
 
-      // Amortization simulation
+      // Amortization simulation & Schedule recording
       const r = (targetRate / 100) / 12;
 
       // 1. Normal Plan
@@ -5413,8 +5511,11 @@
         bal1 -= prinPaid;
       }
 
-      // 2. Accelerated Plan
+      // 2. Accelerated Plan & Schedule
       let bal2 = targetPrincipal, totalInt2 = 0, m2 = 0;
+      const yearlySchedule = [];
+      let currentYearPrin = 0, currentYearInt = 0;
+
       while (bal2 > 0 && m2 < 600) {
         m2++;
         const interest = bal2 * r;
@@ -5424,6 +5525,22 @@
         const prinPaid = Math.min(bal2, (minPayment - interest) + extraThisMonth);
         if (prinPaid <= 0) break;
         bal2 -= prinPaid;
+
+        currentYearPrin += prinPaid;
+        currentYearInt += interest;
+
+        if (m2 % 12 === 0 || bal2 <= 0) {
+          const yearNum = Math.ceil(m2 / 12);
+          yearlySchedule.push({
+            year: yearNum,
+            month: m2,
+            principalPaid: currentYearPrin,
+            interestPaid: currentYearInt,
+            balance: bal2
+          });
+          currentYearPrin = 0;
+          currentYearInt = 0;
+        }
       }
 
       const intSaved = Math.max(0, Math.round(totalInt1 - totalInt2));
@@ -5442,6 +5559,46 @@
       }
       if ($('prepayNewSummary')) {
         $('prepayNewSummary').textContent = `ผ่อนเหลือ ${newYears} ปี ${newMos} ด. | ดอกเบี้ยรวม ${fmt(Math.round(totalInt2))} ฿ (ประหยัด ${fmt(intSaved)} ฿)`;
+      }
+
+      // Calculate Target Payoff Dates in Thai format
+      const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+      const now = new Date();
+      const origDate = new Date(now.getFullYear(), now.getMonth() + m1, 1);
+      const newDate = new Date(now.getFullYear(), now.getMonth() + m2, 1);
+      const origDateStr = `${thaiMonths[origDate.getMonth()]} ${origDate.getFullYear() + 543}`;
+      const newDateStr = `${thaiMonths[newDate.getMonth()]} ${newDate.getFullYear() + 543}`;
+
+      if ($('prepayPayoffDateBadge')) {
+        $('prepayPayoffDateBadge').innerHTML = `<b>${newDateStr}</b> <span style="font-size:0.7rem; color:var(--text-muted);">(เดิม ${origDateStr})</span>`;
+      }
+
+      // Render Amortization Schedule Table
+      if ($('prepayAmortizationTableBody')) {
+        const rows = yearlySchedule.map(s => `
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:5px; text-align:left; font-weight:600;">ปีที่ ${s.year} (งวด ${s.month})</td>
+            <td style="padding:5px;" class="num-font">${fmt(Math.round(s.principalPaid))} ฿</td>
+            <td style="padding:5px; color:#D97706;" class="num-font">${fmt(Math.round(s.interestPaid))} ฿</td>
+            <td style="padding:5px; font-weight:700; color:${s.balance <= 0 ? 'var(--success)' : 'var(--text-main)'};" class="num-font">
+              ${s.balance <= 0 ? '✅ ปิดหนี้แล้ว' : fmt(Math.round(s.balance)) + ' ฿'}
+            </td>
+          </tr>
+        `).join('');
+        $('prepayAmortizationTableBody').innerHTML = rows;
+      }
+    }
+
+    function toggleAmortSchedule() {
+      const wrap = $('prepayAmortScheduleWrap');
+      const btn = $('btnToggleAmortSchedule');
+      if (!wrap || !btn) return;
+      if (wrap.style.display === 'none') {
+        wrap.style.display = 'block';
+        btn.textContent = '📊 ซ่อนตาราง Amortization ▲';
+      } else {
+        wrap.style.display = 'none';
+        btn.textContent = '📊 ดูตารางตัดเงินต้นและดอกเบี้ยรายปี (Amortization Schedule) ▼';
       }
     }
 
@@ -6016,9 +6173,9 @@
           ast_other: 0,
           debtStrategy: 'avalanche',
           debts: [
-            { id: 'd_samp_home', category: 'secured', name: 'สินเชื่อบ้าน ธอส.', principal: 1800000, monthly: 11000, rate: 3.65 },
-            { id: 'd_samp_coop', category: 'welfare', name: 'เงินกู้สามัญสหกรณ์ กฟภ.', principal: 450000, monthly: 6500, rate: 4.75 },
-            { id: 'd_samp_card', category: 'unsecured', name: 'บัตรเครดิต KTC Visa', principal: 30000, monthly: 3000, rate: 16.0 }
+            { id: 'd_samp_home', category: 'secured', name: 'สินเชื่อบ้าน ธอส.', principal: 1800000, monthly: 11000, rate: 3.65, total_terms: 240, remaining_terms: 192, start_date: '2022-01-01', end_date: '2042-01-01' },
+            { id: 'd_samp_coop', category: 'welfare', name: 'เงินกู้สามัญสหกรณ์ กฟภ.', principal: 450000, monthly: 6500, rate: 4.75, total_terms: 84, remaining_terms: 60, start_date: '2024-01-01', end_date: '2031-01-01' },
+            { id: 'd_samp_card', category: 'unsecured', name: 'บัตรเครดิต KTC Visa', principal: 30000, monthly: 3000, rate: 16.0, total_terms: 12, remaining_terms: 10, start_date: '2026-01-01', end_date: '2027-01-01' }
           ],
           lia_home: 1800000,
           lia_car: 0,
