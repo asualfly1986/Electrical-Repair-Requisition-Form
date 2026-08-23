@@ -4633,7 +4633,7 @@
     // Event Handler on any data change
     function onDataChanged() {
       collectInputs();
-      // 2-Way Realtime Sync between Tab 2 and Tab 4
+      // 2-Way Realtime Sync between Tab 2 and Tab 4 (Salary & Savings)
       if (state.inc_salary !== undefined && state.pea_salary !== state.inc_salary) {
         state.pea_salary = state.inc_salary;
         if ($('pea_salary')) $('pea_salary').value = state.inc_salary;
@@ -4642,6 +4642,16 @@
         state.pea_monthlySavings = state.exp_saving;
         if ($('pea_monthlySavings')) $('pea_monthlySavings').value = state.exp_saving;
       }
+
+      // 2-Way Realtime Sync between Tab 3 (Assets) and Tab 4 (Retirement) for Coop Shares
+      if (state.assets) {
+        const totalCoop = state.assets.filter(a => a.category === 'pea_coop').reduce((sum, a) => sum + (a.amount || 0), 0);
+        if (state.pea_coopShareCurrent !== totalCoop) {
+          state.pea_coopShareCurrent = totalCoop;
+          if ($('pea_coopShareCurrent')) $('pea_coopShareCurrent').value = totalCoop;
+        }
+      }
+
       renderAll();
       calculateRetirement();
       triggerAutoSave();
@@ -4649,7 +4659,7 @@
 
     function onRetirementInput() {
       collectInputs();
-      // 2-Way Realtime Sync between Tab 4 and Tab 2
+      // 2-Way Realtime Sync between Tab 4 and Tab 2 (Salary & Savings)
       if (state.pea_salary !== undefined && state.inc_salary !== state.pea_salary) {
         state.inc_salary = state.pea_salary;
         if ($('inc_salary')) $('inc_salary').value = state.pea_salary;
@@ -4658,6 +4668,25 @@
         state.exp_saving = state.pea_monthlySavings;
         if ($('exp_saving')) $('exp_saving').value = state.pea_monthlySavings;
       }
+
+      // 2-Way Realtime Sync from Tab 4 (Retirement) to Tab 3 (Assets) for Coop Shares
+      if (state.pea_coopShareCurrent !== undefined && state.assets) {
+        let coopAsset = state.assets.find(a => a.category === 'pea_coop');
+        if (coopAsset && coopAsset.amount !== state.pea_coopShareCurrent) {
+          coopAsset.amount = state.pea_coopShareCurrent;
+          renderAssetLists();
+        } else if (!coopAsset && state.pea_coopShareCurrent > 0) {
+          state.assets.push({
+            id: 'a_coop_' + Date.now(),
+            category: 'pea_coop',
+            isLiquid: true,
+            name: 'หุ้นสะสมสหกรณ์ออมทรัพย์ กฟภ.',
+            amount: state.pea_coopShareCurrent
+          });
+          renderAssetLists();
+        }
+      }
+
       renderAll();
       calculateRetirement();
       triggerAutoSave();
