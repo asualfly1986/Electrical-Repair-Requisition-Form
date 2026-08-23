@@ -3362,9 +3362,36 @@
     <!-- ==================== TAB 5: ตั้งค่า & จัดการข้อมูล (SETTINGS & BACKUP) ==================== -->
     <div class="tab-panel" id="tab-settings">
       
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><span class="icon">💾</span><span>สำรองและจัดการข้อมูล</span></div>
+      <!-- Management & Backup Card with Passcode Protection (Collapsed by default) -->
+      <div class="card" id="settingsManageLockedCard" style="border:1.5px solid var(--pea-purple-soft); background:linear-gradient(135deg, var(--card-bg), var(--pea-purple-bg)); text-align:center; padding:20px 16px;">
+        <div style="width:52px; height:52px; background:linear-gradient(135deg, #7C3AED, #A855F7); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 10px; box-shadow:0 6px 18px rgba(124,58,237,0.3);">
+          <span style="font-size:1.6rem; color:#fff;">🔒</span>
+        </div>
+        <b style="font-size:1rem; color:var(--text-main); display:block; margin-bottom:4px;">สำรองและจัดการข้อมูล (ล็อกความปลอดภัย)</b>
+        <p style="font-size:0.78rem; color:var(--text-muted); max-width:340px; margin:0 auto 14px; line-height:1.45;">
+          เพื่อความปลอดภัยของข้อมูลการเงินส่วนบุคคล กรุณากรอกรหัสผ่านเพื่อปลดล็อกฟังก์ชันสำรอง โหลดข้อมูล หรือล้างค่าระบบ
+        </p>
+
+        <div style="max-width:320px; margin:0 auto; display:flex; flex-direction:column; gap:8px;">
+          <div class="input-wrap">
+            <input type="password" class="form-input" id="passcodeSettingsInput" placeholder="กรอกรหัสผ่าน (PEA FP)" style="text-align:center; font-weight:700; letter-spacing:0.1em;" onkeydown="if(event.key==='Enter') unlockSettingsSection()">
+          </div>
+          <button type="button" class="btn btn-purple" style="width:100%; font-weight:700;" onclick="unlockSettingsSection()">
+            <span>🔓 ปลดล็อกเข้าจัดการข้อมูล</span>
+          </button>
+          <div id="passcodeErrorMsg" style="display:none; font-size:0.75rem; color:#DC2626; font-weight:600;">
+            ❌ รหัสผ่านไม่ถูกต้อง กรุณากรอกรหัส PEA FP
+          </div>
+        </div>
+      </div>
+
+      <!-- Unlocked Management Section (Shown after Passcode Verified) -->
+      <div class="card" id="settingsManageUnlockedCard" style="display:none; border:1.5px solid #10B981; background:linear-gradient(135deg, var(--card-bg), #ECFDF5);">
+        <div class="card-header" style="border-bottom:1px solid #A7F3D0; padding-bottom:8px; margin-bottom:12px;">
+          <div class="card-title"><span class="icon">🔓</span><span>สำรองและจัดการข้อมูล (ปลดล็อกแล้ว)</span></div>
+          <button type="button" class="btn btn-outline" style="padding:4px 10px; font-size:0.75rem; width:auto; border-color:#9CA3AF; color:var(--text-muted);" onclick="lockSettingsSection()" title="กดเพื่อล็อกความปลอดภัย">
+            <span>🔒 ล็อกหน้านี้</span>
+          </button>
         </div>
 
         <div style="display:flex; flex-direction:column; gap:10px;">
@@ -6671,6 +6698,31 @@
     function manualPrint() {
       renderAll();
       window.print();
+    }
+
+    function unlockSettingsSection() {
+      const input = $('passcodeSettingsInput');
+      const err = $('passcodeErrorMsg');
+      if (!input) return;
+      const val = (input.value || '').trim().replace(/\s+/g, '').toUpperCase();
+      if (val === 'PEAFP') {
+        if (err) err.style.display = 'none';
+        input.value = '';
+        if ($('settingsManageLockedCard')) $('settingsManageLockedCard').style.display = 'none';
+        if ($('settingsManageUnlockedCard')) $('settingsManageUnlockedCard').style.display = 'block';
+        showToast('🔓 ปลดล็อกเข้าสู่ส่วนจัดการข้อมูลสำเร็จ');
+      } else {
+        if (err) err.style.display = 'block';
+        input.focus();
+      }
+    }
+
+    function lockSettingsSection() {
+      if ($('settingsManageLockedCard')) $('settingsManageLockedCard').style.display = 'block';
+      if ($('settingsManageUnlockedCard')) $('settingsManageUnlockedCard').style.display = 'none';
+      if ($('passcodeSettingsInput')) $('passcodeSettingsInput').value = '';
+      if ($('passcodeErrorMsg')) $('passcodeErrorMsg').style.display = 'none';
+      showToast('🔒 ล็อกส่วนจัดการข้อมูลเรียบร้อยแล้ว');
     }
 
     function confirmResetAll() {
