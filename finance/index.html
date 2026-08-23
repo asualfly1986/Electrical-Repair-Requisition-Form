@@ -3766,15 +3766,44 @@
         </div>
       </div>
 
-      <!-- Chart 5: Lifetime Retirement Projection Trajectory (Full Width) -->
+      <!-- Chart 5: Lifetime Retirement Projection Trajectory (Enhanced Detailed View) -->
       <div class="card" style="border-radius:14px; margin-bottom:16px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:10px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
           <div>
-            <b style="font-size:0.92rem; color:var(--text-main);">📈 เส้นทางเงินออมและการทยอยใช้เงินหลังเกษียณ (อายุขัยถึง 85 ปี)</b>
-            <div style="font-size:0.72rem; color:var(--text-muted);">จำลองการสะสมเงินก่อน 60 ปี และการเบิกใช้เงินค่าครองชีพหลังเกษียณ</div>
+            <div style="display:inline-flex; align-items:center; gap:6px;">
+              <b style="font-size:0.92rem; color:var(--text-main);">📈 เส้นทางเงินออมและการทยอยใช้เงินหลังเกษียณ (Lifetime Wealth Trajectory)</b>
+              <span class="badge badge-gold" id="analyticsTrajectoryBadge">จำลองอายุ 35 ➔ 85 ปี</span>
+            </div>
+            <div style="font-size:0.72rem; color:var(--text-muted);">
+              จำลองการเติบโตของเงินสะสมก่อน 60 ปี จุดพีคเงินก้อนวันเกษียณ และกระแสเงินสดคงเหลือถึงอายุ 85 ปี
+            </div>
           </div>
-          <span class="badge badge-gold" id="analyticsTrajectoryBadge">จำลองตามแผน</span>
+          <div style="display:inline-flex; background:var(--bg-main); padding:3px; border-radius:8px; border:1px solid var(--border); gap:4px;">
+            <button type="button" id="btnProjStep1" class="btn btn-sm" style="padding:3px 10px; font-size:0.72rem; border-radius:6px; background:var(--pea-purple); color:#FFFFFF; border:none; cursor:pointer;" onclick="setProjectionChartMode('yearly')">📅 รายปี (ทุกปี)</button>
+            <button type="button" id="btnProjStep5" class="btn btn-sm" style="padding:3px 10px; font-size:0.72rem; border-radius:6px; background:transparent; color:var(--text-muted); border:none; cursor:pointer;" onclick="setProjectionChartMode('5years')">🎯 ทุก 5 ปี</button>
+          </div>
         </div>
+
+        <!-- Trajectory Milestone Summary Cards -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:8px; margin-bottom:12px; background:var(--pea-purple-bg); padding:10px 12px; border-radius:10px; border:1px solid var(--pea-purple-soft);">
+          <div style="text-align:center;">
+            <div style="font-size:0.68rem; color:var(--text-muted);">เงินสะสมก่อน 60 ปี</div>
+            <div id="projCardPreRetire" class="num-font" style="font-weight:700; color:var(--text-main); font-size:0.95rem;">0 ฿</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:0.68rem; color:var(--text-muted);">🏆 ยอดเงินก้อน ณ เกษียณ (Peak)</div>
+            <div id="projCardPeak" class="num-font" style="font-weight:800; color:var(--pea-purple-light); font-size:0.95rem;">0 ฿</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:0.68rem; color:var(--text-muted);">รายจ่ายเกษียณตลอดชีพ</div>
+            <div id="projCardExpenseTotal" class="num-font" style="font-weight:700; color:#EF4444; font-size:0.95rem;">0 ฿</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:0.68rem; color:var(--text-muted);">🛡️ เงินคงเหลือ ณ 85 ปี</div>
+            <div id="projCardRemain85" class="num-font" style="font-weight:800; color:#10B981; font-size:0.95rem;">0 ฿</div>
+          </div>
+        </div>
+
         <div style="position:relative; height:270px;">
           <canvas id="chartRetirementProjection"></canvas>
         </div>
@@ -4729,11 +4758,32 @@
     };
 
     let salaryChartMode = 'yearly';
+    let projectionChartMode = 'yearly';
 
     function setSalaryChartMode(mode) {
       salaryChartMode = mode;
       const btn1 = $('btnSalaryStep1');
       const btn5 = $('btnSalaryStep5');
+      if (btn1 && btn5) {
+        if (mode === 'yearly') {
+          btn1.style.background = 'var(--pea-purple)';
+          btn1.style.color = '#FFFFFF';
+          btn5.style.background = 'transparent';
+          btn5.style.color = 'var(--text-muted)';
+        } else {
+          btn5.style.background = 'var(--pea-purple)';
+          btn5.style.color = '#FFFFFF';
+          btn1.style.background = 'transparent';
+          btn1.style.color = 'var(--text-muted)';
+        }
+      }
+      renderAnalyticsDashboard(true);
+    }
+
+    function setProjectionChartMode(mode) {
+      projectionChartMode = mode;
+      const btn1 = $('btnProjStep1');
+      const btn5 = $('btnProjStep5');
       if (btn1 && btn5) {
         if (mode === 'yearly') {
           btn1.style.background = 'var(--pea-purple)';
@@ -5115,7 +5165,7 @@
       }
 
       // -------------------------------------------------------------
-      // Chart 5: Lifetime Retirement Projection Trajectory (Area Line Chart)
+      // Chart 5: Lifetime Retirement Projection Trajectory (Enhanced Detailed)
       // -------------------------------------------------------------
       const ctxProj = $('chartRetirementProjection');
       if (ctxProj) {
@@ -5123,28 +5173,170 @@
 
         const curAge = num('pea_currentAge') || 35;
         const retAge = num('pea_retireAge') || 60;
-        const maxAge = 85;
-        
+        const maxAge = num('pea_lifeExpectancy') || 85;
+        const curSal = num('pea_salary') || 38200;
+
+        let growthPct = 4.5;
+        if ($('pea_salaryGrowthRate')) growthPct = parseFloat($('pea_salaryGrowthRate').value) || 4.5;
+        else if ($('pea_salaryGrowth')) growthPct = parseFloat($('pea_salaryGrowth').value) || 4.5;
+        else if (state.pea_salaryGrowthRate !== undefined) growthPct = state.pea_salaryGrowthRate;
+        const gRate = growthPct / 100;
+
+        let pfYield = 4.0;
+        if ($('pea_pfYield')) pfYield = parseFloat($('pea_pfYield').value) || 4.0;
+        else if (state.pea_pfYield !== undefined) pfYield = state.pea_pfYield;
+        const pfYieldRate = pfYield / 100;
+
+        let coopDiv = 5.0;
+        if ($('pea_coopDivRate')) coopDiv = parseFloat($('pea_coopDivRate').value) || 5.0;
+        else if (state.pea_coopDivRate !== undefined) coopDiv = state.pea_coopDivRate;
+        const coopDivRate = coopDiv / 100;
+
+        let postReturn = 2.5;
+        if ($('pea_postRetireReturn')) postReturn = parseFloat($('pea_postRetireReturn').value) || 2.5;
+        else if (state.pea_postRetireReturn !== undefined) postReturn = state.pea_postRetireReturn;
+        const postReturnRate = postReturn / 100;
+
+        let infRate = 2.5;
+        if ($('pea_inflationRate')) infRate = parseFloat($('pea_inflationRate').value) || 2.5;
+        else if (state.pea_inflationRate !== undefined) infRate = state.pea_inflationRate;
+        const inflationRate = infRate / 100;
+
+        const desiredExpenseToday = num('pea_desiredExpenseToday') || 25000;
+        const monthlyCoop = num('pea_coopShareMonthly') || 1000;
+        const monthlyPfRate = (num('pea_pfRate') || 5) / 100;
+        const peaMatchRate = monthlyPfRate; // 1:1 PEA match
+
+        const step = projectionChartMode === 'yearly' ? 1 : 5;
         const labels = [];
         const wealthData = [];
         const expenseData = [];
-        
-        let runningWealth = totalAssets - totalDebtPrincipal;
-        const annualSavings = Math.max(netSavings, 0) * 12;
-        const annualRetireExp = (num('pea_desiredExpenseToday') || 25000) * 12;
-        
-        for (let age = curAge; age <= maxAge; age += 5) {
-          labels.push(`\u0E2D\u0E32\u0E22\u0E38 ${age} \u0E1B\u0E35`);
-          if (age <= retAge) {
-            const years = age - curAge;
-            runningWealth = (totalAssets - totalDebtPrincipal) + (annualSavings * years * 1.15);
-            wealthData.push(Math.round(runningWealth));
-            expenseData.push(0);
+        const metaDetails = [];
+
+        // Simulate year-by-year simulation
+        let runPf = pfAcc;
+        let runCoop = coopShares;
+        let runOther = liquidAssets + invAssets;
+        let runWealth = (totalAssets - totalDebtPrincipal);
+        let finalSalary = curSal;
+        let finalSeverance = Math.round((curSal / 30) * 400);
+
+        let preRetireValAt59 = 0;
+        let peakWealthAt60 = 0;
+        let totalExpense60to85 = 0;
+        let remainAt85 = 0;
+        let depletionAge = null;
+
+        // Run exact 1-year internal simulation to build accurate continuous state
+        const yearlySim = {};
+        let simPf = pfAcc;
+        let simCoop = coopShares;
+        let simOther = Math.max(0, (liquidAssets + invAssets) - totalDebtPrincipal);
+        let simCumExp = 0;
+
+        for (let a = curAge; a <= maxAge; a++) {
+          const yrs = a - curAge;
+          const salThisYr = curSal * Math.pow(1 + gRate, yrs);
+
+          if (a < retAge) {
+            // Pre-retirement accumulation
+            const annualPfContrib = salThisYr * (monthlyPfRate + peaMatchRate) * 12;
+            simPf = (simPf + annualPfContrib) * (1 + pfYieldRate);
+            
+            const annualCoopContrib = monthlyCoop * 12;
+            simCoop = (simCoop + annualCoopContrib) * (1 + coopDivRate);
+            
+            const annualOtherContrib = Math.max(0, netSavings) * 12;
+            simOther = (simOther + annualOtherContrib) * 1.025; // mild cash yield
+
+            const totalPre = Math.round(simPf + simCoop + simOther + personalAssets);
+            yearlySim[a] = {
+              wealth: totalPre,
+              cumExpense: 0,
+              isRetire: false,
+              detail: `\u0E2A\u0E34\u0E19\u0E17\u0E23\u0E31\u0E1E\u0E22\u0E4C\u0E2A\u0E30\u0E2A\u0E21: ${fmt(totalPre)} \u0E1A\u0E32\u0E17`
+            };
+            if (a === retAge - 1) preRetireValAt59 = totalPre;
+          } else if (a === retAge) {
+            // Retirement date inflection (Add Severance 400 days)
+            finalSalary = salThisYr;
+            finalSeverance = Math.round((finalSalary / 30) * 400);
+            
+            const totalAt60 = Math.round(simPf + simCoop + simOther + finalSeverance + personalAssets);
+            peakWealthAt60 = totalAt60;
+            simOther = simOther + finalSeverance; // inject severance into liquid pool
+            
+            yearlySim[a] = {
+              wealth: totalAt60,
+              cumExpense: 0,
+              isRetire: true,
+              detail: `\uD83C\uDFC6 \u0E02\u0E38\u0E21\u0E17\u0E23\u0E31\u0E1E\u0E22\u0E4C\u0E2A\u0E39\u0E07\u0E2A\u0E38\u0E14: ${fmt(totalAt60)} \u0E1A\u0E32\u0E17 (\u0E23\u0E27\u0E21\u0E0A\u0E14\u0E40\u0E0A\u0E22 ${fmt(finalSeverance)} \u0E1A\u0E32\u0E17)`
+            };
           } else {
-            const postYears = age - retAge;
-            const remaining = Math.max(runningWealth - (annualRetireExp * postYears * 1.25), 0);
-            wealthData.push(Math.round(remaining));
-            expenseData.push(Math.round(annualRetireExp * postYears));
+            // Post-retirement drawdown & investment yield
+            const postYrs = a - retAge;
+            const expThisYear = (desiredExpenseToday * 12) * Math.pow(1 + inflationRate, yrs);
+            simCumExp += expThisYear;
+            
+            const prevWealth = yearlySim[a - 1].wealth;
+            const investGain = Math.max(0, prevWealth - personalAssets) * postReturnRate;
+            const netRemaining = Math.max(0, prevWealth + investGain - expThisYear);
+
+            if (netRemaining === 0 && depletionAge === null) {
+              depletionAge = a;
+            }
+
+            yearlySim[a] = {
+              wealth: Math.round(netRemaining),
+              cumExpense: Math.round(simCumExp),
+              expThisYear: Math.round(expThisYear),
+              gainThisYear: Math.round(investGain),
+              isPost: true
+            };
+            if (a === maxAge) {
+              remainAt85 = Math.round(netRemaining);
+              totalExpense60to85 = Math.round(simCumExp);
+            }
+          }
+        }
+
+        // Build plot datasets based on step mode
+        for (let a = curAge; a <= maxAge; a += step) {
+          if (yearlySim[a]) {
+            labels.push(`\u0E2D\u0E32\u0E22\u0E38 ${a} \u0E1B\u0E35`);
+            wealthData.push(yearlySim[a].wealth);
+            expenseData.push(yearlySim[a].cumExpense);
+            metaDetails.push(yearlySim[a]);
+          }
+        }
+        // Ensure maxAge is in labels
+        if (labels.length > 0 && labels[labels.length - 1] !== `\u0E2D\u0E32\u0E22\u0E38 ${maxAge} \u0E1B\u0E35`) {
+          labels.push(`\u0E2D\u0E32\u0E22\u0E38 ${maxAge} \u0E1B\u0E35`);
+          wealthData.push(yearlySim[maxAge].wealth);
+          expenseData.push(yearlySim[maxAge].cumExpense);
+          metaDetails.push(yearlySim[maxAge]);
+        }
+
+        // Update Milestone Summary Cards
+        if ($('projCardPreRetire')) $('projCardPreRetire').textContent = fmt(preRetireValAt59 || peakWealthAt60 * 0.85) + ' \u0E3F';
+        if ($('projCardPeak')) $('projCardPeak').textContent = fmt(peakWealthAt60) + ' \u0E3F';
+        if ($('projCardExpenseTotal')) $('projCardExpenseTotal').textContent = fmt(totalExpense60to85) + ' \u0E3F';
+        if ($('projCardRemain85')) {
+          if (remainAt85 > 0) {
+            $('projCardRemain85').textContent = '+' + fmt(remainAt85) + ' \u0E3F';
+            $('projCardRemain85').style.color = '#10B981';
+          } else {
+            $('projCardRemain85').textContent = '\u0E40\u0E07\u0E34\u0E19\u0E2B\u0E21\u0E14\u0E13\u0E2D\u0E32\u0E22\u0E38 ' + (depletionAge || 75) + ' \u0E1B\u0E35';
+            $('projCardRemain85').style.color = '#EF4444';
+          }
+        }
+
+        // Update Verdict Text
+        if ($('analyticsTrajectoryVerdict')) {
+          if (remainAt85 > 0) {
+            $('analyticsTrajectoryVerdict').innerHTML = `💡 <b>\u0E1C\u0E25\u0E01\u0E32\u0E23\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C:</b> \u0E41\u0E1C\u0E19\u0E01\u0E32\u0E23\u0E40\u0E07\u0E34\u0E19\u0E21\u0E35\u0E04\u0E27\u0E32\u0E21\u0E21\u0E31\u0E48\u0E19\u0E04\u0E07\u0E2A\u0E39\u0E07 \u0E21\u0E35\u0E22\u0E2D\u0E14\u0E40\u0E07\u0E34\u0E19\u0E01\u0E49\u0E2D\u0E19\u0E2A\u0E39\u0E07\u0E2A\u0E38\u0E14 \u0E13 \u0E27\u0E31\u0E19\u0E40\u0E01\u0E29\u0E35\u0E22\u0E13 <b>${fmt(peakWealthAt60)} \u0E1A\u0E32\u0E17</b> \u0E41\u0E25\u0E30\u0E21\u0E35\u0E40\u0E07\u0E34\u0E19\u0E04\u0E07\u0E40\u0E2B\u0E25\u0E37\u0E2D\u0E2A\u0E48\u0E07\u0E15\u0E48\u0E2D\u0E21\u0E23\u0E14\u0E01 \u0E13 \u0E2D\u0E32\u0E22\u0E38 85 \u0E1B\u0E35 \u0E2D\u0E35\u0E01 <b>+${fmt(remainAt85)} \u0E1A\u0E32\u0E17</b> 🎉`;
+          } else {
+            $('analyticsTrajectoryVerdict').innerHTML = `⚠️ <b>\u0E02\u0E49\u0E2D\u0E04\u0E27\u0E23\u0E23\u0E30\u0E27\u0E31\u0E07:</b> \u0E40\u0E07\u0E34\u0E19\u0E2D\u0E2D\u0E21\u0E08\u0E30\u0E40\u0E23\u0E34\u0E48\u0E21\u0E2B\u0E21\u0E14\u0E25\u0E07\u0E13\u0E0A\u0E48\u0E27\u0E07\u0E2D\u0E32\u0E22\u0E38 <b>${depletionAge || 75} \u0E1B\u0E35</b> \u0E41\u0E19\u0E30\u0E19\u0E33\u0E43\u0E2B\u0E49\u0E40\u0E1E\u0E34\u0E48\u0E21\u0E2D\u0E31\u0E15\u0E23\u0E32\u0E2A\u0E30\u0E2a\u0E21 \u0E01\u0E2a\u0E0A./\u0E2A\u0E2B\u0E01\u0E23\u0E13\u0E4C \u0E2B\u0E23\u0E37\u0E2D\u0E1B\u0E23\u0E31\u0E1A\u0E25\u0E14\u0E04\u0E48\u0E32\u0E04\u0E23\u0E2D\u0E07\u0E0A\u0E35\u0E1E\u0E2B\u0E25\u0E31\u0E07\u0E40\u0E01\u0E29\u0E35\u0E22\u0E13`;
           }
         }
 
@@ -5154,33 +5346,63 @@
             labels: labels,
             datasets: [
               {
-                label: '\u0E01\u0E2D\u0E07\u0E17\u0E38\u0E19\u0E04\u0E27\u0E32\u0E21\u0E21\u0E31\u0E48\u0E07\u0E04\u0E31\u0E48\u0E07\u0E2a\u0E30\u0E2a\u0E21 (\u0E1A\u0E32\u0E17)',
+                label: '\u0E01\u0E2D\u0E07\u0E17\u0E38\u0E19\u0E04\u0E27\u0E32\u0E21\u0E21\u0E31\u0E48\u0E07\u0E04\u0E31\u0E48\u0E07\u0E2A\u0E30\u0E2a\u0E21 (\u0E1A\u0E32\u0E17)',
                 data: wealthData,
                 borderColor: '#7C3AED',
-                backgroundColor: 'rgba(124, 58, 237, 0.15)',
+                backgroundColor: 'rgba(124, 58, 237, 0.16)',
                 fill: true,
-                tension: 0.35,
-                borderWidth: 3
+                tension: 0.3,
+                borderWidth: 3,
+                pointRadius: projectionChartMode === 'yearly' ? 2 : 4,
+                pointHoverRadius: 6,
+                pointBackgroundColor: '#7C3AED',
+                pointBorderColor: '#FFFFFF'
               },
               {
-                label: '\u0E23\u0E32\u0E22\u0E08\u0E48\u0E32\u0E22\u0E2a\u0E30\u0E2a\u0E21\u0E2B\u0E25\u0E31\u0E07\u0E40\u0E01\u0E29\u0E35\u0E22\u0E13 (\u0E1A\u0E32\u0E17)',
+                label: '\u0E23\u0E32\u0E22\u0E08\u0E48\u0E32\u0E22\u0E2A\u0E30\u0E2a\u0E21\u0E2B\u0E25\u0E31\u0E07\u0E40\u0E01\u0E29\u0E35\u0E22\u0E13 (\u0E1A\u0E32\u0E17)',
                 data: expenseData,
                 borderColor: '#EF4444',
                 borderDash: [5, 5],
                 fill: false,
                 tension: 0.2,
-                borderWidth: 2
+                borderWidth: 2,
+                pointRadius: 0
               }
             ]
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
             plugins: {
               legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } },
               tooltip: {
                 callbacks: {
-                  label: ctx => ` ${ctx.dataset.label}: ${fmt(ctx.raw)} \u0E3F`
+                  title: (items) => items[0].label,
+                  label: (ctx) => {
+                    const idx = ctx.dataIndex;
+                    const meta = metaDetails[idx];
+                    if (!meta) return ` ${ctx.dataset.label}: ${fmt(ctx.raw)} \u0E3F`;
+                    
+                    if (ctx.datasetIndex === 0) {
+                      if (meta.isRetire) {
+                        return [
+                          ` \uD83C\uDFC6 \u0E02\u0E38\u0E21\u0E17\u0E23\u0E31\u0E1E\u0E22\u0E4C\u0E2A\u0E39\u0E07\u0E2A\u0E38\u0E14 (Peak \u0E13 60 \u0E1B\u0E35): ${fmt(ctx.raw)} \u0E1A\u0E32\u0E17`,
+                          ` \u2022 \u0E23\u0E27\u0E21\u0E0A\u0E14\u0E40\u0E0A\u0E22 400 \u0E27\u0E31\u0E19: +${fmt(finalSeverance)} \u0E1A\u0E32\u0E17`
+                        ];
+                      } else if (meta.isPost) {
+                        return [
+                          ` \u0E01\u0E2D\u0E07\u0E17\u0E38\u0E19\u0E04\u0E07\u0E40\u0E2B\u0E25\u0E37\u0E2D: ${fmt(ctx.raw)} \u0E1A\u0E32\u0E17`,
+                          ` \u2022 \u0E04\u0E48\u0E32\u0E04\u0E23\u0E2D\u0E07\u0E0A\u0E35\u0E1E\u0E1B\u0E35\u0E19\u0E35\u0E49: -${fmt(meta.expThisYear)} \u0E1A\u0E32\u0E17/\u0E1B\u0E35`,
+                          ` \u2022 \u0E1C\u0E25\u0E15\u0E2D\u0E1A\u0E41\u0E17\u0E19\u0E1B\u0E35\u0E19\u0E35\u0E49: +${fmt(meta.gainThisYear)} \u0E1A\u0E32\u0E17/\u0E1B\u0E35`
+                        ];
+                      } else {
+                        return ` \u0E2A\u0E34\u0E19\u0E17\u0E23\u0E31\u0E1E\u0E22\u0E4C\u0E2A\u0E30\u0E2A\u0E21: ${fmt(ctx.raw)} \u0E1A\u0E32\u0E17`;
+                      }
+                    } else {
+                      return meta.cumExpense > 0 ? ` \u0E23\u0E32\u0E22\u0E08\u0E48\u0E32\u0E22\u0E2A\u0E30\u0E2A\u0E21\u0E2B\u0E25\u0E31\u0E07\u0E40\u0E01\u0E29\u0E35\u0E22\u0E13: ${fmt(ctx.raw)} \u0E1A\u0E32\u0E17` : null;
+                    }
+                  }
                 }
               }
             },
