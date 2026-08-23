@@ -8758,7 +8758,7 @@
       creatorAffiliationShort: 'ผปบ./กฟส.ขก.2/กฟจ.ขก./กฟฉ.1/สายงาน (ฉ)',
       creatorAffiliationFull: 'แผนกปฏิบัติการและบำรุงรักษาระบบไฟฟ้า\nการไฟฟ้าส่วนภูมิภาคสาขาเมืองขอนแก่น 2\nการไฟฟ้าส่วนภูมิภาคจังหวัดขอนแก่น\nการไฟฟ้าส่วนภูมิภาค เขต 1 (ภาคตะวันออกเฉียงเหนือ) จังหวัดอุดรธานี\nสายงานภาคตะวันออกเฉียงเหนือ',
       releaseDate: '23 สิงหาคม 2569',
-      appVersion: 'v3.1'
+      appVersion: 'v2.7'
     };
 
     function getAppMetadata() {
@@ -8825,7 +8825,7 @@
       if ($('inp_meta_affil_short')) $('inp_meta_affil_short').value = meta.creatorAffiliationShort || '';
       if ($('inp_meta_affil_full')) $('inp_meta_affil_full').value = meta.creatorAffiliationFull || '';
       if ($('inp_meta_date')) $('inp_meta_date').value = meta.releaseDate || getThaiTodayString();
-      if ($('inp_meta_version')) $('inp_meta_version').value = meta.appVersion || 'v3.1';
+      if ($('inp_meta_version')) $('inp_meta_version').value = meta.appVersion || 'v2.7';
       
       const modal = $('appMetaModal');
       if (modal) modal.style.display = 'flex';
