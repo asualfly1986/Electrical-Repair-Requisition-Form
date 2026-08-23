@@ -1744,10 +1744,92 @@
 
       <!-- CF SUB 2: รายจ่าย (EXPENSES) -->
       <div id="cf-sub-expense" style="display:none;">
+        
+        <!-- หมวดที่ 1: รายการหักสวัสดิการ & สลิปเงินเดือน กฟภ. (PEA Payroll Deductions) -->
+        <div class="card" style="border:1.5px solid var(--pea-purple-soft); background:linear-gradient(135deg, var(--card-bg), var(--pea-purple-bg)); margin-bottom:14px;">
+          <div class="card-header" style="margin-bottom:8px;">
+            <div class="card-title">
+              <span class="icon">⚡</span>
+              <span>รายการหักสลิปเงินเดือน & สวัสดิการ กฟภ. (Payroll Deductions)</span>
+            </div>
+            <span class="badge badge-purple" id="peaDeductionsSubtotalBadge">0 ฿/ด.</span>
+          </div>
+          <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:12px;">รายการหักจากเงินเดือนประจำเดือนของการไฟฟ้าส่วนภูมิภาค:</p>
+
+          <!-- 1. ภาษีหัก ณ ที่จ่าย -->
+          <div class="input-group">
+            <label class="input-label">
+              <span>🧾 ภาษีเงินได้หัก ณ ที่จ่าย (ประมาณการรายเดือน)</span>
+            </label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="exp_pea_tax" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท/ด.</span>
+            </div>
+          </div>
+
+          <!-- 2. เงินสะสม กสช. -->
+          <div class="input-group">
+            <label class="input-label">
+              <span>⚡ เงินสะสมกองทุนสำรองเลี้ยงชีพ (กสช. กฟภ.)</span>
+              <span class="input-hint" id="expPeaPfHint">หักรายเดือน</span>
+            </label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="exp_pea_pf" value="1050" oninput="onDataChanged()">
+              <span class="input-unit">บาท/ด.</span>
+            </div>
+          </div>
+
+          <!-- 3. ค่าหุ้นสหกรณ์ออมทรัพย์ กฟภ. -->
+          <div class="input-group">
+            <label class="input-label">
+              <span>📈 ค่าหุ้นสะสม สหกรณ์ออมทรัพย์ กฟภ.</span>
+              <span class="input-hint">สะสมรายเดือน</span>
+            </label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="exp_pea_coop_share" value="1000" oninput="onPeaCoopShareExpenseChanged()">
+              <span class="input-unit">บาท/ด.</span>
+            </div>
+          </div>
+
+          <!-- 4. เงินกู้ฉุกเฉิน สหกรณ์ กฟภ. -->
+          <div class="input-group">
+            <label class="input-label">
+              <span>🚨 หักชำระเงินกู้ฉุกเฉิน สหกรณ์ กฟภ.</span>
+            </label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="exp_pea_loan_emergency" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท/ด.</span>
+            </div>
+          </div>
+
+          <!-- 5. เงินกู้สามัญ สหกรณ์ กฟภ. -->
+          <div class="input-group">
+            <label class="input-label">
+              <span>🏛️ หักชำระเงินกู้สามัญ สหกรณ์ กฟภ.</span>
+            </label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="exp_pea_loan_ordinary" value="0" oninput="onDataChanged()">
+              <span class="input-unit">บาท/ด.</span>
+            </div>
+          </div>
+
+          <!-- 6. ฌาปนกิจสงเคราะห์ -->
+          <div class="input-group">
+            <label class="input-label">
+              <span>🤝 เงินสงเคราะห์ / สมาคมฌาปนกิจสงเคราะห์ (กฟภ. / สหกรณ์)</span>
+            </label>
+            <div class="input-wrap">
+              <input type="number" inputmode="decimal" class="form-input" id="exp_pea_cremation" value="300" oninput="onDataChanged()">
+              <span class="input-unit">บาท/ด.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- หมวดที่ 2: ค่าใช้จ่ายดำเนินชีวิต & ครอบครัว (Living & Household Expenses) -->
         <div class="card">
           <div class="card-header">
-            <div class="card-title"><span class="icon">💳</span><span>รายจ่ายต่อเดือน (Expenses)</span></div>
-            <span class="badge badge-red">รวม: <span class="num-font" id="cfTotalExpenseBadge">0</span> ฿</span>
+            <div class="card-title"><span class="icon">💳</span><span>ค่าใช้จ่ายดำเนินชีวิต & ผ่อนชำระทั่วไป</span></div>
+            <span class="badge badge-red">รวมรายจ่ายทั้งหมด: <span class="num-font" id="cfTotalExpenseBadge">0</span> ฿</span>
           </div>
 
           <div style="background:var(--pea-purple-bg); border:1px solid var(--border-focus); border-radius:10px; padding:10px 12px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
@@ -1807,7 +1889,7 @@
           </div>
 
           <div class="input-group">
-            <label class="input-label"><span>💳 ชำระหนี้บัตรเครดิต / สินเชื่อส่วนบุคคล</span></label>
+            <label class="input-label"><span>💳 ชำระหนี้บัตรเครดิต / สินเชื่อส่วนบุคคลภายนอก</span></label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="exp_debt" value="0" oninput="onDataChanged()">
               <span class="input-unit">บาท</span>
@@ -1815,7 +1897,7 @@
           </div>
 
           <div class="input-group">
-            <label class="input-label"><span>💰 เงินออม / เงินลงทุนรายเดือน</span><span class="input-hint">ออมเพิ่ม</span></label>
+            <label class="input-label"><span>💰 เงินออม / เงินลงทุนเพิ่มเติม</span><span class="input-hint">ออมเพิ่ม</span></label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="exp_saving" value="3000" oninput="onDataChanged()">
               <span class="input-unit">บาท</span>
@@ -1823,7 +1905,7 @@
           </div>
 
           <div class="input-group">
-            <label class="input-label"><span>🧾 ภาษี และ อื่นๆ</span></label>
+            <label class="input-label"><span>🧾 ค่าใช้จ่ายอื่นๆ</span></label>
             <div class="input-wrap">
               <input type="number" inputmode="decimal" class="form-input" id="exp_tax" value="0" oninput="onDataChanged()">
               <span class="input-unit">บาท</span>
@@ -3522,6 +3604,13 @@
       exp_debt: 0,
       exp_saving: 3000,
       exp_tax: 0,
+      // PEA Payroll Deductions (รายการหักสลิปเงินเดือน กฟภ.)
+      exp_pea_tax: 0,
+      exp_pea_pf: 1050,
+      exp_pea_cremation: 300,
+      exp_pea_coop_share: 1000,
+      exp_pea_loan_emergency: 0,
+      exp_pea_loan_ordinary: 0,
       // Net Worth Assets (Dynamic list + legacy fallback)
       assets: [
         { id: 'a_cash', category: 'cash', isLiquid: true, name: 'เงินสด & บัญชีเงินฝากออมทรัพย์', amount: 100000 },
@@ -4488,13 +4577,19 @@
       // Update Grand Totals UI
       if ($('totalDebtPrincipalText')) $('totalDebtPrincipalText').textContent = fmt(totalDebtPrincipal) + ' ฿';
       if ($('totalDebtMonthlyText')) $('totalDebtMonthlyText').textContent = fmt(totalDebtMonthly) + ' ฿/ด.';
-      if ($('cfDebtAutoSummary')) $('cfDebtAutoSummary').textContent = fmt(totalDebtMonthly) + ' ฿/ด.';
-
       // 3. Cash Flow Calculation & Logic Correction
       const totalIncome = (state.inc_salary || 0) + (state.inc_pea_electric || 0) + (state.inc_pea_shift || 0) + (state.inc_pea_hazard || 0) + (state.inc_business || 0) + (state.inc_rent || 0) + (state.inc_dividend || 0) + (state.inc_bonus || 0) + (state.inc_other || 0);
-      const totalExpense = state.exp_housing + state.exp_car + state.exp_home + state.exp_family + state.exp_insurance + state.exp_lifestyle + totalDebtMonthly + state.exp_saving + state.exp_tax;
+      
+      const peaDeductionsTotal = (state.exp_pea_tax || 0) + (state.exp_pea_pf || 0) + (state.exp_pea_cremation || 0) + (state.exp_pea_coop_share || 0) + (state.exp_pea_loan_emergency || 0) + (state.exp_pea_loan_ordinary || 0);
+      const livingExpensesTotal = (state.exp_housing || 0) + (state.exp_car || 0) + (state.exp_home || 0) + (state.exp_family || 0) + (state.exp_insurance || 0) + (state.exp_lifestyle || 0) + (state.exp_debt || 0) + (state.exp_saving || 0) + (state.exp_tax || 0);
+      const totalExpense = peaDeductionsTotal + livingExpensesTotal + totalDebtMonthly;
+      
       const netSavings = totalIncome - totalExpense;
-      const totalSavingsWithExp = netSavings + state.exp_saving;
+      const totalSavingsWithExp = netSavings + (state.exp_saving || 0) + (state.exp_pea_pf || 0) + (state.exp_pea_coop_share || 0);
+      
+      // Update PEA Deduction Hint & Subtotal
+      if ($('peaDeductionsSubtotalBadge')) $('peaDeductionsSubtotalBadge').textContent = fmt(peaDeductionsTotal) + ' ฿/ด.';
+      if ($('expPeaPfHint')) $('expPeaPfHint').textContent = `${state.pea_employeeRate || 3}% (${fmt(Math.round((state.inc_salary || 35000) * ((state.pea_employeeRate || 3)/100)))} ฿)`;
       
       // True Net Savings Rate Logic:
       let savingsRate = 0;
@@ -5894,6 +5989,12 @@
           exp_debt: 0,
           exp_saving: 8000,
           exp_tax: 1000,
+          exp_pea_tax: 850,
+          exp_pea_pf: 2250,
+          exp_pea_cremation: 350,
+          exp_pea_coop_share: 2000,
+          exp_pea_loan_emergency: 0,
+          exp_pea_loan_ordinary: 6500,
           assets: [
             { id: 'a_samp_cash1', category: 'cash', isLiquid: true, name: 'บัญชีเงินเดือน กรุงไทย', amount: 120000 },
             { id: 'a_samp_cash2', category: 'cash', isLiquid: true, name: 'บัญชีออมทรัพย์ฉุกเฉิน SCB', amount: 30000 },
@@ -5991,6 +6092,14 @@
         const card = $('gapTimelineOptimizerCard');
         if (card) card.scrollIntoView({ behavior: 'smooth' });
       }, 100);
+    }
+
+    function onPeaCoopShareExpenseChanged() {
+      const val = parseFloat($('exp_pea_coop_share').value) || 0;
+      state.exp_pea_coop_share = val;
+      state.pea_coopSharePerMonth = val;
+      if ($('pea_coopSharePerMonth')) $('pea_coopSharePerMonth').value = val;
+      onDataChanged();
     }
 
     function goToSmartGap() {
