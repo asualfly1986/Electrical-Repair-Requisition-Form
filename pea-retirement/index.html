@@ -4749,7 +4749,7 @@
         $('analyticsDtiRatio').style.color = dsr <= 35 ? '#10B981' : (dsr <= 45 ? '#F59E0B' : '#EF4444');
       }
       if ($('analyticsNetWorth')) {
-        $('analyticsNetWorth').textContent = fmt(netWorth) + ' เธฟ';
+        $('analyticsNetWorth').textContent = fmt(netWorth) + ' \u0E3F';
         $('analyticsNetWorth').style.color = netWorth >= 0 ? 'var(--pea-purple-light)' : '#EF4444';
       }
       if ($('analyticsRetireScore')) {
@@ -4766,7 +4766,12 @@
         globalCharts.cashflow = new Chart(ctxCF, {
           type: 'doughnut',
           data: {
-            labels: ['เธฃเธฒเธขเธเนเธฒเธขเธเธเธ—เธตเน', 'เธเนเธฒเธเธฃเธญเธเธเธตเธ/เธเธฑเธเนเธเธฃ', 'เธ เธฒเธฃเธฐเธเนเธญเธเธซเธเธตเน', 'เน€เธเธดเธเธญเธญเธกเธชเธธเธ—เธเธด'],
+            labels: [
+              '\u0E23\u0E32\u0E22\u0E08\u0E48\u0E32\u0E22\u0E04\u0E07\u0E17\u0E35\u0E48 (Fixed)',
+              '\u0E04\u0E48\u0E32\u0E04\u0E23\u0E2D\u0E07\u0E0A\u0E35\u0E1E/\u0E1C\u0E31\u0E19\u0E41\u0E1B\u0E23',
+              '\u0E20\u0E32\u0E23\u0E30\u0E1C\u0E48\u0E2D\u0E19\u0E2B\u0E19\u0E35\u0E49 (Debt)',
+              '\u0E40\u0E07\u0E34\u0E19\u0E2D\u0E2D\u0E21\u0E2a\u0E38\u0E17\u0E18\u0E34 (Savings)'
+            ],
             datasets: [{
               data: [Math.max(fixedExp, 0), Math.max(varExp, 0), Math.max(totalMonthlyDebt, 0), Math.max(netSavings, 0)],
               backgroundColor: ['#3B82F6', '#F59E0B', '#EF4444', '#10B981'],
@@ -4781,7 +4786,7 @@
               legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
               tooltip: {
                 callbacks: {
-                  label: ctx => ` ${ctx.label}: ${fmt(ctx.raw)} เธฟ (${fmt2((ctx.raw / (totalIncome || 1)) * 100)}%)`
+                  label: ctx => ` ${ctx.label}: ${fmt(ctx.raw)} \u0E3F (${fmt2((ctx.raw / (totalIncome || 1)) * 100)}%)`
                 }
               }
             },
@@ -4799,7 +4804,13 @@
         globalCharts.networth = new Chart(ctxNW, {
           type: 'doughnut',
           data: {
-            labels: ['เน€เธเธดเธเธเธฒเธ/เธชเธ เธฒเธเธเธฅเนเธญเธ', 'เน€เธเธดเธเธฅเธเธ—เธธเธ/เธเธญเธเธ—เธธเธ', 'เธซเธธเนเธเธชเธซเธเธฃเธ“เน เธเธเธ .', 'เธชเธดเธเธ—เธฃเธฑเธเธขเนเธชเนเธงเธเธ•เธฑเธง', 'เธซเธเธตเนเธชเธดเธเธฃเธงเธก'],
+            labels: [
+              '\u0E40\u0E07\u0E34\u0E19\u0E1D\u0E32\u0E01/\u0E2a\u0E20\u0E32\u0E1E\u0E04\u0E25\u0E48\u0E2D\u0E07',
+              '\u0E40\u0E07\u0E34\u0E19\u0E25\u0E07\u0E17\u0E38\u0E19/\u0E01\u0E2D\u0E07\u0E17\u0E38\u0E19',
+              '\u0E2B\u0E38\u0E49\u0E19\u0E2a\u0E2B\u0E01\u0E23\u0E13\u0E4C \u0E01\u0E1F\u0E20.',
+              '\u0E2a\u0E34\u0E19\u0E17\u0E23\u0E31\u0E1E\u0E22\u0E4C\u0E2a\u0E48\u0E27\u0E19\u0E15\u0E31\u0E27',
+              '\u0E2B\u0E19\u0E35\u0E49\u0E2a\u0E34\u0E19\u0E23\u0E27\u0E21'
+            ],
             datasets: [{
               data: [Math.max(liquidAssets, 0), Math.max(invAssets, 0), Math.max(coopShares, 0), Math.max(personalAssets, 0), Math.max(totalDebtPrincipal, 0)],
               backgroundColor: ['#06B6D4', '#8B5CF6', '#F59E0B', '#10B981', '#EF4444'],
@@ -4814,7 +4825,7 @@
               legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
               tooltip: {
                 callbacks: {
-                  label: ctx => ` ${ctx.label}: ${fmt(ctx.raw)} เธฟ`
+                  label: ctx => ` ${ctx.label}: ${fmt(ctx.raw)} \u0E3F`
                 }
               }
             },
@@ -4837,9 +4848,14 @@
         globalCharts.retirement = new Chart(ctxRet, {
           type: 'bar',
           data: {
-            labels: ['เธเธชเธ. เธเธเธ .', 'เธชเธซเธเธฃเธ“เน เธเธเธ .', 'เธเธ”เน€เธเธข 400 เธงเธฑเธ', 'เน€เธเธดเธเธญเธญเธกเน€เธชเธฃเธดเธก'],
+            labels: [
+              '\u0E01\u0E2a\u0E0A. \u0E01\u0E1F\u0E20.',
+              '\u0E2a\u0E2B\u0E01\u0E23\u0E13\u0E4C \u0E01\u0E1F\u0E20.',
+              '\u0E0A\u0E14\u0E40\u0E0A\u0E22 400 \u0E27\u0E31\u0E19',
+              '\u0E40\u0E07\u0E34\u0E19\u0E2D\u0E2D\u0E21\u0E40\u0E2a\u0E23\u0E34\u0E21'
+            ],
             datasets: [{
-              label: 'เธกเธนเธฅเธเนเธฒเธเธฃเธฐเธกเธฒเธ“เธเธฒเธฃ เธ“ เธงเธฑเธเน€เธเธฉเธตเธขเธ“ (เธเธฒเธ—)',
+              label: '\u0E21\u0E39\u0E25\u0E04\u0E48\u0E32\u0E1B\u0E23\u0E30\u0E21\u0E32\u0E13\u0E01\u0E32\u0E23 \u0E13 \u0E27\u0E31\u0E19\u0E40\u0E01\u0E29\u0E35\u0E22\u0E13 (\u0E1A\u0E32\u0E17)',
               data: [estPf, estCoop, estSev, estOther],
               backgroundColor: ['#7C3AED', '#F59E0B', '#EC4899', '#10B981'],
               borderRadius: 8,
@@ -4853,7 +4869,7 @@
               legend: { display: false },
               tooltip: {
                 callbacks: {
-                  label: ctx => ` เธกเธนเธฅเธเนเธฒ: ${fmt(ctx.raw)} เธเธฒเธ—`
+                  label: ctx => ` \u0E21\u0E39\u0E25\u0E04\u0E48\u0E32: ${fmt(ctx.raw)} \u0E1A\u0E32\u0E17`
                 }
               }
             },
@@ -4887,9 +4903,15 @@
         globalCharts.radar = new Chart(ctxRadar, {
           type: 'radar',
           data: {
-            labels: ['เธชเธ เธฒเธเธเธฅเนเธญเธ', 'เธเธฒเธฃเธเธธเธกเธซเธเธตเน', 'เธงเธดเธเธฑเธขเธเธฒเธฃเธญเธญเธก', 'เธเธงเธฒเธกเธกเธฑเนเธเธเธฑเนเธ', 'เธเธงเธฒเธกเธเธฃเนเธญเธกเน€เธเธฉเธตเธขเธ“'],
+            labels: [
+              '\u0E2a\u0E20\u0E32\u0E1E\u0E04\u0E25\u0E48\u0E2D\u0E07',
+              '\u0E01\u0E32\u0E23\u0E04\u0E38\u0E21\u0E2B\u0E19\u0E35\u0E49',
+              '\u0E27\u0E34\u0E19\u0E31\u0E22\u0E01\u0E32\u0E23\u0E2D\u0E2D\u0E21',
+              '\u0E04\u0E27\u0E32\u0E21\u0E21\u0E31\u0E48\u0E07\u0E04\u0E31\u0E48\u0E07',
+              '\u0E04\u0E27\u0E32\u0E21\u0E1E\u0E23\u0E49\u0E2D\u0E21\u0E40\u0E01\u0E29\u0E35\u0E22\u0E13'
+            ],
             datasets: [{
-              label: 'เธเธฐเนเธเธเธชเธธเธเธ เธฒเธเธเธฒเธฃเน€เธเธดเธ',
+              label: '\u0E04\u0E30\u0E41\u0E19\u0E19\u0E2a\u0E38\u0E02\u0E20\u0E32\u0E1E\u0E01\u0E32\u0E23\u0E40\u0E07\u0E34\u0E19',
               data: [scoreLiquidity, scoreDebt, scoreSavings, scoreSolvency, scoreRetire],
               backgroundColor: 'rgba(124, 58, 237, 0.25)',
               borderColor: '#7C3AED',
@@ -4907,7 +4929,7 @@
               legend: { display: false },
               tooltip: {
                 callbacks: {
-                  label: ctx => ` เธเธฐเนเธเธ: ${ctx.raw}/100`
+                  label: ctx => ` \u0E04\u0E30\u0E41\u0E19\u0E19: ${ctx.raw}/100`
                 }
               }
             },
@@ -4945,7 +4967,7 @@
         const annualRetireExp = (num('pea_desiredExpenseToday') || 25000) * 12;
         
         for (let age = curAge; age <= maxAge; age += 5) {
-          labels.push(`เธญเธฒเธขเธธ ${age} เธเธต`);
+          labels.push(`\u0E2D\u0E32\u0E22\u0E38 ${age} \u0E1B\u0E35`);
           if (age <= retAge) {
             const years = age - curAge;
             runningWealth = (totalAssets - totalDebtPrincipal) + (annualSavings * years * 1.15);
@@ -4965,7 +4987,7 @@
             labels: labels,
             datasets: [
               {
-                label: 'เธเธญเธเธ—เธธเธเธเธงเธฒเธกเธกเธฑเนเธเธเธฑเนเธเธชเธฐเธชเธก (เธเธฒเธ—)',
+                label: '\u0E01\u0E2D\u0E07\u0E17\u0E38\u0E19\u0E04\u0E27\u0E32\u0E21\u0E21\u0E31\u0E48\u0E07\u0E04\u0E31\u0E48\u0E07\u0E2a\u0E30\u0E2a\u0E21 (\u0E1A\u0E32\u0E17)',
                 data: wealthData,
                 borderColor: '#7C3AED',
                 backgroundColor: 'rgba(124, 58, 237, 0.15)',
@@ -4974,7 +4996,7 @@
                 borderWidth: 3
               },
               {
-                label: 'เธฃเธฒเธขเธเนเธฒเธขเธชเธฐเธชเธกเธซเธฅเธฑเธเน€เธเธฉเธตเธขเธ“ (เธเธฒเธ—)',
+                label: '\u0E23\u0E32\u0E22\u0E08\u0E48\u0E32\u0E22\u0E2a\u0E30\u0E2a\u0E21\u0E2B\u0E25\u0E31\u0E07\u0E40\u0E01\u0E29\u0E35\u0E22\u0E13 (\u0E1A\u0E32\u0E17)',
                 data: expenseData,
                 borderColor: '#EF4444',
                 borderDash: [5, 5],
@@ -4991,7 +5013,7 @@
               legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } },
               tooltip: {
                 callbacks: {
-                  label: ctx => ` ${ctx.dataset.label}: ${fmt(ctx.raw)} เธฟ`
+                  label: ctx => ` ${ctx.dataset.label}: ${fmt(ctx.raw)} \u0E3F`
                 }
               }
             },
