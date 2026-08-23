@@ -3641,7 +3641,7 @@
               <span>แดชบอร์ดกราฟวิเคราะห์</span>
             </div>
             <h2 style="font-size:1.15rem; font-weight:800; line-height:1.3; margin:0 0 2px;">ศูนย์รวมกราฟวิเคราะห์สุขภาพการเงินและวัยเกษียณ</h2>
-            <p style="font-size:0.76rem; opacity:0.92; margin:0;">สรุปสัดส่วนกระแสเงินสด โครงสร้างสินทรัพย์ ขุมทรัพย์เกษียณ อัตราก้าวหน้าเงินเดือน และเรดาร์ 360 องศา</p>
+            <p style="font-size:0.76rem; opacity:0.92; margin:0;">สรุปสัดส่วนกระแสเงินสด โครงสร้างสินทรัพย์ ขุมทรัพย์เกษียณ อัตราก้าวหน้าเงินเดือน พลังดอกเบี้ยทบต้น และเรดาร์ 360 องศา</p>
           </div>
           <button type="button" class="btn btn-gold" style="padding:6px 14px; font-size:0.78rem; width:auto;" onclick="renderAnalyticsDashboard(true)" title="รีเฟรชกราฟทั้งหมด">
             <span>🔄 อัปเดตกราฟ</span>
@@ -3763,6 +3763,53 @@
 
         <div style="position:relative; height:250px;">
           <canvas id="chartSalaryProgression"></canvas>
+        </div>
+      </div>
+
+      <!-- Chart 7: Compound Growth & PEA Provident Fund (กสช.) Mastery (NEW) -->
+      <div class="card" style="border-radius:14px; margin-bottom:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+          <div>
+            <div style="display:inline-flex; align-items:center; gap:6px;">
+              <b style="font-size:0.92rem; color:var(--text-main);">🌱 พลังดอกเบี้ยทบต้น &amp; ขุมทรัพย์ กสช. กฟภ. (Compound Interest &amp; PEA Match)</b>
+              <span class="badge badge-green" style="font-size:0.65rem;">กฟภ. สมทบ 100%</span>
+            </div>
+            <div style="font-size:0.72rem; color:var(--text-muted);">
+              เปรียบเทียบผลลัพธ์การออม กสช. ทบต้น vs ฝากเงินออมทรัพย์ธรรมดา และผ่าโครงสร้าง 3 กองทุน
+            </div>
+          </div>
+          <div style="display:inline-flex; background:var(--bg-main); padding:3px; border-radius:8px; border:1px solid var(--border); gap:4px; flex-wrap:wrap;">
+            <button type="button" id="btnPfModeCompare" class="btn btn-sm" style="padding:3px 10px; font-size:0.72rem; border-radius:6px; background:var(--pea-purple); color:#FFFFFF; border:none; cursor:pointer;" onclick="setPfChartMode('compare')">⚡ กสช. vs ฝากธรรมดา</button>
+            <button type="button" id="btnPfModeStructure" class="btn btn-sm" style="padding:3px 10px; font-size:0.72rem; border-radius:6px; background:transparent; color:var(--text-muted); border:none; cursor:pointer;" onclick="setPfChartMode('structure')">🍰 ผ่า 3 กองทุน กสช.</button>
+            <button type="button" id="btnPfModeRates" class="btn btn-sm" style="padding:3px 10px; font-size:0.72rem; border-radius:6px; background:transparent; color:var(--text-muted); border:none; cursor:pointer;" onclick="setPfChartMode('rates')">🚀 พลังออม 5% / 10% / 15%</button>
+          </div>
+        </div>
+
+        <!-- Provident Fund Summary Cards -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:8px; margin-bottom:12px; background:var(--pea-purple-bg); padding:10px 12px; border-radius:10px; border:1px solid var(--pea-purple-soft);">
+          <div style="text-align:center;">
+            <div style="font-size:0.68rem; color:var(--text-muted);">สะสมเองตลอดชีพ</div>
+            <div id="pfCardEmployeeTotal" class="num-font" style="font-weight:700; color:#3B82F6; font-size:0.95rem;">0 ฿</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:0.68rem; color:var(--text-muted);">กฟภ. สมทบฟรีตลอดชีพ</div>
+            <div id="pfCardEmployerTotal" class="num-font" style="font-weight:800; color:#F59E0B; font-size:0.95rem;">0 ฿</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:0.68rem; color:var(--text-muted);">ดอกผลทบต้นสะสม</div>
+            <div id="pfCardGainTotal" class="num-font" style="font-weight:700; color:#10B981; font-size:0.95rem;">0 ฿</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:0.68rem; color:var(--text-muted);">🏆 ขุมทรัพย์ กสช. รวม</div>
+            <div id="pfCardGrandTotal" class="num-font" style="font-weight:800; color:var(--pea-purple-light); font-size:0.95rem;">0 ฿</div>
+          </div>
+        </div>
+
+        <div style="position:relative; height:260px;">
+          <canvas id="chartProvidentMastery"></canvas>
+        </div>
+        <div id="pfMasteryVerdict" style="margin-top:10px; padding:8px 12px; border-radius:8px; background:var(--pea-purple-bg); font-size:0.78rem; line-height:1.4; color:var(--text-main);">
+          💡 <b>ผลการวิเคราะห์:</b> กสช. กฟภ. พร้อมเงินสมทบ 100% และพลังดอกเบี้ยทบต้น ช่วยสร้างความมั่งคั่งมากกว่าการฝากธรรมดาอย่างมหาศาล
         </div>
       </div>
 
@@ -4778,11 +4825,13 @@
       retirement: null,
       radar: null,
       projection: null,
-      salaryProgression: null
+      salaryProgression: null,
+      providentMastery: null
     };
 
     let salaryChartMode = 'yearly';
     let projectionChartMode = 'yearly';
+    let pfChartMode = 'compare';
     let simLegacyAge = 70;
 
     function setSalaryChartMode(mode) {
@@ -4821,6 +4870,32 @@
           btn1.style.background = 'transparent';
           btn1.style.color = 'var(--text-muted)';
         }
+      }
+      renderAnalyticsDashboard(true);
+    }
+
+    function setPfChartMode(mode) {
+      pfChartMode = mode;
+      const btnCompare = $('btnPfModeCompare');
+      const btnStructure = $('btnPfModeStructure');
+      const btnRates = $('btnPfModeRates');
+      
+      [btnCompare, btnStructure, btnRates].forEach(b => {
+        if (b) {
+          b.style.background = 'transparent';
+          b.style.color = 'var(--text-muted)';
+        }
+      });
+
+      if (mode === 'compare' && btnCompare) {
+        btnCompare.style.background = 'var(--pea-purple)';
+        btnCompare.style.color = '#FFFFFF';
+      } else if (mode === 'structure' && btnStructure) {
+        btnStructure.style.background = 'var(--pea-purple)';
+        btnStructure.style.color = '#FFFFFF';
+      } else if (mode === 'rates' && btnRates) {
+        btnRates.style.background = 'var(--pea-purple)';
+        btnRates.style.color = '#FFFFFF';
       }
       renderAnalyticsDashboard(true);
     }
@@ -5195,6 +5270,232 @@
       }
 
       // -------------------------------------------------------------
+      // Chart 7: Compound Growth & PEA Provident Fund (กสช.) Mastery
+      // -------------------------------------------------------------
+      const ctxPf = $('chartProvidentMastery');
+      if (ctxPf) {
+        if (globalCharts.providentMastery) globalCharts.providentMastery.destroy();
+
+        const curAge = num('pea_currentAge') || 35;
+        const retAge = num('pea_retireAge') || 60;
+        const curSal = num('pea_salary') || 38200;
+
+        let growthPct = 4.5;
+        if ($('pea_salaryGrowthRate')) growthPct = parseFloat($('pea_salaryGrowthRate').value) || 4.5;
+        else if ($('pea_salaryGrowth')) growthPct = parseFloat($('pea_salaryGrowth').value) || 4.5;
+        else if (state.pea_salaryGrowthRate !== undefined) growthPct = state.pea_salaryGrowthRate;
+        const gRate = growthPct / 100;
+
+        let pfYield = 4.0;
+        if ($('pea_pfYield')) pfYield = parseFloat($('pea_pfYield').value) || 4.0;
+        else if (state.pea_pfYield !== undefined) pfYield = state.pea_pfYield;
+        const pfYieldRate = pfYield / 100;
+
+        let basePfRate = (num('pea_pfRate') || (state.pea_pfRate !== undefined ? state.pea_pfRate : 5)) / 100;
+
+        const pfLabels = [];
+        const dataEmpContrib = [];
+        const dataEmployerContrib = [];
+        const dataGains = [];
+        const dataTotalPf = [];
+        const dataRegularSavings = [];
+
+        // For Rates Mode (5%, 10%, 15%)
+        const dataRate5 = [];
+        const dataRate10 = [];
+        const dataRate15 = [];
+
+        let runEmp = num('pea_pfAccumulated') || (pfAcc * 0.45);
+        let runEmployer = num('pea_pfContributed') || (pfAcc * 0.45);
+        let runGains = (num('pea_pfAccumulatedGain') || 0) + (num('pea_pfContributedGain') || 0) || (pfAcc * 0.1);
+        let runRegSavings = runEmp;
+
+        let runSim5 = pfAcc * 0.9;
+        let runSim10 = pfAcc * 1.5;
+        let runSim15 = pfAcc * 2.0;
+
+        for (let a = curAge; a <= retAge; a++) {
+          const yrs = a - curAge;
+          const sal = curSal * Math.pow(1 + gRate, yrs);
+          
+          if (a > curAge) {
+            const annualEmp = sal * basePfRate * 12;
+            const annualEmployer = sal * basePfRate * 12;
+            const prevTotal = runEmp + runEmployer + runGains;
+            const gainThisYear = (prevTotal + annualEmp + annualEmployer) * pfYieldRate;
+
+            runEmp += annualEmp;
+            runEmployer += annualEmployer;
+            runGains += gainThisYear;
+
+            // Regular Savings comparison (1% return, no employer match)
+            runRegSavings = (runRegSavings + annualEmp) * 1.01;
+
+            // Rate comparisons
+            runSim5 = (runSim5 + (sal * 0.05 * 2 * 12)) * (1 + pfYieldRate);
+            runSim10 = (runSim10 + (sal * 0.10 * 2 * 12)) * (1 + pfYieldRate);
+            runSim15 = (runSim15 + (sal * 0.15 * 2 * 12)) * (1 + pfYieldRate);
+          }
+
+          pfLabels.push(`\u0E2D\u0E32\u0E22\u0E38 ${a} \u0E1B\u0E35`);
+          dataEmpContrib.push(Math.round(runEmp));
+          dataEmployerContrib.push(Math.round(runEmployer));
+          dataGains.push(Math.round(runGains));
+          dataTotalPf.push(Math.round(runEmp + runEmployer + runGains));
+          dataRegularSavings.push(Math.round(runRegSavings));
+
+          dataRate5.push(Math.round(runSim5));
+          dataRate10.push(Math.round(runSim10));
+          dataRate15.push(Math.round(runSim15));
+        }
+
+        // Update Provident Fund Summary Cards
+        const totalEmp = dataEmpContrib[dataEmpContrib.length - 1];
+        const totalEmployer = dataEmployerContrib[dataEmployerContrib.length - 1];
+        const totalGain = dataGains[dataGains.length - 1];
+        const grandTotal = dataTotalPf[dataTotalPf.length - 1];
+        const regFinal = dataRegularSavings[dataRegularSavings.length - 1];
+
+        if ($('pfCardEmployeeTotal')) $('pfCardEmployeeTotal').textContent = fmt(totalEmp) + ' \u0E3F';
+        if ($('pfCardEmployerTotal')) $('pfCardEmployerTotal').textContent = '+' + fmt(totalEmployer) + ' \u0E3F';
+        if ($('pfCardGainTotal')) $('pfCardGainTotal').textContent = '+' + fmt(totalGain) + ' \u0E3F';
+        if ($('pfCardGrandTotal')) $('pfCardGrandTotal').textContent = fmt(grandTotal) + ' \u0E3F';
+
+        // Update Verdict Text
+        if ($('pfMasteryVerdict')) {
+          const diffVal = grandTotal - regFinal;
+          const mult = totalEmp > 0 ? (grandTotal / totalEmp).toFixed(1) : '4.0';
+          $('pfMasteryVerdict').innerHTML = `💡 <b>\u0E1E\u0E25\u0E31\u0E07\u0E01\u0E32\u0E23\u0E2D\u0E2D\u0E21 \u0E01\u0E2a\u0E0A. \u0E01\u0E1F\u0E20.:</b> \u0E01\u0E32\u0E23\u0E2A\u0E21\u0E17\u0E1A\u0E40\u0E07\u0E34\u0E19 100% \u0E08\u0E32\u0E01 \u0E01\u0E1F\u0E20. \u0E23\u0E48\u0E27\u0E21\u0E01\u0E31\u0E1A\u0E14\u0E2D\u0E01\u0E40\u0E1A\u0E35\u0E49\u0E22\u0E17\u0E1A\u0E15\u0E49\u0E19 \u0E0A\u0E48\u0E27\u0E22\u0E17\u0E27\u0E35\u0E04\u0E39\u0E13\u0E40\u0E07\u0E34\u0E19\u0E40\u0E01\u0E29\u0E35\u0E22\u0E13\u0E40\u0E1E\u0E34\u0E48\u0E21\u0E02\u0E36\u0E49\u0E19 <b>${mult} \u0E40\u0E17\u0E48\u0E32</b> \u0E41\u0E25\u0E30\u0E21\u0E32\u0E01\u0E01\u0E27\u0E48\u0E32\u0E01\u0E32\u0E23\u0E1D\u0E32\u0E01\u0E18\u0E23\u0E23\u0E21\u0E14\u0E32\u0E16\u0E36\u0E07 <b>+${fmt(diffVal)} \u0E1A\u0E32\u0E17</b> 🎉`;
+        }
+
+        // Build Chart based on pfChartMode
+        let chartType = 'line';
+        let chartDataSets = [];
+        let chartScales = {
+          x: { grid: { color: theme.gridColor } },
+          y: {
+            grid: { color: theme.gridColor },
+            ticks: { callback: v => (v >= 1000000 ? (v/1000000).toFixed(1) + 'M' : fmt(v)) }
+          }
+        };
+
+        if (pfChartMode === 'compare') {
+          chartType = 'line';
+          chartDataSets = [
+            {
+              label: '\u0E01\u0E2D\u0E07\u0E17\u0E38\u0E19 \u0E01\u0E2a\u0E0A. \u0E01\u0E1F\u0E20. (\u0E2A\u0E21\u0E17\u0E1A 100% + \u0E17\u0E1A\u0E15\u0E49\u0E19)',
+              data: dataTotalPf,
+              borderColor: '#7C3AED',
+              backgroundColor: 'rgba(124, 58, 237, 0.18)',
+              fill: true,
+              tension: 0.35,
+              borderWidth: 3,
+              pointRadius: 2.5
+            },
+            {
+              label: '\u0E1D\u0E32\u0E01\u0E2D\u0E2D\u0E21\u0E17\u0E23\u0E31\u0E1E\u0E22\u0E4C\u0E18\u0E23\u0E23\u0E21\u0E14\u0E32 (\u0E44\u0E21\u0E48\u0E21\u0E35 \u0E01\u0E1F\u0E20. \u0E2A\u0E21\u0E17\u0E1A, \u0E14\u0E2D\u0E01 1%)',
+              data: dataRegularSavings,
+              borderColor: '#9CA3AF',
+              borderDash: [5, 5],
+              fill: false,
+              tension: 0.2,
+              borderWidth: 2,
+              pointRadius: 0
+            }
+          ];
+        } else if (pfChartMode === 'structure') {
+          chartType = 'line';
+          chartDataSets = [
+            {
+              label: '\u0E14\u0E2D\u0E01\u0E1C\u0E25\u0E17\u0E1A\u0E15\u0E49\u0E19\u0E2A\u0E30\u0E2A\u0E21 (Compound Gain)',
+              data: dataGains,
+              borderColor: '#10B981',
+              backgroundColor: 'rgba(16, 185, 129, 0.25)',
+              fill: true,
+              tension: 0.35,
+              borderWidth: 2,
+              pointRadius: 2
+            },
+            {
+              label: '\u0E40\u0E07\u0E34\u0E19\u0E2A\u0E21\u0E17\u0E1A\u0E08\u0E32\u0E01 \u0E01\u0E1F\u0E20. (PEA Match)',
+              data: dataEmployerContrib,
+              borderColor: '#F59E0B',
+              backgroundColor: 'rgba(245, 158, 11, 0.25)',
+              fill: true,
+              tension: 0.35,
+              borderWidth: 2,
+              pointRadius: 2
+            },
+            {
+              label: '\u0E40\u0E07\u0E34\u0E19\u0E2A\u0E30\u0E2a\u0E21\u0E1E\u0E19\u0E31\u0E01\u0E07\u0E32\u0E19 (My Contribution)',
+              data: dataEmpContrib,
+              borderColor: '#3B82F6',
+              backgroundColor: 'rgba(59, 130, 246, 0.25)',
+              fill: true,
+              tension: 0.35,
+              borderWidth: 2,
+              pointRadius: 2
+            }
+          ];
+        } else if (pfChartMode === 'rates') {
+          chartType = 'line';
+          chartDataSets = [
+            {
+              label: '\u0E2A\u0E30\u0E2a\u0E21 15% (\u0E40\u0E15\u0E47\u0E21\u0E40\u0E1E\u0E14\u0E32\u0E19)',
+              data: dataRate15,
+              borderColor: '#10B981',
+              backgroundColor: 'rgba(16, 185, 129, 0.12)',
+              fill: true,
+              tension: 0.35,
+              borderWidth: 3,
+              pointRadius: 2
+            },
+            {
+              label: '\u0E2A\u0E30\u0E2a\u0E21 10% (\u0E23\u0E30\u0E14\u0E31\u0E1A\u0E41\u0E19\u0E30\u0E19\u0E33)',
+              data: dataRate10,
+              borderColor: '#F59E0B',
+              fill: false,
+              tension: 0.35,
+              borderWidth: 2.5,
+              pointRadius: 2
+            },
+            {
+              label: '\u0E2A\u0E30\u0E2a\u0E21 5% (\u0E23\u0E30\u0E14\u0E31\u0E1A\u0E1E\u0E37\u0E49\u0E19\u0E10\u0E32\u0E19)',
+              data: dataRate5,
+              borderColor: '#8B5CF6',
+              fill: false,
+              tension: 0.35,
+              borderWidth: 2,
+              pointRadius: 2
+            }
+          ];
+        }
+
+        globalCharts.providentMastery = new Chart(ctxPf, {
+          type: chartType,
+          data: {
+            labels: pfLabels,
+            datasets: chartDataSets
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+              legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } },
+              tooltip: {
+                callbacks: {
+                  title: (items) => items[0].label,
+                  label: (ctx) => ` ${ctx.dataset.label}: ${fmt(ctx.raw)} \u0E3F`
+                }
+              }
+            },
+            scales: chartScales
+          }
+        });
+      }
+
+      // -------------------------------------------------------------
       // Chart 5: Lifetime Retirement & Legacy Trajectory (Enhanced Detailed)
       // -------------------------------------------------------------
       const ctxProj = $('chartRetirementProjection');
@@ -5442,7 +5743,7 @@
                     if (ctx.datasetIndex === 0) {
                       const ageNum = meta.age;
                       const isSimLegacy = (ageNum === simLegacyAge);
-                      const legacyBadge = isSimLegacy ? ' 📍 [จำลองส่งต่อมรดก]' : '';
+                      const legacyBadge = isSimLegacy ? ' 📍 [\u0E08\u0E33\u0E25\u0E2D\u0E07\u0E2A\u0E48\u0E07\u0E15\u0E48\u0E2D\u0E21\u0E23\u0E14\u0E01]' : '';
 
                       if (meta.isRetire) {
                         return [
